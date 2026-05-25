@@ -11,13 +11,13 @@ todos:
     status: completed
   - id: set_secrets
     content: Set SUPABASE_URL and SUPABASE_KEY via wrangler secret put (with fallback if Worker doesn't yet exist)
-    status: pending
+    status: completed
   - id: first_deploy
     content: Run npx wrangler deploy and capture the published URL
-    status: pending
+    status: completed
   - id: verify_live
     content: Smoke test the live URL with curl + wrangler tail; check Supabase-auth middleware redirects work
-    status: pending
+    status: completed
   - id: cf_api_token
     content: User creates a Cloudflare API token with Workers Scripts:Edit + Account:Read
     status: pending
@@ -26,7 +26,7 @@ todos:
     status: pending
   - id: ci_deploy_job
     content: Extend .github/workflows/ci.yml with a deploy job using cloudflare/wrangler-action@v3, gated to push-to-main
-    status: pending
+    status: completed
   - id: verify_auto_deploy
     content: Open a PR with the changes, merge to main, and confirm the deploy job ships a new version
     status: pending
@@ -314,4 +314,9 @@ npx wrangler rollback <PREVIOUS_VERSION_ID>
 
 - 2026-05-25T15:30Z — Step 1 done: [wrangler.jsonc](../../../wrangler.jsonc) `name` changed from `10x-astro-starter` to `sendlog` (uncommitted).
 - 2026-05-25T15:30Z — Step 2 done: `npm run build` succeeded locally; Astro server build completed in 3.78s with the Cloudflare adapter, Images binding enabled, KV `SESSION` binding enabled, sitemap warning only (no `site` configured — non-blocking). Exit code 0.
-- Paused before Step 3 at user request.
+- 2026-05-25T17:12Z — Step 3 done: Worker secrets `SUPABASE_URL` and `SUPABASE_KEY` set from [.env.example](../../../.env.example) with values redacted from terminal output. `npx wrangler secret list` confirmed both names exist.
+- 2026-05-25T17:14Z — Step 4 initially hit Cloudflare KV provisioning error `namespace with this account ID and title already exists` for `sendlog-session`. Resolved by binding the existing namespace id `8597788846934397ba6217633b50477e` as `SESSION` in [wrangler.jsonc](../../../wrangler.jsonc), rebuilding, and redeploying.
+- 2026-05-25T17:15Z — Step 4 done: `npx wrangler deploy` succeeded. Live URL: `https://sendlog.samuel-liotta.workers.dev`. Version ID: `e012e391-91a5-4199-a8ec-37bc85c83573`.
+- 2026-05-25T17:16Z — Step 5 done: `curl` smoke passed (`/` returned HTTP 200 HTML; `/dashboard` returned HTTP 302 to `/auth/signin`). `npx wrangler tail` showed both requests as `Ok` with no runtime errors.
+- 2026-05-25T17:18Z — Step 7 partially done: GitHub Actions secrets `CLOUDFLARE_ACCOUNT_ID`, `SUPABASE_URL`, and `SUPABASE_KEY` set in `smlltt/sendlog`. `CLOUDFLARE_API_TOKEN` remains pending because it must be created in Cloudflare Dashboard.
+- 2026-05-25T17:18Z — Step 8 done: [.github/workflows/ci.yml](../../../.github/workflows/ci.yml) now has a deploy job using `cloudflare/wrangler-action@v3`, gated to push-to-main.
