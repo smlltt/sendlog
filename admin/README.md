@@ -1,3 +1,5 @@
+> SendLog is a non-commercial MVP; this admin app runs on the Strapi Cloud Free plan, whose license forbids commercial use. See [context/foundation/infrastructure-admin.md](../context/foundation/infrastructure-admin.md) and the project PRD before introducing any monetization.
+
 # 🚀 Getting started with Strapi
 
 Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.

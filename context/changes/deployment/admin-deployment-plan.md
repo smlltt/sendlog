@@ -8,28 +8,28 @@ todos:
     status: completed
   - id: license_note
     content: Add non-commercial license precondition note to top of admin/README.md citing infrastructure-admin.md
-    status: pending
+    status: completed
   - id: gen_secrets
     content: Generate 6 fresh production secrets (APP_KEYS x4 base64 + 5 others); keep in password manager only, do NOT commit
-    status: pending
+    status: completed
   - id: local_build
     content: Run `cd admin && npm run build` to confirm Strapi v5 build is green before involving Strapi Cloud
-    status: pending
+    status: completed
   - id: cli_login
     content: Run `cd admin && npx strapi login` to bind the local CLI to your Strapi Cloud account
-    status: pending
+    status: completed
   - id: cli_deploy
     content: Run `cd admin && npx strapi deploy` to create the Strapi Cloud project (Free plan, region Europe-West — immutable); first build may fail until env vars are set
-    status: pending
+    status: completed
   - id: set_env_vars
     content: "USER: paste the 6 production secrets into project Settings → Variables; do NOT set DATABASE_* / HOST / PORT; trigger redeploy"
-    status: pending
+    status: completed
   - id: connect_repo
     content: "USER: in Strapi Cloud Project Settings → Connected repository, connect smlltt/sendlog, branch main, base directory `admin`, enable auto-deploy on push"
-    status: pending
+    status: completed
   - id: create_super_admin
     content: "USER: open /admin/, create first super admin account, smoke-test the UI"
-    status: pending
+    status: completed
 ---
 
 ## Scope
@@ -287,3 +287,12 @@ Note: do **not** create the API token for the Astro Worker yet — that's a foll
 
 - 2026-05-25 — Strapi Cloud account created and signed in via GitHub; Strapi Cloud GitHub App authorized on `smlltt/sendlog`.
 - 2026-05-25 — Web wizard's repo-pick step (Step 2 of the 3-step wizard) blocked on "Strapi was not found in the project dependencies" because `@strapi/strapi` lives only in [admin/package.json](../../../admin/package.json), not at the repo root. Switched the plan from "GitHub-connected wizard" to "CLI-first deploy then connect repo post-creation"; this section reflects the updated flow.
+- 2026-05-25 — Added the Strapi Cloud Free non-commercial precondition note to [admin/README.md](../../../admin/README.md).
+- 2026-05-25 — Generated a fresh production secret set and copied it to the operator clipboard; the earlier chat-exposed set was discarded.
+- 2026-05-25 — Ran `STRAPI_TELEMETRY_DISABLED=true npm run build` from [admin/](../../../admin/); Strapi v5 build completed successfully.
+- 2026-05-25 — Confirmed Strapi Cloud CLI login via `npx strapi login`.
+- 2026-05-25 — Created Strapi Cloud project `sendlog-admin` via `npx strapi deploy` with Node `22` and region `Europe (West)` (`AMS`). Internal project name: `sendlog-admin-0a0e02aa14`; dashboard: https://cloud.strapi.io/projects/sendlog-admin-0a0e02aa14. Initial Cloud build completed successfully.
+- 2026-05-25 — Rotated Strapi Cloud default secret variables with the dashboard generator, added `ENCRYPTION_KEY`, and confirmed production has a live deployment with no pending deployment.
+- 2026-05-25 — Connected GitHub repository `smlltt/sendlog` on branch `main` with base directory `admin` and auto-deploy enabled. The connection triggered a production deploy, which completed with `hasLiveDeployment: true` and `hasPendingDeployment: false`.
+- 2026-05-25 — Confirmed live admin at https://light-talent-409ec7d381.strapiapp.com/admin/ — HTTP 200 from the production environment.
+- 2026-05-25 — Super admin bootstrapped via the live admin UI. Smoke test results: `Settings → Roles` reachable; Content-Type Builder loads but shows the expected "Strapi is in production mode, editing content types is disabled" toast (Strapi Cloud runs `strapi start`, so schema edits must be done locally via `npm run develop` and committed; auto-deploy rebuilds Strapi Cloud with the new schema). Plan complete.
