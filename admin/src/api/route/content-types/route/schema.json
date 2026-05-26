@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "routes",
+  "info": {
+    "singularName": "route",
+    "pluralName": "routes",
+    "displayName": "Route",
+    "description": "Canonical climbing route record. documentId is the stable identity referenced by later private state."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "grade": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["sport", "trad", "boulder", "multipitch", "via_ferrata", "mixed"],
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "yearSet": {
+      "type": "integer",
+      "required": false,
+      "min": 1800,
+      "max": 2200,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "crag": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::crag.crag",
+      "inversedBy": "routes"
+    }
+  }
+}

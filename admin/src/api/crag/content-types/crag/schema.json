@@ -1,0 +1,84 @@
+{
+  "kind": "collectionType",
+  "collectionName": "crags",
+  "info": {
+    "singularName": "crag",
+    "pluralName": "crags",
+    "displayName": "Crag",
+    "description": "Canonical crag entity with location, optional photo, and child routes."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "latitude": {
+      "type": "decimal",
+      "required": true,
+      "min": -90,
+      "max": 90,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "longitude": {
+      "type": "decimal",
+      "required": true,
+      "min": -180,
+      "max": 180,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "region": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::region.region",
+      "inversedBy": "crags"
+    },
+    "routes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::route.route",
+      "mappedBy": "crag"
+    }
+  }
+}
