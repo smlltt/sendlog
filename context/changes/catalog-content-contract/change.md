@@ -1,7 +1,7 @@
 ---
 change_id: catalog-content-contract
 title: Catalog content contract
-status: implementing
+status: implemented
 created: 2026-05-26
 updated: 2026-05-27
 archived_at: null

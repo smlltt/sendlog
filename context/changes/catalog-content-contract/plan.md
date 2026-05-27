@@ -363,15 +363,15 @@ Strapi schema changes must be committed under `admin/src/api/**` and deployed th
 
 #### Automated
 
-- [x] 3.1 Astro types are regenerated after page additions: `npx astro sync`
-- [x] 3.2 Root lint passes: `npm run lint`
-- [x] 3.3 Root production build passes: `npm run build`
-- [x] 3.4 Strapi admin build still passes: `cd admin && npm run build`
+- [x] 3.1 Astro types are regenerated after page additions: `npx astro sync` — bcb5ada
+- [x] 3.2 Root lint passes: `npm run lint` — bcb5ada
+- [x] 3.3 Root production build passes: `npm run build` — bcb5ada
+- [x] 3.4 Strapi admin build still passes: `cd admin && npm run build` — bcb5ada
 
 #### Manual
 
-- [x] 3.5 A published region created in Strapi appears on `/catalog-smoke/regions`.
-- [x] 3.6 Editing a region in Strapi appears on the smoke page when cache is bypassed (local Strapi or `bypassCache` option); without bypass, edits land after the 1-hour TTL.
-- [x] 3.7 Unpublished regions do not appear on the smoke page.
-- [x] 3.8 Browser devtools and rendered HTML do not expose the Strapi API token.
-- [x] 3.9 The smoke route is clearly treated as verification-only, not final public navigation.
+- [x] 3.5 A published region created in Strapi appears on `/catalog-smoke/regions`. — bcb5ada
+- [x] 3.6 Editing a region in Strapi appears on the smoke page when cache is bypassed (local Strapi or `bypassCache` option); without bypass, edits land after the 1-hour TTL. — bcb5ada
+- [x] 3.7 Unpublished regions do not appear on the smoke page. — bcb5ada
+- [x] 3.8 Browser devtools and rendered HTML do not expose the Strapi API token. — bcb5ada
+- [x] 3.9 The smoke route is clearly treated as verification-only, not final public navigation. — bcb5ada
