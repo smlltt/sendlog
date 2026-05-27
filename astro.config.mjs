@@ -18,6 +18,8 @@ export default defineConfig({
     schema: {
       SUPABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
       SUPABASE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+      STRAPI_API_URL: envField.string({ context: "server", access: "secret", optional: true }),
+      STRAPI_API_TOKEN: envField.string({ context: "server", access: "secret", optional: true }),
     },
   },
 });
