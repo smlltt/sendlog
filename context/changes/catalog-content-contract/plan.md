@@ -348,30 +348,30 @@ Strapi schema changes must be committed under `admin/src/api/**` and deployed th
 
 #### Automated
 
-- [x] 2.1 Astro types are regenerated: `npx astro sync`
-- [x] 2.2 Root lint passes: `npm run lint`
-- [x] 2.3 Production build passes without requiring Strapi secrets in CI: `npm run build`
+- [x] 2.1 Astro types are regenerated: `npx astro sync` — 4d167bd
+- [x] 2.2 Root lint passes: `npm run lint` — 4d167bd
+- [x] 2.3 Production build passes without requiring Strapi secrets in CI: `npm run build` — 4d167bd
 
 #### Manual
 
-- [x] 2.4 Missing Strapi env values produce a clear local configuration warning rather than a crash.
-- [x] 2.5 With valid Strapi URL and API token set locally, the catalog read helper returns published regions.
-- [x] 2.6 Draft/unpublished Strapi content is not returned by the Astro catalog helper.
-- [x] 2.7 Strapi API token is not referenced from client-side React or browser code.
+- [x] 2.4 Missing Strapi env values produce a clear local configuration warning rather than a crash. — 4d167bd
+- [x] 2.5 With valid Strapi URL and API token set locally, the catalog read helper returns published regions. — 4d167bd
+- [x] 2.6 Draft/unpublished Strapi content is not returned by the Astro catalog helper. — 4d167bd
+- [x] 2.7 Strapi API token is not referenced from client-side React or browser code. — 4d167bd
 
 ### Phase 3: Smoke Route & Verification
 
 #### Automated
 
-- [ ] 3.1 Astro types are regenerated after page additions: `npx astro sync`
-- [ ] 3.2 Root lint passes: `npm run lint`
-- [ ] 3.3 Root production build passes: `npm run build`
-- [ ] 3.4 Strapi admin build still passes: `cd admin && npm run build`
+- [x] 3.1 Astro types are regenerated after page additions: `npx astro sync`
+- [x] 3.2 Root lint passes: `npm run lint`
+- [x] 3.3 Root production build passes: `npm run build`
+- [x] 3.4 Strapi admin build still passes: `cd admin && npm run build`
 
 #### Manual
 
-- [ ] 3.5 A published region created in Strapi appears on `/catalog-smoke/regions`.
-- [ ] 3.6 Editing a region in Strapi appears on the smoke page when cache is bypassed (local Strapi or `bypassCache` option); without bypass, edits land after the 1-hour TTL.
-- [ ] 3.7 Unpublished regions do not appear on the smoke page.
-- [ ] 3.8 Browser devtools and rendered HTML do not expose the Strapi API token.
-- [ ] 3.9 The smoke route is clearly treated as verification-only, not final public navigation.
+- [x] 3.5 A published region created in Strapi appears on `/catalog-smoke/regions`.
+- [x] 3.6 Editing a region in Strapi appears on the smoke page when cache is bypassed (local Strapi or `bypassCache` option); without bypass, edits land after the 1-hour TTL.
+- [x] 3.7 Unpublished regions do not appear on the smoke page.
+- [x] 3.8 Browser devtools and rendered HTML do not expose the Strapi API token.
+- [x] 3.9 The smoke route is clearly treated as verification-only, not final public navigation.
