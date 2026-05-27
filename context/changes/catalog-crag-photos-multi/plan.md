@@ -238,30 +238,30 @@ No Supabase migration. The Strapi schema change deploys through Strapi Cloud's G
 
 #### Automated
 
-- [x] 1.1 Strapi admin builds successfully: `cd admin && npm run build`
-- [x] 1.2 Strapi local development starts without schema errors: `cd admin && npm run develop`
-- [x] 1.3 Root lint still passes after the schema edit: `npm run lint`
+- [x] 1.1 Strapi admin builds successfully: `cd admin && npm run build` — 995a8ce
+- [x] 1.2 Strapi local development starts without schema errors: `cd admin && npm run develop` — 995a8ce
+- [x] 1.3 Root lint still passes after the schema edit: `npm run lint` — 995a8ce
 
 #### Manual
 
-- [x] 1.4 Local Strapi admin shows the `Crag` content type with a `photos` media field that accepts multiple images.
-- [x] 1.5 The legacy `photo` field is no longer present on the `Crag` form.
-- [x] 1.6 A crag can be created/edited with two or more photos attached and published.
-- [x] 1.7 Strapi `alternativeText` set in the media library propagates to crag photos in the admin UI.
+- [x] 1.4 Local Strapi admin shows the `Crag` content type with a `photos` media field that accepts multiple images. — 995a8ce
+- [x] 1.5 The legacy `photo` field is no longer present on the `Crag` form. — 995a8ce
+- [x] 1.6 A crag can be created/edited with two or more photos attached and published. — 995a8ce
+- [x] 1.7 Strapi `alternativeText` set in the media library propagates to crag photos in the admin UI. — 995a8ce
 - [ ] 1.8 Production Strapi rebuilds successfully after the schema commit is deployed.
 
 ### Phase 2: Astro Catalog Read Contract
 
 #### Automated
 
-- [ ] 2.1 Astro types are regenerated: `npx astro sync`
-- [ ] 2.2 Root lint passes: `npm run lint`
-- [ ] 2.3 Production build passes without requiring Strapi secrets in CI: `npm run build`
+- [x] 2.1 Astro types are regenerated: `npx astro sync`
+- [x] 2.2 Root lint passes: `npm run lint`
+- [x] 2.3 Production build passes without requiring Strapi secrets in CI: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 With a local Strapi crag carrying two or more photos, `listCrags({ bypassCache: true })` returns those crags with a `photos` array containing all attached media and absolute Strapi Cloud CDN URLs.
-- [ ] 2.5 A crag with zero photos returns `photos: []` (not `null`, not a missing field).
-- [ ] 2.6 Strapi `alternativeText` round-trips as `alt` (`string` when filled, `null` when blank).
-- [ ] 2.7 Draft/unpublished crags are not returned by `listCrags()`.
-- [ ] 2.8 Browser devtools and rendered HTML do not expose the Strapi API token.
+- [x] 2.4 With a local Strapi crag carrying two or more photos, `listCrags({ bypassCache: true })` returns those crags with a `photos` array containing all attached media and absolute Strapi Cloud CDN URLs.
+- [x] 2.5 A crag with zero photos returns `photos: []` (not `null`, not a missing field).
+- [x] 2.6 Strapi `alternativeText` round-trips as `alt` (`string` when filled, `null` when blank).
+- [x] 2.7 Draft/unpublished crags are not returned by `listCrags()`.
+- [x] 2.8 Browser devtools and rendered HTML do not expose the Strapi API token.

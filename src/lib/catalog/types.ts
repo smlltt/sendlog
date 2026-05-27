@@ -14,6 +14,7 @@ export interface CatalogPhoto {
   url: string;
   width?: number;
   height?: number;
+  alt: string | null;
 }
 
 export interface CatalogRegion {
@@ -28,7 +29,7 @@ export interface CatalogCrag {
   name: string;
   latitude: number;
   longitude: number;
-  photo: CatalogPhoto | null;
+  photos: CatalogPhoto[];
   regionId: string | null;
   regionSlug: string | null;
 }

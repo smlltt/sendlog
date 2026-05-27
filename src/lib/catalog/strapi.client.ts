@@ -27,6 +27,7 @@ interface StrapiMedia {
   url?: string;
   width?: number;
   height?: number;
+  alternativeText?: string | null;
   formats?: Record<string, StrapiMediaFormatThumbnail | undefined>;
 }
 
@@ -42,7 +43,7 @@ interface StrapiCragRecord {
   name: string;
   latitude: number;
   longitude: number;
-  photo?: StrapiMedia | null;
+  photos?: StrapiMedia[] | null;
   region?: StrapiRegionRecord | null;
 }
 
@@ -144,13 +145,25 @@ function buildListPath(
   return `/api/${resource}?${params.toString()}`;
 }
 
-function mapPhoto(media: StrapiMedia | null | undefined): CatalogPhoto | null {
-  if (!media?.url) return null;
-  return {
-    url: media.url,
-    width: typeof media.width === "number" ? media.width : undefined,
-    height: typeof media.height === "number" ? media.height : undefined,
-  };
+// Strapi's default local upload provider serves media via relative `/uploads/...`
+// paths; Strapi Cloud's Cloudinary provider returns absolute URLs. Normalize to
+// always-absolute so consumers can render `<img src={photo.url}>` without caring
+// which provider is in use. Already-absolute URLs (http://, https://) pass through.
+function absolutizeMediaUrl(url: string, base: string): string {
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith("/")) return `${base}${url}`;
+  return url;
+}
+
+function mapPhotos(media: StrapiMedia[] | null | undefined, base: string): CatalogPhoto[] {
+  return (media ?? [])
+    .filter((item): item is StrapiMedia & { url: string } => typeof item.url === "string")
+    .map((item) => ({
+      url: absolutizeMediaUrl(item.url, base),
+      width: typeof item.width === "number" ? item.width : undefined,
+      height: typeof item.height === "number" ? item.height : undefined,
+      alt: typeof item.alternativeText === "string" ? item.alternativeText : null,
+    }));
 }
 
 function mapRegion(record: StrapiRegionRecord): CatalogRegion {
@@ -161,14 +174,14 @@ function mapRegion(record: StrapiRegionRecord): CatalogRegion {
   };
 }
 
-function mapCrag(record: StrapiCragRecord): CatalogCrag {
+function mapCrag(record: StrapiCragRecord, base: string): CatalogCrag {
   return {
     id: record.documentId,
     slug: record.slug,
     name: record.name,
     latitude: record.latitude,
     longitude: record.longitude,
-    photo: mapPhoto(record.photo),
+    photos: mapPhotos(record.photos, base),
     regionId: record.region?.documentId ?? null,
     regionSlug: record.region?.slug ?? null,
   };
@@ -202,13 +215,17 @@ export async function listRegions(options: CatalogReadOptions = {}): Promise<Cat
 
 /**
  * Lists published crags. Nested `region` is populated so callers get the
- * parent identity without a second round-trip. Photo (when present) carries an
- * absolute Strapi Cloud CDN URL; no transforms are applied in v1.
+ * parent identity without a second round-trip. Photo URLs are always absolute:
+ * Strapi Cloud's Cloudinary provider already returns absolute URLs and is
+ * passed through; the default local disk provider returns `/uploads/...`
+ * relative paths which the mapper prefixes with `STRAPI_API_URL` so consumers
+ * can render images regardless of environment.
  */
 export async function listCrags(options: CatalogReadOptions = {}): Promise<CatalogCrag[]> {
-  const path = buildListPath("crags", options, ["photo", "region"]);
+  const { url: base } = ensureConfig();
+  const path = buildListPath("crags", options, ["photos", "region"]);
   const json = await strapiFetch<StrapiListResponse<StrapiCragRecord>>(path, options);
-  return json.data.map(mapCrag);
+  return json.data.map((record) => mapCrag(record, base));
 }
 
 /**

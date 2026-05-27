@@ -10,8 +10,10 @@ is the likely candidate given the Vite/Astro toolchain.
 
 - Strapi v5 region record → `CatalogRegion`, including `id === documentId`.
 - Strapi v5 crag record → `CatalogCrag`:
-  - `photo` present (full media object with `url`/`width`/`height`).
-  - `photo` absent / `null` → `CatalogCrag.photo === null`.
+  - `photos` array populated → `CatalogCrag.photos` mirrors entries in upstream order, each with `url`, optional numeric `width`/`height`, and `alt` sourced from `alternativeText` (`null` when absent or blank).
+  - `photos` absent / `null` / `[]` upstream → `CatalogCrag.photos === []` (always an array, never `null`).
+  - Entries missing a `url` are filtered out by the mapper.
+  - Photo `url` is always absolute: upstream `http(s)://...` URLs (Strapi Cloud / Cloudinary) pass through; upstream relative `/uploads/...` URLs (default local disk provider) are prefixed with `STRAPI_API_URL` so consumers can render images regardless of environment.
   - `region` populated → `regionId` / `regionSlug` non-null.
   - `region` absent → both `regionId` and `regionSlug` are `null`.
 - Strapi v5 route record → `CatalogRoute`:
