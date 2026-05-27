@@ -69,7 +69,8 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::crag.crag",
-      "inversedBy": "routes"
+      "inversedBy": "routes",
+      "required": true
     }
   }
 }

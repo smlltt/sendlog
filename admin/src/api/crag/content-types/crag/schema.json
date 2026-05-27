@@ -72,7 +72,8 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::region.region",
-      "inversedBy": "crags"
+      "inversedBy": "crags",
+      "required": true
     },
     "routes": {
       "type": "relation",
