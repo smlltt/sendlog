@@ -254,14 +254,14 @@ No Supabase migration. The Strapi schema change deploys through Strapi Cloud's G
 
 #### Automated
 
-- [x] 2.1 Astro types are regenerated: `npx astro sync`
-- [x] 2.2 Root lint passes: `npm run lint`
-- [x] 2.3 Production build passes without requiring Strapi secrets in CI: `npm run build`
+- [x] 2.1 Astro types are regenerated: `npx astro sync` — d7af8a7
+- [x] 2.2 Root lint passes: `npm run lint` — d7af8a7
+- [x] 2.3 Production build passes without requiring Strapi secrets in CI: `npm run build` — d7af8a7
 
 #### Manual
 
-- [x] 2.4 With a local Strapi crag carrying two or more photos, `listCrags({ bypassCache: true })` returns those crags with a `photos` array containing all attached media and absolute Strapi Cloud CDN URLs.
-- [x] 2.5 A crag with zero photos returns `photos: []` (not `null`, not a missing field).
-- [x] 2.6 Strapi `alternativeText` round-trips as `alt` (`string` when filled, `null` when blank).
-- [x] 2.7 Draft/unpublished crags are not returned by `listCrags()`.
-- [x] 2.8 Browser devtools and rendered HTML do not expose the Strapi API token.
+- [x] 2.4 With a local Strapi crag carrying two or more photos, `listCrags({ bypassCache: true })` returns those crags with a `photos` array containing all attached media and absolute Strapi Cloud CDN URLs. — d7af8a7
+- [x] 2.5 A crag with zero photos returns `photos: []` (not `null`, not a missing field). — d7af8a7
+- [x] 2.6 Strapi `alternativeText` round-trips as `alt` (`string` when filled, `null` when blank). — d7af8a7
+- [x] 2.7 Draft/unpublished crags are not returned by `listCrags()`. — d7af8a7
+- [x] 2.8 Browser devtools and rendered HTML do not expose the Strapi API token. — d7af8a7
