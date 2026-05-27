@@ -331,33 +331,33 @@ Strapi schema changes must be committed under `admin/src/api/**` and deployed th
 
 #### Automated
 
-- [x] 1.1 Strapi admin builds successfully: `cd admin && npm run build`
-- [x] 1.2 Strapi local development starts without schema errors: `cd admin && npm run develop`
-- [x] 1.3 Root lint still passes after generated schema files are present: `npm run lint`
+- [x] 1.1 Strapi admin builds successfully: `cd admin && npm run build` — 976a346
+- [x] 1.2 Strapi local development starts without schema errors: `cd admin && npm run develop` — 976a346
+- [x] 1.3 Root lint still passes after generated schema files are present: `npm run lint` — 976a346
 
 #### Manual
 
-- [x] 1.4 Local Strapi admin shows Region, Crag, and Route collection types.
-- [x] 1.5 A region can be created and published.
-- [x] 1.6 A crag can be created with coordinates, optional photo, and a region relation.
-- [x] 1.7 A route can be created with name, grade, type, year set, and a crag relation.
-- [x] 1.8 Polish is the default Strapi catalog locale, English is available as a secondary locale, and slugs remain shared across locales.
-- [x] 1.9 Production Strapi deploy completes after committing schema files.
+- [x] 1.4 Local Strapi admin shows Region, Crag, and Route collection types. — 976a346
+- [x] 1.5 A region can be created and published. — 976a346
+- [x] 1.6 A crag can be created with coordinates, optional photo, and a region relation. — 976a346
+- [x] 1.7 A route can be created with name, grade, type, year set, and a crag relation. — 976a346
+- [x] 1.8 Polish is the default Strapi catalog locale, English is available as a secondary locale, and slugs remain shared across locales. — 976a346
+- [x] 1.9 Production Strapi deploy completes after committing schema files. — 976a346
 
 ### Phase 2: Astro Catalog Read Contract
 
 #### Automated
 
-- [ ] 2.1 Astro types are regenerated: `npx astro sync`
-- [ ] 2.2 Root lint passes: `npm run lint`
-- [ ] 2.3 Production build passes without requiring Strapi secrets in CI: `npm run build`
+- [x] 2.1 Astro types are regenerated: `npx astro sync`
+- [x] 2.2 Root lint passes: `npm run lint`
+- [x] 2.3 Production build passes without requiring Strapi secrets in CI: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Missing Strapi env values produce a clear local configuration warning rather than a crash.
-- [ ] 2.5 With valid Strapi URL and API token set locally, the catalog read helper returns published regions.
-- [ ] 2.6 Draft/unpublished Strapi content is not returned by the Astro catalog helper.
-- [ ] 2.7 Strapi API token is not referenced from client-side React or browser code.
+- [x] 2.4 Missing Strapi env values produce a clear local configuration warning rather than a crash.
+- [x] 2.5 With valid Strapi URL and API token set locally, the catalog read helper returns published regions.
+- [x] 2.6 Draft/unpublished Strapi content is not returned by the Astro catalog helper.
+- [x] 2.7 Strapi API token is not referenced from client-side React or browser code.
 
 ### Phase 3: Smoke Route & Verification
 
