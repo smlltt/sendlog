@@ -5,7 +5,7 @@
     "singularName": "crag",
     "pluralName": "crags",
     "displayName": "Crag",
-    "description": "Canonical crag entity with location, optional photo, and child routes."
+    "description": "Canonical crag entity with location, optional photos, and child routes."
   },
   "options": {
     "draftAndPublish": true
@@ -57,9 +57,9 @@
         }
       }
     },
-    "photo": {
+    "photos": {
       "type": "media",
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "allowedTypes": ["images"],
       "pluginOptions": {
