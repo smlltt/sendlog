@@ -3,7 +3,7 @@ project: SendLog
 version: 1
 status: draft
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-05-27
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -27,7 +27,7 @@ SendLog is a Polish-first online catalog for local climbing crags, starting with
 
 | ID | Change ID | Outcome (user can ...) | Prerequisites | PRD refs | Status |
 |---|---|---|---|---|---|
-| F-01 | catalog-content-contract | (foundation) catalog content and canonical route identity are ready for public browsing and private references | - | Business Logic, Access Control, FR-001, FR-003, FR-016, FR-018 | ready |
+| F-01 | catalog-content-contract | (foundation) catalog content and canonical route identity are ready for public browsing and private references | - | Business Logic, Access Control, FR-001, FR-003, FR-016, FR-018 | done |
 | F-02 | private-user-state-contract | (foundation) authenticated climber state is private per user and can reference canonical routes | F-01 | Access Control, NFR privacy, FR-006, FR-009, FR-012 | proposed |
 | F-03 | core-flow-verification-guardrails | (foundation) mobile, Polish-language, progress, and response-time guardrails are checkable for beta flows | - | NFR mobile, NFR Polish UI, NFR progress, NFR response time | ready |
 | S-07 | admin-catalog-curation | admin can create, edit, and delete regions, crags, and routes | F-01 | FR-016, FR-017, FR-018 | proposed |
@@ -72,7 +72,7 @@ What's already in place in the codebase as of `2026-05-26` (auto-researched + us
 - **Blockers:** -
 - **Unknowns:** -
 - **Risk:** Sequenced first because route identity is shared by the catalog, climb log, projects, and admin curation; changing it later would ripple through every slice.
-- **Status:** ready
+- **Status:** done
 
 ### F-02: Private user state contract
 
@@ -225,3 +225,5 @@ No open roadmap questions. The only sequencing-relevant uncertainty is tracked i
 - **Auto-remove project when route is logged** - Why parked: FR-015 is nice-to-have polish, not part of the required launch scope.
 
 ## Done
+
+- **F-01: (foundation) catalog content and canonical route identity are ready for public browsing and private references** — Archived 2026-05-27 → `context/archive/2026-05-26-catalog-content-contract/`. Lesson: —.
