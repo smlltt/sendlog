@@ -1,6 +1,6 @@
 # Repository Guidelines
 
-sendlog is an Astro 6 SSR app on Cloudflare Workers with React 19 islands, Tailwind 4, Supabase auth, and shadcn/ui (new-york style). 
+sendlog is an Astro 6 SSR app on Cloudflare Workers with React 19 islands, Tailwind 4, Supabase auth, and shadcn/ui (new-york style).
 
 ## Tripwires
 
