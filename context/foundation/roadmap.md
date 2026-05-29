@@ -3,7 +3,7 @@ project: SendLog
 version: 1
 status: draft
 created: 2026-05-26
-updated: 2026-05-27
+updated: 2026-05-29
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -30,7 +30,7 @@ SendLog is a Polish-first online catalog for local climbing crags, starting with
 | F-01 | catalog-content-contract | (foundation) catalog content and canonical route identity are ready for public browsing and private references | - | Business Logic, Access Control, FR-001, FR-003, FR-016, FR-018 | done |
 | F-02 | private-user-state-contract | (foundation) authenticated climber state is private per user and can reference canonical routes | F-01 | Access Control, NFR privacy, FR-006, FR-009, FR-012 | proposed |
 | F-03 | core-flow-verification-guardrails | (foundation) mobile, Polish-language, progress, and response-time guardrails are checkable for beta flows | - | NFR mobile, NFR Polish UI, NFR progress, NFR response time | ready |
-| S-07 | admin-catalog-curation | admin can create, edit, and delete regions, crags, and routes | F-01 | FR-016, FR-017, FR-018 | proposed |
+| S-07 | admin-catalog-curation | admin can create, edit, and delete regions, crags, and routes | F-01 | FR-016, FR-017, FR-018 | done |
 | S-01 | public-catalog-browse | visitor can browse regions, open a crag, and view its routes | F-01, S-07 | FR-001, FR-002, FR-003 | proposed |
 | S-02 | crag-map-navigation | visitor can use map pins to reach a crag's route list | S-01 | FR-004, FR-005 | proposed |
 | S-03 | passwordless-auth-flow | visitor can request a sign-in link, become signed in, and sign out | F-02 | FR-006, FR-007, FR-008 | proposed |
@@ -112,7 +112,8 @@ What's already in place in the codebase as of `2026-05-26` (auto-researched + us
 - **Blockers:** -
 - **Unknowns:** -
 - **Risk:** Sequenced before public browsing because the catalog has nothing useful to show - and no canonical content for private state to reference - until the admin can load and maintain initial region, crag, and route data.
-- **Status:** proposed
+- **Status:** done
+- **Subsumed by:** F-01 delivered the Strapi schema and live admin (`context/archive/2026-05-26-catalog-content-contract/`); `catalog-crag-photos-multi` tightened the crag photo contract. No standalone change folder. Initial Sokoliki content is loaded manually by the project owner via the Strapi admin UI.
 
 ### S-01: Public catalog browse
 
@@ -195,8 +196,8 @@ What's already in place in the codebase as of `2026-05-26` (auto-researched + us
 | F-01 | catalog-content-contract | Define catalog content and route identity contract | yes | Run `/10x-plan catalog-content-contract` |
 | F-02 | private-user-state-contract | Define private climber state contract | no | Wait for F-01 |
 | F-03 | core-flow-verification-guardrails | Add beta flow verification guardrails | yes | Can run alongside F-01 |
-| S-07 | admin-catalog-curation | Ship admin catalog curation | no | Wait for F-01 |
-| S-01 | public-catalog-browse | Ship public catalog browsing | no | Wait for F-01 and S-07 |
+| S-07 | admin-catalog-curation | Ship admin catalog curation | n/a | Subsumed by F-01 + `catalog-crag-photos-multi`; no standalone plan |
+| S-01 | public-catalog-browse | Ship public catalog browsing | yes | Run `/10x-plan public-catalog-browse` — F-01 and S-07 are both done |
 | S-02 | crag-map-navigation | Ship crag map navigation | no | Wait for S-01 |
 | S-03 | passwordless-auth-flow | Ship passwordless sign-in and sign-out | no | Wait for F-02 |
 | S-04 | route-climb-log | Ship route climb logging and history | no | Wait for F-01, F-02, F-03, S-01, and S-03 |
@@ -227,3 +228,4 @@ No open roadmap questions. The only sequencing-relevant uncertainty is tracked i
 ## Done
 
 - **F-01: (foundation) catalog content and canonical route identity are ready for public browsing and private references** — Archived 2026-05-27 → `context/archive/2026-05-26-catalog-content-contract/`. Lesson: —.
+- **S-07: admin can create, edit, and delete regions, crags, and routes** — Subsumed by F-01 (`context/archive/2026-05-26-catalog-content-contract/`) and the `catalog-crag-photos-multi` follow-up. Strapi Cloud admin (live at `https://light-talent-409ec7d381.strapiapp.com/admin/`) already provides FR-016/017/018 via native CRUD on the region/crag/route collection types; the project owner curates Sokoliki content manually. No standalone change folder. Lesson: —.
