@@ -448,9 +448,9 @@ The cross-source identity contract is the lasting invariant: any future change t
 - [x] 1.4 After `npx supabase db reset`, both `public.climbs` and `public.projects` exist with the columns, indexes, and `unique (user_id, route_id)` constraint listed above. — f756ccf
 - [x] 1.5 Both tables show `rls = on` in Supabase Studio's table editor. — f756ccf
 - [x] 1.6 All eight per-operation policies (4 per table) appear in Studio with `auth.uid() = user_id` expressions and the `authenticated` role. — f756ccf
-- [x] 1.7 Inserting a row into `public.climbs` while signed in as user A, then signing in as user B and running `select * from public.climbs`, returns zero rows for user B.
+- [x] 1.7 Inserting a row into `public.climbs` while signed in as user A, then signing in as user B and running `select * from public.climbs`, returns zero rows for user B. — 1748378
 - [ ] 1.8 User A can `delete` their own row; attempting to `delete` user A's row while signed in as user B returns zero rows affected.
-- [x] 1.9 Cascading delete works: deleting the user from `auth.users` removes all their `climbs` and `projects` rows.
+- [x] 1.9 Cascading delete works: deleting the user from `auth.users` removes all their `climbs` and `projects` rows. — 1748378
 
 ### Phase 2: Private state module
 
@@ -473,22 +473,22 @@ The cross-source identity contract is the lasting invariant: any future change t
 
 #### Automated
 
-- [x] 3.1 Astro types regenerate after the new page: `npx astro sync`
-- [x] 3.2 Root lint passes: `npm run lint`
-- [x] 3.3 Production build passes: `npm run build`
-- [x] 3.4 Pre-commit hook (`lint-staged`) accepts all new files unchanged.
+- [x] 3.1 Astro types regenerate after the new page: `npx astro sync` — 1748378
+- [x] 3.2 Root lint passes: `npm run lint` — 1748378
+- [x] 3.3 Production build passes: `npm run build` — 1748378
+- [x] 3.4 Pre-commit hook (`lint-staged`) accepts all new files unchanged. — 1748378
 
 #### Manual
 
-- [x] 3.5 A signed-out visitor opening `/private-state-smoke` is redirected to `/auth/signin` by middleware.
-- [x] 3.6 A signed-in user with valid Supabase + Strapi config and at least one published route sees the route name / grade / crag, inserted-climb summary, inserted-project summary, totals, and a cleanup link.
-- [x] 3.7 Clicking the cleanup link removes all climb and project rows for that user; reloading the smoke page re-creates them.
+- [x] 3.5 A signed-out visitor opening `/private-state-smoke` is redirected to `/auth/signin` by middleware. — 1748378
+- [x] 3.6 A signed-in user with valid Supabase + Strapi config and at least one published route sees the route name / grade / crag, inserted-climb summary, inserted-project summary, totals, and a cleanup link. — 1748378
+- [x] 3.7 Clicking the cleanup link removes all climb and project rows for that user; reloading the smoke page re-creates them. — 1748378
 - [ ] 3.8 Orphan-cleanup proof: after running the smoke once, manually flip a climb row's `route_id` to a nonexistent value via Studio's SQL editor, then click the cleanup link — the orphan row is removed (cleanup uses `includeOrphans: true`).
-- [x] 3.9 Opening `/private-state-smoke` as a different signed-in user shows only that user's rows; user A's row counts in Studio are unchanged.
-- [x] 3.10 With Supabase env unset locally, the smoke page renders the Polish Supabase missing-config diagnostic and writes nothing.
-- [x] 3.11 With Strapi env unset locally, the smoke page renders the Polish Strapi missing-config diagnostic and writes nothing.
-- [x] 3.12 With zero published Strapi routes, the smoke page renders the Polish "no published routes" diagnostic and writes nothing.
-- [x] 3.13 With `SMOKE_WRITES_ENABLED` unset (deployed default), `/private-state-smoke` renders the disabled-environment diagnostic and performs zero Supabase reads or writes — including for `?cleanup=1`; row counts in Studio are unchanged across the visit.
-- [x] 3.14 With `SMOKE_WRITES_ENABLED=true` in `.dev.vars`, the smoke page runs the full round-trip.
-- [x] 3.15 Browser devtools and rendered HTML do not expose `SUPABASE_KEY`, `STRAPI_API_TOKEN`, or `SMOKE_WRITES_ENABLED`.
-- [x] 3.16 The smoke page is treated as verification-only — no link from public catalog navigation or the dashboard.
+- [x] 3.9 Opening `/private-state-smoke` as a different signed-in user shows only that user's rows; user A's row counts in Studio are unchanged. — 1748378
+- [x] 3.10 With Supabase env unset locally, the smoke page renders the Polish Supabase missing-config diagnostic and writes nothing. — 1748378
+- [x] 3.11 With Strapi env unset locally, the smoke page renders the Polish Strapi missing-config diagnostic and writes nothing. — 1748378
+- [x] 3.12 With zero published Strapi routes, the smoke page renders the Polish "no published routes" diagnostic and writes nothing. — 1748378
+- [x] 3.13 With `SMOKE_WRITES_ENABLED` unset (deployed default), `/private-state-smoke` renders the disabled-environment diagnostic and performs zero Supabase reads or writes — including for `?cleanup=1`; row counts in Studio are unchanged across the visit. — 1748378
+- [x] 3.14 With `SMOKE_WRITES_ENABLED=true` in `.dev.vars`, the smoke page runs the full round-trip. — 1748378
+- [x] 3.15 Browser devtools and rendered HTML do not expose `SUPABASE_KEY`, `STRAPI_API_TOKEN`, or `SMOKE_WRITES_ENABLED`. — 1748378
+- [x] 3.16 The smoke page is treated as verification-only — no link from public catalog navigation or the dashboard. — 1748378
