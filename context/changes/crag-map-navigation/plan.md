@@ -382,9 +382,9 @@ By default, no code changes. The phase outputs one of two documentation artifact
 
 #### Manual
 
-- [x] 2.1 Safari iOS (real phone, cellular): map loads in ~3s, tiles fill viewport without blank squares, pins are tappable, popup opens, link navigates to the crag's route list
-- [x] 2.2 Chrome Android (real phone, cellular): same checks as 2.1
-- [x] 2.3 Throttled "Slow 3G" or known-slow cellular on a real phone: the SSR Polish crag list visibly renders inside `#mapa` during the slow tile-load period
-- [x] 2.4 No console errors in Safari Web Inspector or Chrome DevTools (Remote Debugging) on the homepage
-- [x] 2.5 Single-pin edge case (temporarily unpublish all-but-one crag in Strapi): the map centers on the remaining crag at zoom ~14, not the world view; republish all crags after the check
-- [x] 2.6 Tripwire decision documented in the change folder: either `verification.md` (sign-off) or `tripwire-fired.md` (failure mode + link to the new `crag-map-fallback` change opened via `/10x-new`)
+- [x] 2.1 Safari iOS (real phone, cellular): map loads in ~3s, tiles fill viewport without blank squares, pins are tappable, popup opens, link navigates to the crag's route list — 50cb49f
+- [x] 2.2 Chrome Android (real phone, cellular): same checks as 2.1 — 50cb49f
+- [x] 2.3 Throttled "Slow 3G" or known-slow cellular on a real phone: the SSR Polish crag list visibly renders inside `#mapa` during the slow tile-load period — 50cb49f
+- [x] 2.4 No console errors in Safari Web Inspector or Chrome DevTools (Remote Debugging) on the homepage — 50cb49f
+- [x] 2.5 Single-pin edge case (temporarily unpublish all-but-one crag in Strapi): the map centers on the remaining crag at zoom ~14, not the world view; republish all crags after the check — 50cb49f
+- [x] 2.6 Tripwire decision documented in the change folder: either `verification.md` (sign-off) or `tripwire-fired.md` (failure mode + link to the new `crag-map-fallback` change opened via `/10x-new`) — 50cb49f
