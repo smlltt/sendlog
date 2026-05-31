@@ -603,22 +603,22 @@ The Strapi auth cookies and middleware behavior are untouched. Visitors with exi
 
 #### Automated
 
-- [x] 3.1 Lint passes: `npm run lint`
-- [x] 3.2 `npx astro sync` succeeds.
-- [x] 3.3 Production build passes: `npm run build`
-- [x] 3.4 `rg "getCragBySlug|listRoutesByCrag" src/pages` returns the new crag page.
+- [x] 3.1 Lint passes: `npm run lint` — 0381fa5
+- [x] 3.2 `npx astro sync` succeeds. — 0381fa5
+- [x] 3.3 Production build passes: `npm run build` — 0381fa5
+- [x] 3.4 `rg "getCragBySlug|listRoutesByCrag" src/pages` returns the new crag page. — 0381fa5
 
 #### Manual
 
-- [x] 3.5 `/` → `/regiony/<region-slug>` → first crag (e.g., `/regiony/<region-slug>/<crag-slug>`) renders crag name, coordinates as text, hero photo + thumbnail strip (when ≥1 photo), and routes table.
-- [x] 3.6 Breadcrumbs show "SendLog / <Region Name> / <Crag Name>" with first two linking back; the region label shows the region's Polish name (not the slug).
-- [x] 3.7 A crag with no photos renders without the hero/strip and without errors.
-- [x] 3.8 A crag with multiple photos shows the first as hero and the rest in a horizontally scrollable strip on mobile.
-- [x] 3.9 Each route row shows `name`, `grade`, `type`, and either `yearSet` or "—" when null.
-- [x] 3.10 A crag with zero routes renders the Polish "Brak tras dla tej skały." copy.
-- [x] 3.11 Visiting `/regiony/<region-slug>/nieistniejacy-crag` renders the Polish 404 page (URL preserved, status 404).
-- [x] 3.12 Signed-in vs signed-out header states render correctly on the crag page; NO per-route climb-log CTA is present.
-- [x] 3.13 With Strapi unreachable, the crag page renders chrome + Polish `CatalogErrorAlert`, status 500.
-- [x] 3.14 Mobile (375×667) layout: hero photo respects aspect ratio, thumbnail strip scrolls horizontally, route table stacks rows with labels visible.
-- [x] 3.15 No client-side JS bundle added for the crag page (DevTools network panel).
-- [x] 3.16 `STRAPI_API_TOKEN` does not appear in rendered HTML or any network response.
+- [x] 3.5 `/` → `/regiony/<region-slug>` → first crag (e.g., `/regiony/<region-slug>/<crag-slug>`) renders crag name, coordinates as text, hero photo + thumbnail strip (when ≥1 photo), and routes table. — 0381fa5
+- [x] 3.6 Breadcrumbs show "SendLog / <Region Name> / <Crag Name>" with first two linking back; the region label shows the region's Polish name (not the slug). — 0381fa5
+- [x] 3.7 A crag with no photos renders without the hero/strip and without errors. — 0381fa5
+- [x] 3.8 A crag with multiple photos shows the first as hero and the rest in a horizontally scrollable strip on mobile. — 0381fa5
+- [x] 3.9 Each route row shows `name`, `grade`, `type`, and either `yearSet` or "—" when null. — 0381fa5
+- [x] 3.10 A crag with zero routes renders the Polish "Brak tras dla tej skały." copy. — 0381fa5
+- [x] 3.11 Visiting `/regiony/<region-slug>/nieistniejacy-crag` renders the Polish 404 page (URL preserved, status 404). — 0381fa5
+- [x] 3.12 Signed-in vs signed-out header states render correctly on the crag page; NO per-route climb-log CTA is present. — 0381fa5
+- [x] 3.13 With Strapi unreachable, the crag page renders chrome + Polish `CatalogErrorAlert`, status 500. — 0381fa5
+- [x] 3.14 Mobile (375×667) layout: hero photo respects aspect ratio, thumbnail strip scrolls horizontally, route table stacks rows with labels visible. — 0381fa5
+- [x] 3.15 No client-side JS bundle added for the crag page (DevTools network panel). — 0381fa5
+- [x] 3.16 `STRAPI_API_TOKEN` does not appear in rendered HTML or any network response. — 0381fa5
