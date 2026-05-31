@@ -381,7 +381,7 @@ Use the photo's own `width`/`height` attributes when both are numeric (the mappe
 
 **Intent**: Render a crag's route list as an accessible, mobile-friendly table — semantic `<table>` on desktop, stacked-card layout on mobile (per the NFR "remains fully usable on a phone browser at the crag").
 
-**Contract**: Accepts `Props = { routes: CatalogRoute[] }`. When `routes.length === 0`, renders a Polish "Brak tras w tym crągu." `<p>`. Otherwise renders ONE semantic `<table>` whose desktop layout is a standard table and whose mobile layout is a stacked-card list, achieved purely with Tailwind 4 responsive utilities (no JS island, no media query CSS). Table semantics are preserved at every breakpoint so screen readers always see a real table.
+**Contract**: Accepts `Props = { routes: CatalogRoute[] }`. When `routes.length === 0`, renders a Polish "Brak tras dla tej skały." `<p>`. Otherwise renders ONE semantic `<table>` whose desktop layout is a standard table and whose mobile layout is a stacked-card list, achieved purely with Tailwind 4 responsive utilities (no JS island, no media query CSS). Table semantics are preserved at every breakpoint so screen readers always see a real table.
 
 Concrete structure:
 
@@ -485,7 +485,7 @@ The error-path branch (lower) only renders when `crag` is `null` AND we caught a
 - A crag with no photos renders without the hero/strip and without errors.
 - A crag with multiple photos shows the first as hero and the rest in a horizontal thumbnail strip that scrolls horizontally on mobile.
 - Each route row shows `name`, `grade`, `type`, and either `yearSet` or "—" when null.
-- A crag with zero routes renders the Polish "Brak tras w tym crągu." copy.
+- A crag with zero routes renders the Polish "Brak tras dla tej skały." copy.
 - Visiting `/regiony/<region-slug>/nieistniejacy-crag` renders the Polish 404 page (URL preserved, status 404).
 - Visiting a known crag URL while signed in shows the user email + "Wyloguj" in the header; while signed out shows "Zaloguj się"; no per-route climb-log CTA is present (verifies the read-only seam decision).
 - With Strapi unreachable, the crag page renders chrome + the Polish `CatalogErrorAlert` with status 500.
@@ -583,42 +583,42 @@ The Strapi auth cookies and middleware behavior are untouched. Visitors with exi
 
 #### Automated
 
-- [x] 2.1 Lint passes: `npm run lint`
-- [x] 2.2 `npx astro sync` succeeds.
-- [x] 2.3 Production build passes: `npm run build`
-- [x] 2.4 `rg "getRegionBySlug" src/pages` returns the new region page.
+- [x] 2.1 Lint passes: `npm run lint` — b7ab6cc
+- [x] 2.2 `npx astro sync` succeeds. — b7ab6cc
+- [x] 2.3 Production build passes: `npm run build` — b7ab6cc
+- [x] 2.4 `rg "getRegionBySlug" src/pages` returns the new region page. — b7ab6cc
 
 #### Manual
 
-- [x] 2.5 Clicking the sample region entry from `/` navigates to `/regiony/<region-slug>` and shows the region heading and list of published crags.
-- [x] 2.6 Breadcrumbs show "SendLog / <Region Name>" with "SendLog" linking to `/`.
-- [x] 2.7 Each crag card shows the crag name; cards with photos show the first photo as a thumbnail with admin-set `alt` (or crag name fallback); cards without photos render cleanly.
-- [x] 2.8 Clicking a crag card navigates to `/regiony/<region-slug>/<crag-slug>` (404 expected at this phase).
-- [x] 2.9 Visiting `/regiony/nieistniejacy-rejon` renders the Polish 404 page with HTTP status 404 (URL preserved).
-- [x] 2.10 With Strapi unreachable, the page renders chrome + Polish `CatalogErrorAlert`, HTTP status 500.
-- [x] 2.11 A region with zero published crags renders the Polish "Brak opublikowanych crągów w tym rejonie." copy.
-- [x] 2.12 Mobile (375×667) layout: crag cards stack vertically, no horizontal scrolling.
+- [x] 2.5 Clicking the sample region entry from `/` navigates to `/regiony/<region-slug>` and shows the region heading and list of published crags. — b7ab6cc
+- [x] 2.6 Breadcrumbs show "SendLog / <Region Name>" with "SendLog" linking to `/`. — b7ab6cc
+- [x] 2.7 Each crag card shows the crag name; cards with photos show the first photo as a thumbnail with admin-set `alt` (or crag name fallback); cards without photos render cleanly. — b7ab6cc
+- [x] 2.8 Clicking a crag card navigates to `/regiony/<region-slug>/<crag-slug>` (404 expected at this phase). — b7ab6cc
+- [x] 2.9 Visiting `/regiony/nieistniejacy-rejon` renders the Polish 404 page with HTTP status 404 (URL preserved). — b7ab6cc
+- [x] 2.10 With Strapi unreachable, the page renders chrome + Polish `CatalogErrorAlert`, HTTP status 500. — b7ab6cc
+- [x] 2.11 A region with zero published crags renders the Polish "Brak opublikowanych crągów w tym rejonie." copy. — b7ab6cc
+- [x] 2.12 Mobile (375×667) layout: crag cards stack vertically, no horizontal scrolling. — b7ab6cc
 
 ### Phase 3: Crag detail page (`/regiony/[region]/[crag]`)
 
 #### Automated
 
-- [ ] 3.1 Lint passes: `npm run lint`
-- [ ] 3.2 `npx astro sync` succeeds.
-- [ ] 3.3 Production build passes: `npm run build`
-- [ ] 3.4 `rg "getCragBySlug|listRoutesByCrag" src/pages` returns the new crag page.
+- [x] 3.1 Lint passes: `npm run lint`
+- [x] 3.2 `npx astro sync` succeeds.
+- [x] 3.3 Production build passes: `npm run build`
+- [x] 3.4 `rg "getCragBySlug|listRoutesByCrag" src/pages` returns the new crag page.
 
 #### Manual
 
-- [ ] 3.5 `/` → `/regiony/<region-slug>` → first crag (e.g., `/regiony/<region-slug>/<crag-slug>`) renders crag name, coordinates as text, hero photo + thumbnail strip (when ≥1 photo), and routes table.
-- [ ] 3.6 Breadcrumbs show "SendLog / <Region Name> / <Crag Name>" with first two linking back; the region label shows the region's Polish name (not the slug).
-- [ ] 3.7 A crag with no photos renders without the hero/strip and without errors.
-- [ ] 3.8 A crag with multiple photos shows the first as hero and the rest in a horizontally scrollable strip on mobile.
-- [ ] 3.9 Each route row shows `name`, `grade`, `type`, and either `yearSet` or "—" when null.
-- [ ] 3.10 A crag with zero routes renders the Polish "Brak tras w tym crągu." copy.
-- [ ] 3.11 Visiting `/regiony/<region-slug>/nieistniejacy-crag` renders the Polish 404 page (URL preserved, status 404).
-- [ ] 3.12 Signed-in vs signed-out header states render correctly on the crag page; NO per-route climb-log CTA is present.
-- [ ] 3.13 With Strapi unreachable, the crag page renders chrome + Polish `CatalogErrorAlert`, status 500.
-- [ ] 3.14 Mobile (375×667) layout: hero photo respects aspect ratio, thumbnail strip scrolls horizontally, route table stacks rows with labels visible.
-- [ ] 3.15 No client-side JS bundle added for the crag page (DevTools network panel).
-- [ ] 3.16 `STRAPI_API_TOKEN` does not appear in rendered HTML or any network response.
+- [x] 3.5 `/` → `/regiony/<region-slug>` → first crag (e.g., `/regiony/<region-slug>/<crag-slug>`) renders crag name, coordinates as text, hero photo + thumbnail strip (when ≥1 photo), and routes table.
+- [x] 3.6 Breadcrumbs show "SendLog / <Region Name> / <Crag Name>" with first two linking back; the region label shows the region's Polish name (not the slug).
+- [x] 3.7 A crag with no photos renders without the hero/strip and without errors.
+- [x] 3.8 A crag with multiple photos shows the first as hero and the rest in a horizontally scrollable strip on mobile.
+- [x] 3.9 Each route row shows `name`, `grade`, `type`, and either `yearSet` or "—" when null.
+- [x] 3.10 A crag with zero routes renders the Polish "Brak tras dla tej skały." copy.
+- [x] 3.11 Visiting `/regiony/<region-slug>/nieistniejacy-crag` renders the Polish 404 page (URL preserved, status 404).
+- [x] 3.12 Signed-in vs signed-out header states render correctly on the crag page; NO per-route climb-log CTA is present.
+- [x] 3.13 With Strapi unreachable, the crag page renders chrome + Polish `CatalogErrorAlert`, status 500.
+- [x] 3.14 Mobile (375×667) layout: hero photo respects aspect ratio, thumbnail strip scrolls horizontally, route table stacks rows with labels visible.
+- [x] 3.15 No client-side JS bundle added for the crag page (DevTools network panel).
+- [x] 3.16 `STRAPI_API_TOKEN` does not appear in rendered HTML or any network response.

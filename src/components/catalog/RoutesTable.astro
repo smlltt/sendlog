@@ -1,0 +1,47 @@
+---
+import type { CatalogRoute } from "@/lib/catalog";
+
+interface Props {
+  routes: CatalogRoute[];
+}
+
+const { routes } = Astro.props;
+
+const CELL_BASE_CLASSES =
+  "block sm:table-cell px-3 py-1 sm:py-2 before:content-[attr(data-label)] before:mr-2 before:font-medium before:text-slate-500 sm:before:content-none";
+---
+
+{
+  routes.length === 0 ? (
+    <p class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700">Brak tras dla tej skały.</p>
+  ) : (
+    <table class="w-full text-sm">
+      <thead class="sr-only sm:not-sr-only">
+        <tr>
+          <th class="border-b border-slate-200 px-3 py-2 text-left font-medium text-slate-700">Nazwa</th>
+          <th class="border-b border-slate-200 px-3 py-2 text-left font-medium text-slate-700">Skala</th>
+          <th class="border-b border-slate-200 px-3 py-2 text-left font-medium text-slate-700">Typ</th>
+          <th class="border-b border-slate-200 px-3 py-2 text-left font-medium text-slate-700">Rok poprowadzenia</th>
+        </tr>
+      </thead>
+      <tbody>
+        {routes.map((route) => (
+          <tr class="mb-3 block rounded-md border border-slate-200 bg-white sm:mb-0 sm:table-row sm:rounded-none sm:border-0 sm:border-b sm:bg-transparent">
+            <td data-label="Nazwa:" class:list={[CELL_BASE_CLASSES, "font-medium text-slate-900"]}>
+              {route.name}
+            </td>
+            <td data-label="Skala:" class:list={[CELL_BASE_CLASSES]}>
+              {route.grade}
+            </td>
+            <td data-label="Typ:" class:list={[CELL_BASE_CLASSES]}>
+              {route.type}
+            </td>
+            <td data-label="Rok poprowadzenia:" class:list={[CELL_BASE_CLASSES]}>
+              {route.yearSet ?? "—"}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}

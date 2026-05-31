@@ -1,0 +1,67 @@
+---
+import CatalogLayout from "@/layouts/CatalogLayout.astro";
+import CragPhotos from "@/components/catalog/CragPhotos.astro";
+import RoutesTable from "@/components/catalog/RoutesTable.astro";
+import CatalogErrorAlert from "@/components/catalog/CatalogErrorAlert.astro";
+import {
+  getCragBySlug,
+  getRegionBySlug,
+  listRoutesByCrag,
+  type CatalogCrag,
+  type CatalogRegion,
+  type CatalogRoute,
+} from "@/lib/catalog";
+
+let crag: CatalogCrag | null = null;
+let region: CatalogRegion | null = null;
+let routes: CatalogRoute[] = [];
+let error: unknown = null;
+
+const regionParam = Astro.params.region;
+const cragParam = Astro.params.crag;
+if (typeof regionParam !== "string" || typeof cragParam !== "string") return Astro.rewrite("/404");
+
+try {
+  crag = await getCragBySlug(regionParam, cragParam);
+  if (crag === null) return Astro.rewrite("/404");
+  // Fetch region for the breadcrumb's Polish name. Shares the cached
+  // listRegions payload — no extra Strapi request.
+  region = await getRegionBySlug(regionParam);
+  routes = await listRoutesByCrag(crag.id);
+} catch (err) {
+  Astro.response.status = 500;
+  error = err;
+}
+
+const regionLabel = region?.name ?? crag?.regionSlug ?? "Rejon";
+---
+
+{
+  crag ? (
+    <CatalogLayout
+      title={crag.name}
+      breadcrumbs={[
+        { label: "SendLog", href: "/" },
+        { label: regionLabel, href: `/regiony/${crag.regionSlug ?? regionParam}` },
+        { label: crag.name },
+      ]}
+    >
+      <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{crag.name}</h1>
+      <p class="mt-2 text-sm text-slate-600">
+        Współrzędne: {crag.latitude.toFixed(5)}, {crag.longitude.toFixed(5)}
+      </p>
+      <CragPhotos photos={crag.photos} cragName={crag.name} />
+      <section class="mt-8 sm:mt-10">
+        <h2 class="text-xl font-semibold text-slate-900 sm:text-2xl">Trasy</h2>
+        <div class="mt-4">{error ? <CatalogErrorAlert error={error} /> : <RoutesTable routes={routes} />}</div>
+      </section>
+    </CatalogLayout>
+  ) : (
+    <CatalogLayout title="Błąd" breadcrumbs={[{ label: "SendLog", href: "/" }]}>
+      <h1 class="text-2xl font-bold text-slate-900 sm:text-3xl">Nie udało się załadować crągu</h1>
+      <div class="mt-6">
+        <CatalogErrorAlert error={error} />
+      </div>
+    </CatalogLayout>
+  )
+}
