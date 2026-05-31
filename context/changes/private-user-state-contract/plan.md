@@ -439,15 +439,15 @@ The cross-source identity contract is the lasting invariant: any future change t
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly to a fresh local Supabase: `npx supabase db reset`
-- [x] 1.2 Root lint still passes (no TS changes, but safety check): `npm run lint`
-- [x] 1.3 Root production build still passes: `npm run build`
+- [x] 1.1 Migration applies cleanly to a fresh local Supabase: `npx supabase db reset` — f756ccf
+- [x] 1.2 Root lint still passes (no TS changes, but safety check): `npm run lint` — f756ccf
+- [x] 1.3 Root production build still passes: `npm run build` — f756ccf
 
 #### Manual
 
-- [x] 1.4 After `npx supabase db reset`, both `public.climbs` and `public.projects` exist with the columns, indexes, and `unique (user_id, route_id)` constraint listed above.
-- [x] 1.5 Both tables show `rls = on` in Supabase Studio's table editor.
-- [x] 1.6 All eight per-operation policies (4 per table) appear in Studio with `auth.uid() = user_id` expressions and the `authenticated` role.
+- [x] 1.4 After `npx supabase db reset`, both `public.climbs` and `public.projects` exist with the columns, indexes, and `unique (user_id, route_id)` constraint listed above. — f756ccf
+- [x] 1.5 Both tables show `rls = on` in Supabase Studio's table editor. — f756ccf
+- [x] 1.6 All eight per-operation policies (4 per table) appear in Studio with `auth.uid() = user_id` expressions and the `authenticated` role. — f756ccf
 - [ ] 1.7 Inserting a row into `public.climbs` while signed in as user A, then signing in as user B and running `select * from public.climbs`, returns zero rows for user B.
 - [ ] 1.8 User A can `delete` their own row; attempting to `delete` user A's row while signed in as user B returns zero rows affected.
 - [ ] 1.9 Cascading delete works: deleting the user from `auth.users` removes all their `climbs` and `projects` rows.
@@ -456,14 +456,14 @@ The cross-source identity contract is the lasting invariant: any future change t
 
 #### Automated
 
-- [ ] 2.1 Astro types regenerate cleanly: `npx astro sync`
-- [ ] 2.2 Root lint (type-checked) passes: `npm run lint`
-- [ ] 2.3 Production build passes without requiring any new env entries: `npm run build`
+- [x] 2.1 Astro types regenerate cleanly: `npx astro sync`
+- [x] 2.2 Root lint (type-checked) passes: `npm run lint`
+- [x] 2.3 Production build passes without requiring any new env entries: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 `src/lib/catalog/strapi.client.ts` declares `DEFAULT_PAGE_SIZE = 1000`; `/catalog-smoke/regions` still renders the full region list without truncation diagnostics.
-- [ ] 2.5 Importing `@/lib/private-state` from a React island is visibly forbidden (server-only import error at build / dev-time, or developer is reminded by the module header comment).
+- [x] 2.4 `src/lib/catalog/strapi.client.ts` declares `DEFAULT_PAGE_SIZE = 1000`; `/catalog-smoke/regions` still renders the full region list without truncation diagnostics.
+- [x] 2.5 Importing `@/lib/private-state` from a React island is visibly forbidden (server-only import error at build / dev-time, or developer is reminded by the module header comment).
 - [ ] 2.6 Calling `createPrivateStateClient(headers, cookies, null)` throws `PrivateStateError({ code: "unauthenticated" })`.
 - [ ] 2.7 Calling `createClimb({ routeId: "definitely-not-a-real-document-id", climbedOn: "2026-05-31" })` throws `PrivateStateError({ code: "unknown_route" })`.
 - [ ] 2.8 Calling `addProject` twice with the same `routeId` for the same user produces `PrivateStateError({ code: "duplicate_project" })` on the second call.
