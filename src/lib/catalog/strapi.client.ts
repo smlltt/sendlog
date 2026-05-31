@@ -10,7 +10,7 @@ import {
 } from "@/lib/catalog/types";
 
 const DEFAULT_LOCALE = "pl";
-const DEFAULT_PAGE_SIZE = 100;
+const DEFAULT_PAGE_SIZE = 1000;
 
 /**
  * Strapi v5 returns a flat record shape (no v4 `.attributes` envelope). These
