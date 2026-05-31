@@ -1,18 +1,6 @@
 ---
 import CatalogLayout from "@/layouts/CatalogLayout.astro";
-import RegionsList from "@/components/catalog/RegionsList.astro";
-import CatalogErrorAlert from "@/components/catalog/CatalogErrorAlert.astro";
-import { listRegions, type CatalogRegion } from "@/lib/catalog";
-
-let regions: CatalogRegion[] = [];
-let error: unknown = null;
-
-try {
-  regions = await listRegions();
-} catch (err) {
-  Astro.response.status = 500;
-  error = err;
-}
+import CragMapSection from "@/components/catalog/CragMapSection.astro";
 ---
 
 <CatalogLayout title="SendLog">
@@ -20,23 +8,18 @@ try {
     <h1 class="text-4xl font-bold text-slate-900 sm:text-5xl">SendLog</h1>
     <p class="mt-3 text-lg text-slate-700 sm:text-xl">Polski katalog wspinaczkowych rejonów.</p>
     <p class="mt-4 max-w-2xl text-base text-slate-600">
-      Przeglądaj rejony, crągi i trasy bez zakładania konta. Treść jest publikowana przez administratora i widoczna dla
+      Przeglądaj rejony, skały i trasy bez zakładania konta. Treść jest publikowana przez administratora i widoczna dla
       każdego, kto chce zaplanować wyjazd albo poznać polskie skały.
     </p>
     <div class="mt-6">
       <a
-        href="#regiony"
+        href="#mapa"
         class="inline-flex items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-700"
       >
-        Przeglądaj rejony
+        Zobacz skały na mapie
       </a>
     </div>
   </section>
 
-  <section id="regiony" class="mt-8 sm:mt-12">
-    <h2 class="text-2xl font-semibold text-slate-900">Rejony</h2>
-    <div class="mt-4">
-      {error ? <CatalogErrorAlert error={error} /> : <RegionsList regions={regions} />}
-    </div>
-  </section>
+  <CragMapSection />
 </CatalogLayout>

@@ -1,0 +1,45 @@
+---
+import { listCrags, listRegions, toCragMapPins, type CragMapPin } from "@/lib/catalog";
+import CatalogErrorAlert from "@/components/catalog/CatalogErrorAlert.astro";
+import CragMapFallbackList from "@/components/catalog/CragMapFallbackList.astro";
+import CragMap from "@/components/catalog/CragMap";
+
+function pluralizeCrags(count: number): string {
+  if (count === 1) return "1 crąg";
+  if (count >= 2 && count <= 4) return `${count} skały`;
+  return `${count} skał`;
+}
+
+let pins: CragMapPin[] = [];
+let error: unknown = null;
+
+try {
+  const [crags, regions] = await Promise.all([listCrags(), listRegions()]);
+  pins = toCragMapPins(crags, regions);
+} catch (err) {
+  Astro.response.status = 500;
+  error = err;
+}
+---
+
+<section id="mapa" class="mt-8 sm:mt-12">
+  <h2 class="text-2xl font-semibold text-slate-900">Skały</h2>
+  {
+    error ? (
+      <div class="mt-4">
+        <CatalogErrorAlert error={error} />
+      </div>
+    ) : (
+      <>
+        <p class="mt-2 text-sm text-slate-600">{pluralizeCrags(pins.length)}</p>
+        <div class="mt-4">
+          <CragMap client:only="react" pins={pins}>
+            <Fragment slot="fallback">
+              <CragMapFallbackList pins={pins} />
+            </Fragment>
+          </CragMap>
+        </div>
+      </>
+    )
+  }
+</section>

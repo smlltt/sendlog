@@ -33,6 +33,20 @@ is the likely candidate given the Vite/Astro toolchain.
 - `listRoutesByCrag(cragId)` → filters by `cragId` (Strapi `documentId`), preserves upstream `name:asc` order.
 - All four forward `bypassCache` and `locale` to the underlying list call; cache key is identical to the list call's.
 
+## Map mapper (`map.ts`)
+
+- `toCragMapPins([], [])` → `[]`.
+- Crag with `regionSlug === null` → filtered out; emits `console.warn({ slug, reason: "missing_region_slug" })`.
+- Crag with `latitude === NaN` or non-finite latitude → filtered out; emits `console.warn({ slug, reason: "invalid_latitude" })`.
+- Crag with `longitude === NaN` or non-finite longitude → filtered out; emits `console.warn({ slug, reason: "invalid_longitude" })`.
+- Crag with latitude outside `[-90, 90]` (e.g. `91`, `-91`) → filtered out as `invalid_latitude`.
+- Crag with longitude outside `[-180, 180]` (e.g. `181`, `-181`) → filtered out as `invalid_longitude`.
+- Region-name resolution: a crag whose `regionSlug` matches an entry in the `regions` argument resolves `regionName` to that region's `name`.
+- Region-name fallback: a crag whose `regionSlug` has no matching region falls back to using the slug itself as `regionName`.
+- `href` is constructed as `/regiony/${regionSlug}/${slug}` exactly (no URL-encoding; admins enter URL-safe slugs in Strapi).
+- Upstream order is preserved across the filter: valid pins appear in the same relative order as their source crags.
+- Pure function: no I/O, no mutation of inputs; the only side effect is the diagnostic `console.warn` on dropped records.
+
 ## Errors / config (`strapi.client.ts`)
 
 - Missing `STRAPI_API_URL` or `STRAPI_API_TOKEN` → `CatalogError("missing_config", ...)`.

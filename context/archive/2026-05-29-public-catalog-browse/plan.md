@@ -90,7 +90,7 @@ The page hierarchy uses Astro's filesystem routing without any custom rewrites; 
 
 ### Astro 404 rendering
 
-In Astro 6 SSR, when a *matched* dynamic route resolves to a missing record, the right pattern is `return Astro.rewrite('/404')`. This preserves the URL the visitor typed, renders `src/pages/404.astro` as the response body, and the status code comes from whatever `404.astro` sets via `Astro.response.status = 404` (must be set explicitly inside the 404 page's frontmatter; the rewrite alone does NOT carry the 404 status). Using `Astro.redirect('/404')` would 302 the visitor to `/404` (changes URL, wrong for "page not found"). Using bare `return new Response(null, { status: 404 })` returns the right status but no body — visitor sees a blank page or Cloudflare's generic HTML.
+In Astro 6 SSR, when a _matched_ dynamic route resolves to a missing record, the right pattern is `return Astro.rewrite('/404')`. This preserves the URL the visitor typed, renders `src/pages/404.astro` as the response body, and the status code comes from whatever `404.astro` sets via `Astro.response.status = 404` (must be set explicitly inside the 404 page's frontmatter; the rewrite alone does NOT carry the 404 status). Using `Astro.redirect('/404')` would 302 the visitor to `/404` (changes URL, wrong for "page not found"). Using bare `return new Response(null, { status: 404 })` returns the right status but no body — visitor sees a blank page or Cloudflare's generic HTML.
 
 ### State sequencing
 
@@ -185,7 +185,8 @@ All four forward `options` unchanged to the underlying list call, so `bypassCach
 
 **Intent**: Document the future test surface for the four new helpers so the next runner-adoption pass has an accurate target.
 
-**Contract**: Under the existing `## Mapping (\`strapi.client.ts\`)` section, add a new sub-section `### Slug helpers` listing one bullet per helper:
+**Contract**: Under the existing `## Mapping (\`strapi.client.ts\`)`section, add a new sub-section`### Slug helpers` listing one bullet per helper:
+
 - `getRegionBySlug("<region-slug>")` → returns the matching region or `null`; does NOT fetch upstream beyond the single shared `listRegions()` call.
 - `listCragsByRegion("<region-slug>")` → returns all crags whose `regionSlug` matches; preserves upstream `name:asc` order; returns `[]` when the region has no published crags.
 - `getCragBySlug("<region-slug>", "<crag-slug>")` → matches both region and crag slug; mismatched region returns `null` even if the crag slug exists under another region.
@@ -296,36 +297,32 @@ Notes on the catch block: if step 1 (`getRegionBySlug`) threw, `region` stays `n
 Body (two explicit branches, mutually exclusive):
 
 ```astro
-{region ? (
-  <CatalogLayout
-    title={region.name}
-    breadcrumbs={[{ label: "SendLog", href: "/" }, { label: region.name }]}
-  >
-    <h1>{region.name}</h1>
-    <h2>Crągi w tym rejonie</h2>
-    {error ? (
+{
+  region ? (
+    <CatalogLayout title={region.name} breadcrumbs={[{ label: "SendLog", href: "/" }, { label: region.name }]}>
+      <h1>{region.name}</h1>
+      <h2>Crągi w tym rejonie</h2>
+      {error ? (
+        <CatalogErrorAlert error={error} />
+      ) : crags.length === 0 ? (
+        <p>Brak opublikowanych skał w tym rejonie.</p>
+      ) : (
+        <ul>
+          {crags.map((c) => (
+            <li>
+              <CragCard crag={c} href={`/regiony/${region.slug}/${c.slug}`} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </CatalogLayout>
+  ) : (
+    <CatalogLayout title="Błąd" breadcrumbs={[{ label: "SendLog", href: "/" }]}>
+      <h1>Nie udało się załadować rejonu</h1>
       <CatalogErrorAlert error={error} />
-    ) : crags.length === 0 ? (
-      <p>Brak opublikowanych crągów w tym rejonie.</p>
-    ) : (
-      <ul>
-        {crags.map((c) => (
-          <li>
-            <CragCard crag={c} href={`/regiony/${region.slug}/${c.slug}`} />
-          </li>
-        ))}
-      </ul>
-    )}
-  </CatalogLayout>
-) : (
-  <CatalogLayout
-    title="Błąd"
-    breadcrumbs={[{ label: "SendLog", href: "/" }]}
-  >
-    <h1>Nie udało się załadować rejonu</h1>
-    <CatalogErrorAlert error={error} />
-  </CatalogLayout>
-)}
+    </CatalogLayout>
+  )
+}
 ```
 
 The error-path branch (lower) only renders when `region` is `null` AND we caught an error on step 1 — in practice the only way to reach it is a Strapi outage during the initial `getRegionBySlug` call. Breadcrumbs omit the region label since we don't know it.
@@ -347,7 +344,7 @@ The error-path branch (lower) only renders when `region` is `null` AND we caught
 - Clicking a crag card navigates to `/regiony/<region-slug>/<crag-slug>` (404 expected at this phase since Phase 3 hasn't shipped).
 - Visiting `/regiony/nieistniejacy-rejon` renders the Polish 404 page with HTTP status 404 (URL preserved).
 - With Strapi unreachable, the page renders chrome and the Polish `CatalogErrorAlert` with HTTP status 500.
-- A region that has zero published crags renders the Polish "Brak opublikowanych crągów w tym rejonie." copy.
+- A region that has zero published crags renders the Polish "Brak opublikowanych skał w tym rejonie." copy.
 - Mobile (375×667) layout: crag cards stack vertically with thumbnail above text; no horizontal scrolling.
 
 **Implementation Note**: After completing this phase and all automated verification passes, pause here for manual confirmation from the human that the manual testing was successful before proceeding to the next phase. Phase blocks use plain bullets — the corresponding `- [ ]` checkboxes for these items live in the `## Progress` section at the bottom of the plan.
@@ -392,8 +389,10 @@ Concrete structure:
   ```html
   <td
     data-label="Nazwa:"
-    class="block sm:table-cell px-3 py-1 sm:py-2 before:content-[attr(data-label)] before:mr-2 before:font-medium before:text-slate-500 sm:before:content-none"
-  >{route.name}</td>
+    class="block px-3 py-1 before:mr-2 before:font-medium before:text-slate-500 before:content-[attr(data-label)] sm:table-cell sm:py-2 sm:before:content-none"
+  >
+    {route.name}
+  </td>
   ```
   The `data-label` attribute carries the column label **with a trailing colon** (`"Nazwa:"`, `"Skala:"`, `"Typ:"`, `"Rok poprowadzenia:"`) so the pseudo-element renders e.g. `"Nazwa: Sample Route"` on mobile. `before:content-[attr(data-label)]` is a verified Tailwind v4 arbitrary value; `sm:before:content-none` resets the pseudo-element at the `sm` breakpoint so desktop relies on the visible thead instead.
 - Empty cells (e.g., `yearSet === null`) render an em-dash `"—"` as the cell content; the label still renders on mobile (so the visitor sees `"Rok poprowadzenia: —"`).
@@ -437,34 +436,31 @@ Notes on the catch block: if step 1 (`getCragBySlug`) threw, `crag` stays `null`
 Body (two explicit branches, mutually exclusive):
 
 ```astro
-{crag ? (
-  <CatalogLayout
-    title={crag.name}
-    breadcrumbs={[
-      { label: "SendLog", href: "/" },
-      { label: regionLabel, href: `/regiony/${crag.regionSlug}` },
-      { label: crag.name },
-    ]}
-  >
-    <h1>{crag.name}</h1>
-    <p>Współrzędne: {crag.latitude.toFixed(5)}, {crag.longitude.toFixed(5)}</p>
-    <CragPhotos photos={crag.photos} cragName={crag.name} />
-    <h2>Trasy</h2>
-    {error ? (
+{
+  crag ? (
+    <CatalogLayout
+      title={crag.name}
+      breadcrumbs={[
+        { label: "SendLog", href: "/" },
+        { label: regionLabel, href: `/regiony/${crag.regionSlug}` },
+        { label: crag.name },
+      ]}
+    >
+      <h1>{crag.name}</h1>
+      <p>
+        Współrzędne: {crag.latitude.toFixed(5)}, {crag.longitude.toFixed(5)}
+      </p>
+      <CragPhotos photos={crag.photos} cragName={crag.name} />
+      <h2>Trasy</h2>
+      {error ? <CatalogErrorAlert error={error} /> : <RoutesTable routes={routes} />}
+    </CatalogLayout>
+  ) : (
+    <CatalogLayout title="Błąd" breadcrumbs={[{ label: "SendLog", href: "/" }]}>
+      <h1>Nie udało się załadować crągu</h1>
       <CatalogErrorAlert error={error} />
-    ) : (
-      <RoutesTable routes={routes} />
-    )}
-  </CatalogLayout>
-) : (
-  <CatalogLayout
-    title="Błąd"
-    breadcrumbs={[{ label: "SendLog", href: "/" }]}
-  >
-    <h1>Nie udało się załadować crągu</h1>
-    <CatalogErrorAlert error={error} />
-  </CatalogLayout>
-)}
+    </CatalogLayout>
+  )
+}
 ```
 
 The error-path branch (lower) only renders when `crag` is `null` AND we caught an error on step 1 — typically a Strapi outage during `getCragBySlug`. Breadcrumbs omit the region and crag labels since neither is known.
@@ -596,7 +592,7 @@ The Strapi auth cookies and middleware behavior are untouched. Visitors with exi
 - [x] 2.8 Clicking a crag card navigates to `/regiony/<region-slug>/<crag-slug>` (404 expected at this phase). — b7ab6cc
 - [x] 2.9 Visiting `/regiony/nieistniejacy-rejon` renders the Polish 404 page with HTTP status 404 (URL preserved). — b7ab6cc
 - [x] 2.10 With Strapi unreachable, the page renders chrome + Polish `CatalogErrorAlert`, HTTP status 500. — b7ab6cc
-- [x] 2.11 A region with zero published crags renders the Polish "Brak opublikowanych crągów w tym rejonie." copy. — b7ab6cc
+- [x] 2.11 A region with zero published crags renders the Polish "Brak opublikowanych skał w tym rejonie." copy. — b7ab6cc
 - [x] 2.12 Mobile (375×667) layout: crag cards stack vertically, no horizontal scrolling. — b7ab6cc
 
 ### Phase 3: Crag detail page (`/regiony/[region]/[crag]`)

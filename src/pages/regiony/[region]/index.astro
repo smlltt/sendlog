@@ -28,13 +28,13 @@ try {
     <CatalogLayout title={region.name} breadcrumbs={[{ label: "SendLog", href: "/" }, { label: region.name }]}>
       <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{region.name}</h1>
       <section class="mt-8 sm:mt-10">
-        <h2 class="text-xl font-semibold text-slate-900 sm:text-2xl">Crągi w tym rejonie</h2>
+        <h2 class="text-xl font-semibold text-slate-900 sm:text-2xl">Skały w tym rejonie</h2>
         <div class="mt-4">
           {error ? (
             <CatalogErrorAlert error={error} />
           ) : crags.length === 0 ? (
             <p class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700">
-              Brak opublikowanych crągów w tym rejonie.
+              Brak opublikowanych skał w tym rejonie.
             </p>
           ) : (
             <ul class="flex flex-col gap-3">
