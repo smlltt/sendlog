@@ -9,7 +9,15 @@
  * props.
  */
 
-export { listRegions, listCrags, listRoutes } from "@/lib/catalog/strapi.client";
+export {
+  listRegions,
+  listCrags,
+  listRoutes,
+  getRegionBySlug,
+  listCragsByRegion,
+  getCragBySlug,
+  listRoutesByCrag,
+} from "@/lib/catalog/strapi.client";
 export { CATALOG_CACHE_TTL_SECONDS, isLocalStrapi } from "@/lib/catalog/cache";
 export {
   CatalogError,

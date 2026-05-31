@@ -238,3 +238,53 @@ export async function listRoutes(options: CatalogReadOptions = {}): Promise<Cata
   const json = await strapiFetch<StrapiListResponse<StrapiRouteRecord>>(path, options);
   return json.data.map(mapRoute);
 }
+
+/**
+ * Returns the published region matching `slug` (case-sensitive, exact match) or
+ * `null` if none exists. Implemented as a pure filter over `listRegions()` so
+ * callers do not introduce a new Strapi request path or cache key — the entire
+ * regions payload lives behind the same single Cloudflare Cache API entry as
+ * `listRegions()`. `options` (`bypassCache`, `locale`) are forwarded unchanged.
+ */
+export async function getRegionBySlug(slug: string, options: CatalogReadOptions = {}): Promise<CatalogRegion | null> {
+  const regions = await listRegions(options);
+  return regions.find((region) => region.slug === slug) ?? null;
+}
+
+/**
+ * Returns all published crags whose `regionSlug` matches `regionSlug`
+ * (case-sensitive, exact match), preserving the upstream `name:asc` order from
+ * `buildListPath`. Returns `[]` when the region has no published crags. Filter
+ * over `listCrags()` — same cache key, no extra Strapi request.
+ */
+export async function listCragsByRegion(regionSlug: string, options: CatalogReadOptions = {}): Promise<CatalogCrag[]> {
+  const crags = await listCrags(options);
+  return crags.filter((crag) => crag.regionSlug === regionSlug);
+}
+
+/**
+ * Returns the published crag matching both `regionSlug` and `cragSlug`
+ * (case-sensitive, exact match) or `null` if none exists. A crag whose `slug`
+ * matches but whose `regionSlug` does not is treated as a miss (URL-space
+ * isolation per region). Filter over `listCrags()` — same cache key, no extra
+ * Strapi request.
+ */
+export async function getCragBySlug(
+  regionSlug: string,
+  cragSlug: string,
+  options: CatalogReadOptions = {},
+): Promise<CatalogCrag | null> {
+  const crags = await listCrags(options);
+  return crags.find((crag) => crag.slug === cragSlug && crag.regionSlug === regionSlug) ?? null;
+}
+
+/**
+ * Returns all published routes whose `cragId` matches the given Strapi
+ * `documentId`, preserving the upstream `name:asc` order from `buildListPath`.
+ * Returns `[]` when the crag has no published routes. Filter over
+ * `listRoutes()` — same cache key, no extra Strapi request.
+ */
+export async function listRoutesByCrag(cragId: string, options: CatalogReadOptions = {}): Promise<CatalogRoute[]> {
+  const routes = await listRoutes(options);
+  return routes.filter((route) => route.cragId === cragId);
+}
