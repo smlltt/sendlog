@@ -19,6 +19,7 @@ export {
   listRoutesByCrag,
 } from "@/lib/catalog/strapi.client";
 export { CATALOG_CACHE_TTL_SECONDS, isLocalStrapi } from "@/lib/catalog/cache";
+export { toCragMapPins, type CragMapPin } from "@/lib/catalog/map";
 export {
   CatalogError,
   type CatalogCrag,

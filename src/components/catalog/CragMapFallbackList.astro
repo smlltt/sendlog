@@ -1,0 +1,55 @@
+---
+import type { CragMapPin } from "@/lib/catalog";
+
+interface Props {
+  pins: CragMapPin[];
+}
+
+const { pins } = Astro.props;
+
+interface PinGroup {
+  regionSlug: string;
+  regionName: string;
+  pins: CragMapPin[];
+}
+
+// Group by regionSlug while preserving the upstream `name:asc` first-seen order
+// so the SSR list mirrors the order callers expect from listCrags().
+const groups: PinGroup[] = [];
+const groupIndexBySlug = new Map<string, number>();
+for (const pin of pins) {
+  const existingIndex = groupIndexBySlug.get(pin.regionSlug);
+  if (existingIndex === undefined) {
+    groupIndexBySlug.set(pin.regionSlug, groups.length);
+    groups.push({ regionSlug: pin.regionSlug, regionName: pin.regionName, pins: [pin] });
+  } else {
+    groups[existingIndex].pins.push(pin);
+  }
+}
+---
+
+{
+  pins.length === 0 ? (
+    <p class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700">Brak opublikowanych skał.</p>
+  ) : (
+    <div class="space-y-6">
+      {groups.map((group) => (
+        <div>
+          <h3 class="text-lg font-semibold text-slate-900">{group.regionName}</h3>
+          <ul class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {group.pins.map((pin) => (
+              <li>
+                <a
+                  href={pin.href}
+                  class="block rounded-md border border-slate-200 bg-white px-4 py-3 text-base font-medium text-slate-900 transition-colors hover:border-slate-400 hover:bg-slate-50"
+                >
+                  {pin.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
