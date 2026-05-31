@@ -1,10 +1,10 @@
 ---
 change_id: crag-map-navigation
 title: Crag map navigation (S-02)
-status: implemented
+status: archived
 created: 2026-05-31
 updated: 2026-05-31
-archived_at: null
+archived_at: 2026-05-31T16:06:44Z
 ---
 
 ## Notes
