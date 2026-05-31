@@ -361,30 +361,30 @@ By default, no code changes. The phase outputs one of two documentation artifact
 
 #### Automated
 
-- [x] 1.1 Dependencies install cleanly: `npm install` succeeds with no peer-dependency errors about React or Leaflet
-- [x] 1.2 Astro types regenerated: `npx astro sync` succeeds
-- [x] 1.3 Lint + type check passes: `npm run lint`
-- [x] 1.4 Production build passes: `npm run build`
-- [x] 1.5 Pre-commit hook passes on staged files (`lint-staged` runs `eslint --fix` and `prettier --write`)
-- [x] 1.6 No `leaflet` or `react-leaflet` import leaks into `.astro` files, `src/lib/`, `src/middleware.ts`, or `src/pages/api/` (grep invariant)
+- [x] 1.1 Dependencies install cleanly: `npm install` succeeds with no peer-dependency errors about React or Leaflet — d8de0fc
+- [x] 1.2 Astro types regenerated: `npx astro sync` succeeds — d8de0fc
+- [x] 1.3 Lint + type check passes: `npm run lint` — d8de0fc
+- [x] 1.4 Production build passes: `npm run build` — d8de0fc
+- [x] 1.5 Pre-commit hook passes on staged files (`lint-staged` runs `eslint --fix` and `prettier --write`) — d8de0fc
+- [x] 1.6 No `leaflet` or `react-leaflet` import leaks into `.astro` files, `src/lib/`, `src/middleware.ts`, or `src/pages/api/` (grep invariant) — d8de0fc
 
 #### Manual
 
-- [x] 1.7 `npm run dev`: homepage renders the SendLog hero, then the `#mapa` section with a custom-divIcon pin per published Sokoliki crag
-- [x] 1.8 Clicking a pin opens a popup with the crag name (`<strong>`) and a Polish "Otwórz trasy" link; clicking the link navigates in the same tab to `/regiony/[regionSlug]/[cragSlug]`
-- [x] 1.9 The map auto-fits to all pins on first load; single-pin catalog state centers on the one crag at zoom ~14 (no world view)
-- [x] 1.10 DevTools → Disable JavaScript → reload `/`: the `#mapa` section renders the SSR Polish crag list (grouped by region, links work, no broken layout)
-- [x] 1.11 OSM attribution is visible in the bottom-right of the map
-- [x] 1.12 The hero CTA "Zobacz crągi na mapie" scrolls to the `#mapa` section
-- [x] 1.13 No regressions on `/regiony/[region]` or `/regiony/[region]/[crag]`; 404 still works for unknown region/crag slugs
+- [x] 1.7 `npm run dev`: homepage renders the SendLog hero, then the `#mapa` section with a custom-divIcon pin per published Sokoliki crag — d8de0fc
+- [x] 1.8 Clicking a pin opens a popup with the crag name (`<strong>`) and a Polish "Otwórz trasy" link; clicking the link navigates in the same tab to `/regiony/[regionSlug]/[cragSlug]` — d8de0fc
+- [x] 1.9 The map auto-fits to all pins on first load; single-pin catalog state centers on the one crag at zoom ~14 (no world view) — d8de0fc
+- [x] 1.10 DevTools → Disable JavaScript → reload `/`: the `#mapa` section renders the SSR Polish crag list (grouped by region, links work, no broken layout) — d8de0fc
+- [x] 1.11 OSM attribution is visible in the bottom-right of the map — d8de0fc
+- [x] 1.12 The hero CTA "Zobacz crągi na mapie" scrolls to the `#mapa` section — d8de0fc
+- [x] 1.13 No regressions on `/regiony/[region]` or `/regiony/[region]/[crag]`; 404 still works for unknown region/crag slugs — d8de0fc
 
 ### Phase 2: Mobile-cellular verification + tripwire decision
 
 #### Manual
 
-- [ ] 2.1 Safari iOS (real phone, cellular): map loads in ~3s, tiles fill viewport without blank squares, pins are tappable, popup opens, link navigates to the crag's route list
-- [ ] 2.2 Chrome Android (real phone, cellular): same checks as 2.1
-- [ ] 2.3 Throttled "Slow 3G" or known-slow cellular on a real phone: the SSR Polish crag list visibly renders inside `#mapa` during the slow tile-load period
-- [ ] 2.4 No console errors in Safari Web Inspector or Chrome DevTools (Remote Debugging) on the homepage
-- [ ] 2.5 Single-pin edge case (temporarily unpublish all-but-one crag in Strapi): the map centers on the remaining crag at zoom ~14, not the world view; republish all crags after the check
-- [ ] 2.6 Tripwire decision documented in the change folder: either `verification.md` (sign-off) or `tripwire-fired.md` (failure mode + link to the new `crag-map-fallback` change opened via `/10x-new`)
+- [x] 2.1 Safari iOS (real phone, cellular): map loads in ~3s, tiles fill viewport without blank squares, pins are tappable, popup opens, link navigates to the crag's route list
+- [x] 2.2 Chrome Android (real phone, cellular): same checks as 2.1
+- [x] 2.3 Throttled "Slow 3G" or known-slow cellular on a real phone: the SSR Polish crag list visibly renders inside `#mapa` during the slow tile-load period
+- [x] 2.4 No console errors in Safari Web Inspector or Chrome DevTools (Remote Debugging) on the homepage
+- [x] 2.5 Single-pin edge case (temporarily unpublish all-but-one crag in Strapi): the map centers on the remaining crag at zoom ~14, not the world view; republish all crags after the check
+- [x] 2.6 Tripwire decision documented in the change folder: either `verification.md` (sign-off) or `tripwire-fired.md` (failure mode + link to the new `crag-map-fallback` change opened via `/10x-new`)
