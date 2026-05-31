@@ -1,0 +1,66 @@
+---
+import type { User } from "@supabase/supabase-js";
+
+interface Breadcrumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  user: User | null;
+  breadcrumbs?: Breadcrumb[];
+}
+
+const { user, breadcrumbs = [] } = Astro.props;
+---
+
+<header class="border-b border-slate-200 bg-white">
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:py-4">
+    <a href="/" class="text-xl font-bold text-slate-900 hover:text-slate-700 sm:text-2xl">SendLog</a>
+    <div class="text-sm text-slate-700">
+      {
+        user ? (
+          <div class="flex items-center gap-3">
+            <span class="hidden text-slate-600 sm:inline">{user.email}</span>
+            <form method="POST" action="/api/auth/signout">
+              <button type="submit" class="font-medium text-slate-900 hover:underline">
+                Wyloguj
+              </button>
+            </form>
+          </div>
+        ) : (
+          <a href="/auth/signin" class="font-medium text-slate-900 hover:underline">
+            Zaloguj się
+          </a>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    breadcrumbs.length > 0 && (
+      <nav aria-label="Okruszki" class="border-t border-slate-100 bg-slate-50">
+        <ol class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-2 px-4 py-2 text-sm text-slate-600">
+          {breadcrumbs.map((crumb, idx) => (
+            <li class="flex items-center gap-2">
+              {idx > 0 && (
+                <span aria-hidden="true" class="text-slate-400">
+                  /
+                </span>
+              )}
+              {crumb.href ? (
+                <a href={crumb.href} class="hover:text-slate-900 hover:underline">
+                  {crumb.label}
+                </a>
+              ) : (
+                <span aria-current="page" class="font-medium text-slate-900">
+                  {crumb.label}
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )
+  }
+</header>

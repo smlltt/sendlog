@@ -25,6 +25,14 @@ is the likely candidate given the Vite/Astro toolchain.
 - `populate` query string is built from the explicit `populate` array argument
   (no implicit deep populate).
 
+### Slug helpers
+
+- `getRegionBySlug("<region-slug>")` → returns the matching region or `null`; does NOT fetch upstream beyond the single shared `listRegions()` call.
+- `listCragsByRegion("<region-slug>")` → returns all crags whose `regionSlug` matches; preserves upstream `name:asc` order; returns `[]` when the region has no published crags.
+- `getCragBySlug("<region-slug>", "<crag-slug>")` → matches both region and crag slug; mismatched region returns `null` even if the crag slug exists under another region.
+- `listRoutesByCrag(cragId)` → filters by `cragId` (Strapi `documentId`), preserves upstream `name:asc` order.
+- All four forward `bypassCache` and `locale` to the underlying list call; cache key is identical to the list call's.
+
 ## Errors / config (`strapi.client.ts`)
 
 - Missing `STRAPI_API_URL` or `STRAPI_API_TOKEN` → `CatalogError("missing_config", ...)`.
