@@ -1,10 +1,10 @@
 ---
 change_id: public-catalog-browse
 title: Public catalog browse
-status: implemented
+status: archived
 created: 2026-05-29
 updated: 2026-05-31
-archived_at: null
+archived_at: 2026-05-31T11:23:01Z
 ---
 
 ## Notes
