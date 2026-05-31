@@ -20,6 +20,7 @@ export default defineConfig({
       SUPABASE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
       STRAPI_API_URL: envField.string({ context: "server", access: "secret", optional: true }),
       STRAPI_API_TOKEN: envField.string({ context: "server", access: "secret", optional: true }),
+      SMOKE_WRITES_ENABLED: envField.string({ context: "server", access: "secret", optional: true }),
     },
   },
 });

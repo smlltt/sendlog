@@ -24,6 +24,8 @@
  * with `route: null` only when the caller passes `{ includeOrphans: true }`.
  * Cleanup paths (e.g. the smoke page) MUST pass `includeOrphans: true` so
  * orphan rows are not silently skipped.
+ *
+ * Verified end-to-end via `src/pages/private-state-smoke.astro`.
  */
 
 export {
