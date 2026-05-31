@@ -562,42 +562,42 @@ The Strapi auth cookies and middleware behavior are untouched. Visitors with exi
 
 #### Automated
 
-- [x] 1.1 Astro types are regenerated: `npx astro sync`
-- [x] 1.2 Lint passes: `npm run lint`
-- [x] 1.3 Production build passes: `npm run build`
-- [x] 1.4 `rg "Welcome|Topbar" src/` returns no import or reference results.
-- [x] 1.5 `rg "getRegionBySlug|listCragsByRegion|getCragBySlug|listRoutesByCrag" src/lib/catalog/index.ts` returns the four new re-exports.
+- [x] 1.1 Astro types are regenerated: `npx astro sync` — caf0f4f
+- [x] 1.2 Lint passes: `npm run lint` — caf0f4f
+- [x] 1.3 Production build passes: `npm run build` — caf0f4f
+- [x] 1.4 `rg "Welcome|Topbar" src/` returns no import or reference results. — caf0f4f
+- [x] 1.5 `rg "getRegionBySlug|listCragsByRegion|getCragBySlug|listRoutesByCrag" src/lib/catalog/index.ts` returns the four new re-exports. — caf0f4f
 
 #### Manual
 
-- [x] 1.6 `npm run dev` loads `/` and shows the Polish SendLog landing with brand, tagline, intro, CTA, and the regions list with the sample region entry.
-- [x] 1.7 Header shows "Zaloguj się" when signed out and `{user.email}` + "Wyloguj" button when signed in; sign-out POST to `/api/auth/signout` works.
-- [x] 1.8 The "Przeglądaj rejony" CTA scrolls to the `#regiony` anchor on the same page.
-- [x] 1.9 Rendered HTML has `<html lang="pl">` and the document `<title>` defaults to "SendLog — katalog polskich rejonów wspinaczkowych" or the page-supplied "SendLog".
-- [x] 1.10 Visiting an unknown route renders the Polish 404 page with HTTP status 404.
-- [x] 1.11 With Strapi unreachable, the landing renders chrome + the Polish `CatalogErrorAlert`, HTTP status 500.
-- [x] 1.12 Mobile (375×667) layout: no horizontal scrolling, regions list legible without zoom.
-- [x] 1.13 No client-side JS bundle added for the landing (DevTools network panel).
+- [x] 1.6 `npm run dev` loads `/` and shows the Polish SendLog landing with brand, tagline, intro, CTA, and the regions list with the sample region entry. — caf0f4f
+- [x] 1.7 Header shows "Zaloguj się" when signed out and `{user.email}` + "Wyloguj" button when signed in; sign-out POST to `/api/auth/signout` works. — caf0f4f
+- [x] 1.8 The "Przeglądaj rejony" CTA scrolls to the `#regiony` anchor on the same page. — caf0f4f
+- [x] 1.9 Rendered HTML has `<html lang="pl">` and the document `<title>` defaults to "SendLog — katalog polskich rejonów wspinaczkowych" or the page-supplied "SendLog". — caf0f4f
+- [x] 1.10 Visiting an unknown route renders the Polish 404 page with HTTP status 404. — caf0f4f
+- [x] 1.11 With Strapi unreachable, the landing renders chrome + the Polish `CatalogErrorAlert`, HTTP status 500. — caf0f4f
+- [x] 1.12 Mobile (375×667) layout: no horizontal scrolling, regions list legible without zoom. — caf0f4f
+- [x] 1.13 No client-side JS bundle added for the landing (DevTools network panel). — caf0f4f
 
 ### Phase 2: Region detail page (`/regiony/[region]`)
 
 #### Automated
 
-- [ ] 2.1 Lint passes: `npm run lint`
-- [ ] 2.2 `npx astro sync` succeeds.
-- [ ] 2.3 Production build passes: `npm run build`
-- [ ] 2.4 `rg "getRegionBySlug" src/pages` returns the new region page.
+- [x] 2.1 Lint passes: `npm run lint`
+- [x] 2.2 `npx astro sync` succeeds.
+- [x] 2.3 Production build passes: `npm run build`
+- [x] 2.4 `rg "getRegionBySlug" src/pages` returns the new region page.
 
 #### Manual
 
-- [ ] 2.5 Clicking the sample region entry from `/` navigates to `/regiony/<region-slug>` and shows the region heading and list of published crags.
-- [ ] 2.6 Breadcrumbs show "SendLog / <Region Name>" with "SendLog" linking to `/`.
-- [ ] 2.7 Each crag card shows the crag name; cards with photos show the first photo as a thumbnail with admin-set `alt` (or crag name fallback); cards without photos render cleanly.
-- [ ] 2.8 Clicking a crag card navigates to `/regiony/<region-slug>/<crag-slug>` (404 expected at this phase).
-- [ ] 2.9 Visiting `/regiony/nieistniejacy-rejon` renders the Polish 404 page with HTTP status 404 (URL preserved).
-- [ ] 2.10 With Strapi unreachable, the page renders chrome + Polish `CatalogErrorAlert`, HTTP status 500.
-- [ ] 2.11 A region with zero published crags renders the Polish "Brak opublikowanych crągów w tym rejonie." copy.
-- [ ] 2.12 Mobile (375×667) layout: crag cards stack vertically, no horizontal scrolling.
+- [x] 2.5 Clicking the sample region entry from `/` navigates to `/regiony/<region-slug>` and shows the region heading and list of published crags.
+- [x] 2.6 Breadcrumbs show "SendLog / <Region Name>" with "SendLog" linking to `/`.
+- [x] 2.7 Each crag card shows the crag name; cards with photos show the first photo as a thumbnail with admin-set `alt` (or crag name fallback); cards without photos render cleanly.
+- [x] 2.8 Clicking a crag card navigates to `/regiony/<region-slug>/<crag-slug>` (404 expected at this phase).
+- [x] 2.9 Visiting `/regiony/nieistniejacy-rejon` renders the Polish 404 page with HTTP status 404 (URL preserved).
+- [x] 2.10 With Strapi unreachable, the page renders chrome + Polish `CatalogErrorAlert`, HTTP status 500.
+- [x] 2.11 A region with zero published crags renders the Polish "Brak opublikowanych crągów w tym rejonie." copy.
+- [x] 2.12 Mobile (375×667) layout: crag cards stack vertically, no horizontal scrolling.
 
 ### Phase 3: Crag detail page (`/regiony/[region]/[crag]`)
 
