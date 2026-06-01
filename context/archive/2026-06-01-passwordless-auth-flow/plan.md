@@ -379,18 +379,18 @@ No database migration is required. Supabase dashboard configuration is required 
 
 #### Automated
 
-- [x] 3.1 Astro types regenerate after any final file changes: `npx astro sync`
-- [x] 3.2 Lint passes: `npm run lint`
-- [x] 3.3 Production build passes: `npm run build`
-- [x] 3.4 `context/changes/passwordless-auth-flow/supabase-config.md` exists and includes `{{ .RedirectTo }}`, `{{ .TokenHash }}`, the verified `EmailOtpType`, `/auth/confirm`, local redirect URL, deployed redirect URL placeholders, local Inbucket URL, and the local dev server command/origin used for smoke testing.
-- [x] 3.5 `README.md` Auth routes describe the magic-link flow and no longer describe visible auth as email/password.
+- [x] 3.1 Astro types regenerate after any final file changes: `npx astro sync` — 80307b7
+- [x] 3.2 Lint passes: `npm run lint` — 80307b7
+- [x] 3.3 Production build passes: `npm run build` — 80307b7
+- [x] 3.4 `context/changes/passwordless-auth-flow/supabase-config.md` exists and includes `{{ .RedirectTo }}`, `{{ .TokenHash }}`, the verified `EmailOtpType`, `/auth/confirm`, local redirect URL, deployed redirect URL placeholders, local Inbucket URL, and the local dev server command/origin used for smoke testing. — 80307b7
+- [x] 3.5 `README.md` Auth routes describe the magic-link flow and no longer describe visible auth as email/password. — 80307b7
 
 #### Manual
 
-- [x] 3.6 Local Supabase/Inbucket magic-link flow works end-to-end.
-- [ ] 3.7 Staging or production Supabase sends a real magic-link email using the `RedirectTo` + `TokenHash` template.
-- [x] 3.8 Opening the deployed email link signs the user in and lands on `/` when no protected route was requested.
-- [x] 3.9 Opening a protected deployed URL while signed out, then completing magic-link auth, returns the user to that protected path.
-- [x] 3.10 A reused or expired deployed magic link redirects to `/auth/signin` with friendly recovery copy.
-- [x] 3.11 A malicious deployed link with external `next` does not redirect off-origin.
-- [x] 3.12 Passwordless-signed-in users can sign out from existing signout surfaces.
+- [x] 3.6 Local Supabase/Inbucket magic-link flow works end-to-end. — 80307b7
+- [x] 3.7 Staging or production Supabase sends a real magic-link email using the `RedirectTo` + `TokenHash` template.
+- [x] 3.8 Opening the deployed email link signs the user in and lands on `/` when no protected route was requested. — 80307b7
+- [x] 3.9 Opening a protected deployed URL while signed out, then completing magic-link auth, returns the user to that protected path. — 80307b7
+- [x] 3.10 A reused or expired deployed magic link redirects to `/auth/signin` with friendly recovery copy. — 80307b7
+- [x] 3.11 A malicious deployed link with external `next` does not redirect off-origin. — 80307b7
+- [x] 3.12 Passwordless-signed-in users can sign out from existing signout surfaces. — 80307b7
