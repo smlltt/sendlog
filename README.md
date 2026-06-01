@@ -127,26 +127,24 @@ SUPABASE_URL=https://<project-ref>.supabase.co
 SUPABASE_KEY=<anon-key>
 ```
 
-### Email confirmation in local development
+### Passwordless magic-link configuration
 
-By default Supabase requires email confirmation before a user can sign in. To skip this during local development:
+This project ships a passwordless sign-in flow built on Supabase magic links. Code-side wiring lives under `src/lib/auth/`, `src/pages/api/auth/magic-link.ts`, `src/pages/auth/confirm.ts`, and `src/components/auth/MagicLinkForm.tsx`. The Supabase-side configuration that code cannot enforce — email provider settings, Site URL, the redirect URL allow-list, and the custom Magic Link email template — is documented in [`context/changes/passwordless-auth-flow/supabase-config.md`](./context/changes/passwordless-auth-flow/supabase-config.md). Follow that checklist before running the flow against a new Supabase project.
 
-1. Open the Supabase dashboard for your project
-2. Go to **Authentication → Email → Confirm email**
-3. Toggle it **off**
-
-Users can then sign in immediately after sign-up without clicking a confirmation link.
+The default Supabase Magic Link template uses `{{ .ConfirmationURL }}` and writes the session into a URL hash fragment, which is incompatible with this app's SSR cookie flow. The custom template at `supabase/templates/magic_link.html` uses `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=magiclink` instead, so the link lands on the app's `/auth/confirm` server route where `verifyOtp` can write cookies before the redirect.
 
 ### Auth routes
 
-| Route                 | Description                                                             |
-| --------------------- | ----------------------------------------------------------------------- |
-| `/auth/signin`        | Email/password sign-in form                                             |
-| `/auth/signup`        | Email/password sign-up form                                             |
-| `/auth/confirm-email` | Post-signup "check your inbox" page                                     |
-| `/dashboard`          | Example protected page (redirects to `/auth/signin` if unauthenticated) |
+| Route                 | Description                                                                                                       |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `/auth/signin`        | Unified passwordless entry point — requests a one-time magic-link email                                           |
+| `/auth/signup`        | Unified with `/auth/signin` (first-time users are auto-created by the magic-link request)                         |
+| `/auth/check-email`   | Post-request landing page that tells the user to open their inbox                                                 |
+| `/auth/confirm`       | Server callback that verifies `token_hash` + `type`, writes session cookies, and redirects to the sanitized `next` |
+| `/auth/confirm-email` | Legacy "check your inbox" compatibility page (not part of the active passwordless flow)                           |
+| `/dashboard`          | Example protected page (redirects to `/auth/signin?next=/dashboard` if unauthenticated)                           |
 
-Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication.
+Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication; the middleware preserves the original path as a same-origin `next` value so the magic-link callback can return the user to it.
 
 ## Deployment
 

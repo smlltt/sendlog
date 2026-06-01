@@ -359,38 +359,38 @@ No database migration is required. Supabase dashboard configuration is required 
 
 #### Automated
 
-- [x] 2.1 Astro types regenerate: `npx astro sync`
-- [x] 2.2 Lint passes: `npm run lint`
-- [x] 2.3 Production build passes: `npm run build`
-- [x] 2.4 `rg "type=\"password\"|PasswordToggle|SignInForm|SignUpForm" src/pages/auth src/components/auth` returns no active password-field usage in the visible auth pages.
-- [x] 2.5 `rg "/api/auth/magic-link" src/pages/auth src/components/auth` finds the new form wiring.
+- [x] 2.1 Astro types regenerate: `npx astro sync` — dd63804
+- [x] 2.2 Lint passes: `npm run lint` — dd63804
+- [x] 2.3 Production build passes: `npm run build` — dd63804
+- [x] 2.4 `rg "type=\"password\"|PasswordToggle|SignInForm|SignUpForm" src/pages/auth src/components/auth` returns no active password-field usage in the visible auth pages. — dd63804
+- [x] 2.5 `rg "/api/auth/magic-link" src/pages/auth src/components/auth` finds the new form wiring. — dd63804
 
 #### Manual
 
-- [x] 2.6 `/auth/signin` shows one email field and no password field.
-- [x] 2.7 `/auth/signup` no longer shows a password signup form and clearly points users into the same passwordless flow.
-- [x] 2.8 Submitting an invalid email shows client-side validation before POST.
-- [x] 2.9 Submitting a valid email shows the check-email page, preserving a safe `next` value on the retry link when one was requested.
-- [x] 2.10 Server-side validation errors and Supabase errors render as friendly messages on `/auth/signin`.
-- [x] 2.11 Existing signout forms on dashboard/catalog pages still POST to `/api/auth/signout` and sign the user out.
-- [x] 2.12 Auth pages remain usable on a 375x667 mobile viewport with no horizontal scrolling.
+- [x] 2.6 `/auth/signin` shows one email field and no password field. — dd63804
+- [x] 2.7 `/auth/signup` no longer shows a password signup form and clearly points users into the same passwordless flow. — dd63804
+- [x] 2.8 Submitting an invalid email shows client-side validation before POST. — dd63804
+- [x] 2.9 Submitting a valid email shows the check-email page, preserving a safe `next` value on the retry link when one was requested. — dd63804
+- [x] 2.10 Server-side validation errors and Supabase errors render as friendly messages on `/auth/signin`. — dd63804
+- [x] 2.11 Existing signout forms on dashboard/catalog pages still POST to `/api/auth/signout` and sign the user out. — dd63804
+- [x] 2.12 Auth pages remain usable on a 375x667 mobile viewport with no horizontal scrolling. — dd63804
 
 ### Phase 3: Configuration and Live Verification
 
 #### Automated
 
-- [ ] 3.1 Astro types regenerate after any final file changes: `npx astro sync`
-- [ ] 3.2 Lint passes: `npm run lint`
-- [ ] 3.3 Production build passes: `npm run build`
-- [ ] 3.4 `context/changes/passwordless-auth-flow/supabase-config.md` exists and includes `{{ .RedirectTo }}`, `{{ .TokenHash }}`, the verified `EmailOtpType`, `/auth/confirm`, local redirect URL, deployed redirect URL placeholders, local Inbucket URL, and the local dev server command/origin used for smoke testing.
-- [ ] 3.5 `README.md` Auth routes describe the magic-link flow and no longer describe visible auth as email/password.
+- [x] 3.1 Astro types regenerate after any final file changes: `npx astro sync`
+- [x] 3.2 Lint passes: `npm run lint`
+- [x] 3.3 Production build passes: `npm run build`
+- [x] 3.4 `context/changes/passwordless-auth-flow/supabase-config.md` exists and includes `{{ .RedirectTo }}`, `{{ .TokenHash }}`, the verified `EmailOtpType`, `/auth/confirm`, local redirect URL, deployed redirect URL placeholders, local Inbucket URL, and the local dev server command/origin used for smoke testing.
+- [x] 3.5 `README.md` Auth routes describe the magic-link flow and no longer describe visible auth as email/password.
 
 #### Manual
 
-- [ ] 3.6 Local Supabase/Inbucket magic-link flow works end-to-end.
+- [x] 3.6 Local Supabase/Inbucket magic-link flow works end-to-end.
 - [ ] 3.7 Staging or production Supabase sends a real magic-link email using the `RedirectTo` + `TokenHash` template.
-- [ ] 3.8 Opening the deployed email link signs the user in and lands on `/` when no protected route was requested.
-- [ ] 3.9 Opening a protected deployed URL while signed out, then completing magic-link auth, returns the user to that protected path.
-- [ ] 3.10 A reused or expired deployed magic link redirects to `/auth/signin` with friendly recovery copy.
-- [ ] 3.11 A malicious deployed link with external `next` does not redirect off-origin.
-- [ ] 3.12 Passwordless-signed-in users can sign out from existing signout surfaces.
+- [x] 3.8 Opening the deployed email link signs the user in and lands on `/` when no protected route was requested.
+- [x] 3.9 Opening a protected deployed URL while signed out, then completing magic-link auth, returns the user to that protected path.
+- [x] 3.10 A reused or expired deployed magic link redirects to `/auth/signin` with friendly recovery copy.
+- [x] 3.11 A malicious deployed link with external `next` does not redirect off-origin.
+- [x] 3.12 Passwordless-signed-in users can sign out from existing signout surfaces.
