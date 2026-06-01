@@ -338,42 +338,42 @@ No database migration is required. Supabase dashboard configuration is required 
 
 #### Automated
 
-- [x] 1.1 Dependency install updates `package.json` and lockfile cleanly.
-- [x] 1.2 Astro types regenerate: `npx astro sync`
-- [x] 1.3 Lint passes: `npm run lint`
-- [x] 1.4 Production build passes: `npm run build`
-- [x] 1.5 `rg "prerender = false" src/pages/api/auth` shows the auth API routes export the flag.
+- [x] 1.1 Dependency install updates `package.json` and lockfile cleanly. — d311a74
+- [x] 1.2 Astro types regenerate: `npx astro sync` — d311a74
+- [x] 1.3 Lint passes: `npm run lint` — d311a74
+- [x] 1.4 Production build passes: `npm run build` — d311a74
+- [x] 1.5 `rg "prerender = false" src/pages/api/auth` shows the auth API routes export the flag. — d311a74
 
 #### Manual
 
-- [x] 1.6 Posting a valid email to `/api/auth/magic-link` in local dev redirects to the check-email page.
-- [x] 1.7 The Supabase `EmailOtpType` for this token-hash flow is verified locally and recorded consistently before the confirm-route guard is finalized.
-- [x] 1.8 Supabase local Inbucket receives a magic-link email whose URL points to `/auth/confirm` and includes `token_hash`, the verified `type`, and a path-only `next`.
-- [x] 1.9 Opening the local magic link signs the user in and redirects to `/` when no `next` was requested.
-- [x] 1.10 Opening a protected route while signed out redirects to `/auth/signin?next=...`; after magic-link confirmation the user returns to that protected path.
-- [x] 1.11 Invalid, missing, expired, or reused token links redirect to `/auth/signin` with a friendly error.
-- [x] 1.12 Attempts to use an external `next` URL fall back to `/`.
-- [x] 1.13 Opening `/private-state-smoke` while signed out preserves `next` through passwordless signin and renders after callback with `Astro.locals.user` intact.
+- [x] 1.6 Posting a valid email to `/api/auth/magic-link` in local dev redirects to the check-email page. — d311a74
+- [x] 1.7 The Supabase `EmailOtpType` for this token-hash flow is verified locally and recorded consistently before the confirm-route guard is finalized. — d311a74
+- [x] 1.8 Supabase local Inbucket receives a magic-link email whose URL points to `/auth/confirm` and includes `token_hash`, the verified `type`, and a path-only `next`. — d311a74
+- [x] 1.9 Opening the local magic link signs the user in and redirects to `/` when no `next` was requested. — d311a74
+- [x] 1.10 Opening a protected route while signed out redirects to `/auth/signin?next=...`; after magic-link confirmation the user returns to that protected path. — d311a74
+- [x] 1.11 Invalid, missing, expired, or reused token links redirect to `/auth/signin` with a friendly error. — d311a74
+- [x] 1.12 Attempts to use an external `next` URL fall back to `/`. — d311a74
+- [x] 1.13 Opening `/private-state-smoke` while signed out preserves `next` through passwordless signin and renders after callback with `Astro.locals.user` intact. — d311a74
 
 ### Phase 2: Unified Auth UI
 
 #### Automated
 
-- [ ] 2.1 Astro types regenerate: `npx astro sync`
-- [ ] 2.2 Lint passes: `npm run lint`
-- [ ] 2.3 Production build passes: `npm run build`
-- [ ] 2.4 `rg "type=\"password\"|PasswordToggle|SignInForm|SignUpForm" src/pages/auth src/components/auth` returns no active password-field usage in the visible auth pages.
-- [ ] 2.5 `rg "/api/auth/magic-link" src/pages/auth src/components/auth` finds the new form wiring.
+- [x] 2.1 Astro types regenerate: `npx astro sync`
+- [x] 2.2 Lint passes: `npm run lint`
+- [x] 2.3 Production build passes: `npm run build`
+- [x] 2.4 `rg "type=\"password\"|PasswordToggle|SignInForm|SignUpForm" src/pages/auth src/components/auth` returns no active password-field usage in the visible auth pages.
+- [x] 2.5 `rg "/api/auth/magic-link" src/pages/auth src/components/auth` finds the new form wiring.
 
 #### Manual
 
-- [ ] 2.6 `/auth/signin` shows one email field and no password field.
-- [ ] 2.7 `/auth/signup` no longer shows a password signup form and clearly points users into the same passwordless flow.
-- [ ] 2.8 Submitting an invalid email shows client-side validation before POST.
-- [ ] 2.9 Submitting a valid email shows the check-email page, preserving a safe `next` value on the retry link when one was requested.
-- [ ] 2.10 Server-side validation errors and Supabase errors render as friendly messages on `/auth/signin`.
-- [ ] 2.11 Existing signout forms on dashboard/catalog pages still POST to `/api/auth/signout` and sign the user out.
-- [ ] 2.12 Auth pages remain usable on a 375x667 mobile viewport with no horizontal scrolling.
+- [x] 2.6 `/auth/signin` shows one email field and no password field.
+- [x] 2.7 `/auth/signup` no longer shows a password signup form and clearly points users into the same passwordless flow.
+- [x] 2.8 Submitting an invalid email shows client-side validation before POST.
+- [x] 2.9 Submitting a valid email shows the check-email page, preserving a safe `next` value on the retry link when one was requested.
+- [x] 2.10 Server-side validation errors and Supabase errors render as friendly messages on `/auth/signin`.
+- [x] 2.11 Existing signout forms on dashboard/catalog pages still POST to `/api/auth/signout` and sign the user out.
+- [x] 2.12 Auth pages remain usable on a 375x667 mobile viewport with no horizontal scrolling.
 
 ### Phase 3: Configuration and Live Verification
 
