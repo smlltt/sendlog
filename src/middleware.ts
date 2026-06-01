@@ -1,4 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
+import { buildSignInRedirect } from "@/lib/auth";
 import { createClient } from "@/lib/supabase";
 
 const PROTECTED_ROUTES = ["/dashboard", "/private-state-smoke"];
@@ -17,7 +18,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   if (PROTECTED_ROUTES.some((route) => context.url.pathname.startsWith(route))) {
     if (!context.locals.user) {
-      return context.redirect("/auth/signin");
+      // Preserve the original protected path (+ query) as a same-origin
+      // `next` hint so passwordless confirm can return the user here.
+      // `sanitizeNextPath` inside the helper drops anything unsafe.
+      const intended = `${context.url.pathname}${context.url.search}`;
+      return context.redirect(buildSignInRedirect({ next: intended }));
     }
   }
 
