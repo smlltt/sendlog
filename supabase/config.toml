@@ -231,6 +231,15 @@ otp_expiry = 3600
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"
 
+# Passwordless sign-in link. Uses the token-hash callback contract so the
+# link lands on this app's server route at /auth/confirm, where verifyOtp
+# writes session cookies through @supabase/ssr before the redirect. The
+# default {{ .ConfirmationURL }} template is incompatible with SSR — see
+# context/changes/passwordless-auth-flow/plan.md.
+[auth.email.template.magic_link]
+subject = "Your SendLog sign-in link"
+content_path = "./supabase/templates/magic_link.html"
+
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
 # enabled = true

@@ -1,6 +1,12 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 
+// Legacy password endpoint kept temporarily for rollback only. The visible
+// auth surface is `/auth/signin` + `/api/auth/magic-link` (passwordless).
+// No page in this app links to this endpoint after the passwordless flow
+// lands — see `context/changes/passwordless-auth-flow/plan.md`.
+export const prerender = false;
+
 export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
   const email = form.get("email") as string;
