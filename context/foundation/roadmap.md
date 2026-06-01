@@ -3,7 +3,7 @@ project: SendLog
 version: 1
 status: draft
 created: 2026-05-26
-updated: 2026-05-31
+updated: 2026-06-01
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -33,7 +33,7 @@ SendLog is a Polish-first online catalog for local climbing crags, starting with
 | S-07 | admin-catalog-curation | admin can create, edit, and delete regions, crags, and routes | F-01 | FR-016, FR-017, FR-018 | done |
 | S-01 | public-catalog-browse | visitor can browse regions, open a crag, and view its routes | F-01, S-07 | FR-001, FR-002, FR-003 | done |
 | S-02 | crag-map-navigation | visitor can use map pins to reach a crag's route list | S-01 | FR-004, FR-005 | done |
-| S-03 | passwordless-auth-flow | visitor can request a sign-in link, become signed in, and sign out | F-02 | FR-006, FR-007, FR-008 | proposed |
+| S-03 | passwordless-auth-flow | visitor can request a sign-in link, become signed in, and sign out | F-02 | FR-006, FR-007, FR-008 | done |
 | S-04 | route-climb-log | signed-in climber can log a route with date and note, then see it in personal history | F-01, F-02, F-03, S-01, S-03 | US-01, FR-009, FR-010 | proposed |
 | S-05 | delete-climb-log | signed-in climber can delete one of their own logged climbs | S-04 | US-01, FR-011 | proposed |
 | S-06 | personal-projects-list | signed-in climber can add, view, and remove routes from their projects list | S-01, S-03 | FR-012, FR-013, FR-014 | proposed |
@@ -151,7 +151,7 @@ What's already in place in the codebase as of `2026-05-26` (auto-researched + us
 
 - **Unknowns:** -
 - **Risk:** Current auth scaffold uses a different sign-in shape than the PRD; aligning it before private features prevents reworking the primary beta path.
-- **Status:** proposed
+- **Status:** done
 
 ### S-04: Route climb log
 
@@ -231,3 +231,4 @@ No open roadmap questions. The only sequencing-relevant uncertainty is tracked i
 - **S-07: admin can create, edit, and delete regions, crags, and routes** — Subsumed by F-01 (`context/archive/2026-05-26-catalog-content-contract/`) and the `catalog-crag-photos-multi` follow-up. Strapi Cloud admin (live at `https://light-talent-409ec7d381.strapiapp.com/admin/`) already provides FR-016/017/018 via native CRUD on the region/crag/route collection types; the project owner curates Sokoliki content manually. No standalone change folder. Lesson: —.
 - **S-01: visitor can browse regions, open a crag, and view its routes** — Archived 2026-05-31 → `context/archive/2026-05-29-public-catalog-browse/`. Lesson: —.
 - **S-02: visitor can use map pins to reach a crag's route list** — Archived 2026-05-31 → `context/archive/2026-05-31-crag-map-navigation/`. Lesson: —.
+- **S-03: visitor can request a sign-in link, become signed in, and sign out** — Archived 2026-06-01 → `context/archive/2026-06-01-passwordless-auth-flow/`. Lesson: —.

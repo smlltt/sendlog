@@ -1,10 +1,10 @@
 ---
 change_id: passwordless-auth-flow
 title: Passwordless auth flow
-status: implemented
+status: archived
 created: 2026-06-01
 updated: 2026-06-01
-archived_at: null
+archived_at: 2026-06-01T14:27:02Z
 ---
 
 ## Notes
