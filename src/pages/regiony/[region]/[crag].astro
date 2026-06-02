@@ -11,6 +11,9 @@ import {
   type CatalogRegion,
   type CatalogRoute,
 } from "@/lib/catalog";
+import { getTranslations } from "@/i18n";
+
+const t = getTranslations();
 
 let crag: CatalogCrag | null = null;
 let region: CatalogRegion | null = null;
@@ -33,7 +36,7 @@ try {
   error = err;
 }
 
-const regionLabel = region?.name ?? crag?.regionSlug ?? "Rejon";
+const regionLabel = region?.name ?? crag?.regionSlug ?? t("catalog.crag.region_fallback");
 ---
 
 {
@@ -48,17 +51,17 @@ const regionLabel = region?.name ?? crag?.regionSlug ?? "Rejon";
     >
       <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{crag.name}</h1>
       <p class="mt-2 text-sm text-slate-600">
-        Współrzędne: {crag.latitude.toFixed(5)}, {crag.longitude.toFixed(5)}
+        {t("catalog.crag.coordinates_label")}: {crag.latitude.toFixed(5)}, {crag.longitude.toFixed(5)}
       </p>
       <CragPhotos photos={crag.photos} cragName={crag.name} />
       <section class="mt-8 sm:mt-10">
-        <h2 class="text-xl font-semibold text-slate-900 sm:text-2xl">Trasy</h2>
+        <h2 class="text-xl font-semibold text-slate-900 sm:text-2xl">{t("catalog.crag.routes_heading")}</h2>
         <div class="mt-4">{error ? <CatalogErrorAlert error={error} /> : <RoutesTable routes={routes} />}</div>
       </section>
     </CatalogLayout>
   ) : (
-    <CatalogLayout title="Błąd" breadcrumbs={[{ label: "SendLog", href: "/" }]}>
-      <h1 class="text-2xl font-bold text-slate-900 sm:text-3xl">Nie udało się załadować crągu</h1>
+    <CatalogLayout title={t("catalog.crag.error_page_title")} breadcrumbs={[{ label: "SendLog", href: "/" }]}>
+      <h1 class="text-2xl font-bold text-slate-900 sm:text-3xl">{t("catalog.crag.load_error_heading")}</h1>
       <div class="mt-6">
         <CatalogErrorAlert error={error} />
       </div>

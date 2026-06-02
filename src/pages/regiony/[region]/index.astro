@@ -3,6 +3,9 @@ import CatalogLayout from "@/layouts/CatalogLayout.astro";
 import CragCard from "@/components/catalog/CragCard.astro";
 import CatalogErrorAlert from "@/components/catalog/CatalogErrorAlert.astro";
 import { getRegionBySlug, listCragsByRegion, type CatalogCrag, type CatalogRegion } from "@/lib/catalog";
+import { getTranslations } from "@/i18n";
+
+const t = getTranslations();
 
 let region: CatalogRegion | null = null;
 let crags: CatalogCrag[] = [];
@@ -28,13 +31,13 @@ try {
     <CatalogLayout title={region.name} breadcrumbs={[{ label: "SendLog", href: "/" }, { label: region.name }]}>
       <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{region.name}</h1>
       <section class="mt-8 sm:mt-10">
-        <h2 class="text-xl font-semibold text-slate-900 sm:text-2xl">Skały w tym rejonie</h2>
+        <h2 class="text-xl font-semibold text-slate-900 sm:text-2xl">{t("catalog.region.crags_heading")}</h2>
         <div class="mt-4">
           {error ? (
             <CatalogErrorAlert error={error} />
           ) : crags.length === 0 ? (
             <p class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700">
-              Brak opublikowanych skał w tym rejonie.
+              {t("catalog.region.empty")}
             </p>
           ) : (
             <ul class="flex flex-col gap-3">
@@ -49,8 +52,8 @@ try {
       </section>
     </CatalogLayout>
   ) : (
-    <CatalogLayout title="Błąd" breadcrumbs={[{ label: "SendLog", href: "/" }]}>
-      <h1 class="text-2xl font-bold text-slate-900 sm:text-3xl">Nie udało się załadować rejonu</h1>
+    <CatalogLayout title={t("catalog.region.error_page_title")} breadcrumbs={[{ label: "SendLog", href: "/" }]}>
+      <h1 class="text-2xl font-bold text-slate-900 sm:text-3xl">{t("catalog.region.load_error_heading")}</h1>
       <div class="mt-6">
         <CatalogErrorAlert error={error} />
       </div>

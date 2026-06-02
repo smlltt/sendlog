@@ -119,7 +119,7 @@ The MVP serves this known group. A broader Polish climbing audience is a v2 conc
 
 ## Non-Functional Requirements
 
-- Core user-facing pages (a crag's route list, the save-climb action) respond within 800 ms p95 as perceived by the climber on a typical mobile cellular connection at the crag.
+- Core user-facing pages (a crag's route list, the save-climb action) target 800 ms p95 as an aspirational guideline, measured on a typical mobile cellular connection at the crag. F-03 (`core-flow-verification-guardrails`) captures cycle-over-cycle observations rather than enforcing a pass/fail gate; this becomes a hard requirement once the audience scales beyond the friends-only beta and warrants the supporting RUM/telemetry work.
 - Any user-initiated action expected to take longer than 2 seconds shows continuous visible progress feedback — no silent wait.
 - User-generated content (climbed routes, dates, notes, projects) is never visible to any other user or to anonymous visitors. Strict per-user privacy on all personal data.
 - The product remains fully usable on a phone browser at the crag for the core climber flows (catalog browse, log climb, view personal history), tolerating small touch screens and patchy connectivity.

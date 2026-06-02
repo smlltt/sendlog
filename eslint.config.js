@@ -74,7 +74,10 @@ const astroConfig = tseslint.config({
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
   {
-    ignores: ["admin/**"],
+    // Build / CI scripts run in Node (not browser, not React), don't ship
+    // to users, and are intentionally written as small mjs files without
+    // TypeScript. The strict type-checked ruleset doesn't apply.
+    ignores: ["admin/**", "scripts/**"],
   },
   baseConfig,
   reactConfig,

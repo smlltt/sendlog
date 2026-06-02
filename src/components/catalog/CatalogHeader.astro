@@ -1,5 +1,6 @@
 ---
 import type { User } from "@supabase/supabase-js";
+import { getTranslations } from "@/i18n";
 
 interface Breadcrumb {
   label: string;
@@ -12,10 +13,12 @@ interface Props {
 }
 
 const { user, breadcrumbs = [] } = Astro.props;
+const t = getTranslations();
 ---
 
 <header class="border-b border-slate-200 bg-white">
   <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:py-4">
+    {/* i18n-allow — brand name */}
     <a href="/" class="text-xl font-bold text-slate-900 hover:text-slate-700 sm:text-2xl">SendLog</a>
     <div class="text-sm text-slate-700">
       {
@@ -24,13 +27,13 @@ const { user, breadcrumbs = [] } = Astro.props;
             <span class="hidden text-slate-600 sm:inline">{user.email}</span>
             <form method="POST" action="/api/auth/signout">
               <button type="submit" class="font-medium text-slate-900 hover:underline">
-                Wyloguj
+                {t("catalog.header.signout")}
               </button>
             </form>
           </div>
         ) : (
           <a href="/auth/signin" class="font-medium text-slate-900 hover:underline">
-            Zaloguj się
+            {t("catalog.header.signin")}
           </a>
         )
       }
@@ -39,7 +42,7 @@ const { user, breadcrumbs = [] } = Astro.props;
 
   {
     breadcrumbs.length > 0 && (
-      <nav aria-label="Okruszki" class="border-t border-slate-100 bg-slate-50">
+      <nav aria-label={t("catalog.header.breadcrumbs_aria")} class="border-t border-slate-100 bg-slate-50">
         <ol class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-2 px-4 py-2 text-sm text-slate-600">
           {breadcrumbs.map((crumb, idx) => (
             <li class="flex items-center gap-2">

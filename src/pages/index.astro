@@ -1,22 +1,24 @@
 ---
 import CatalogLayout from "@/layouts/CatalogLayout.astro";
 import CragMapSection from "@/components/catalog/CragMapSection.astro";
+import { getTranslations } from "@/i18n";
+
+const t = getTranslations();
 ---
 
-<CatalogLayout title="SendLog">
+<CatalogLayout title={t("home.page_title")}>
   <section class="py-6 sm:py-10">
-    <h1 class="text-4xl font-bold text-slate-900 sm:text-5xl">SendLog</h1>
-    <p class="mt-3 text-lg text-slate-700 sm:text-xl">Polski katalog wspinaczkowych rejonów.</p>
+    <h1 class="text-4xl font-bold text-slate-900 sm:text-5xl">{t("home.heading")}</h1>
+    <p class="mt-3 text-lg text-slate-700 sm:text-xl">{t("home.lead")}</p>
     <p class="mt-4 max-w-2xl text-base text-slate-600">
-      Przeglądaj rejony, skały i trasy bez zakładania konta. Treść jest publikowana przez administratora i widoczna dla
-      każdego, kto chce zaplanować wyjazd albo poznać polskie skały.
+      {t("home.body")}
     </p>
     <div class="mt-6">
       <a
         href="#mapa"
         class="inline-flex items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-700"
       >
-        Zobacz skały na mapie
+        {t("home.map_link")}
       </a>
     </div>
   </section>

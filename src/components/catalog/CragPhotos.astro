@@ -1,5 +1,6 @@
 ---
 import type { CatalogPhoto } from "@/lib/catalog";
+import { getTranslations, format } from "@/i18n";
 
 interface Props {
   photos: CatalogPhoto[];
@@ -7,6 +8,7 @@ interface Props {
 }
 
 const { photos, cragName } = Astro.props;
+const t = getTranslations();
 const hero = photos.at(0);
 const showStrip = photos.length > 1;
 const galleryName = `crag-photos-${photos.map((photo) => photo.url).join("-").length}`;
@@ -27,7 +29,7 @@ function hasIntrinsicSize(photo: CatalogPhoto): photo is CatalogPhoto & { width:
             name={galleryName}
             class="sr-only"
             checked={idx === 0}
-            aria-label={`Zdjęcie ${idx + 1} z ${photos.length}`}
+            aria-label={format(t("catalog.photos.aria_photo_n_of_m"), { n: idx + 1, m: photos.length })}
           />
           <a href={photo.url} target="_blank" rel="noopener" class="hero-link overflow-hidden rounded-lg bg-slate-100">
             <img
@@ -52,7 +54,7 @@ function hasIntrinsicSize(photo: CatalogPhoto): photo is CatalogPhoto & { width:
                 class="block cursor-pointer overflow-hidden rounded border border-slate-200 transition-colors hover:border-slate-400"
               >
                 <span class="sr-only">
-                  Pokaż zdjęcie {idx + 1} z {photos.length}
+                  {format(t("catalog.photos.show_photo_n_of_m"), { n: idx + 1, m: photos.length })}
                 </span>
                 <img
                   src={photo.url}
