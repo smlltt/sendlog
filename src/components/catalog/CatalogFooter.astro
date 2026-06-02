@@ -1,10 +1,12 @@
 ---
+import { getTranslations } from "@/i18n";
 
+const t = getTranslations();
 ---
 
 <footer class="border-t border-slate-200 bg-white">
   <div class="mx-auto flex max-w-5xl flex-col items-center gap-1 px-4 py-6 text-center text-xs text-slate-500">
-    <p>SendLog — katalog wspinaczkowy. Treść zarządzana przez administratora.</p>
-    <a href="/" class="text-slate-700 hover:text-slate-900 hover:underline">Powrót na stronę główną</a>
+    <p>{t("catalog.footer.tagline")}</p>
+    <a href="/" class="text-slate-700 hover:text-slate-900 hover:underline">{t("catalog.footer.home_link")}</a>
   </div>
 </footer>

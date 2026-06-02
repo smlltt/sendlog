@@ -1,26 +1,28 @@
 ---
 import CatalogLayout from "@/layouts/CatalogLayout.astro";
+import { getTranslations } from "@/i18n";
 
 Astro.response.status = 404;
+const t = getTranslations();
 ---
 
-<CatalogLayout title="Nie znaleziono strony">
+<CatalogLayout title={t("not_found.page_title")}>
   <section class="mx-auto max-w-xl py-12 text-center">
     <p class="text-sm font-semibold tracking-wider text-slate-500 uppercase">404</p>
-    <h1 class="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">Nie znaleziono</h1>
-    <p class="mt-4 text-base text-slate-600">Wygląda na to, że ta strona nie istnieje albo została przeniesiona.</p>
+    <h1 class="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">{t("not_found.heading")}</h1>
+    <p class="mt-4 text-base text-slate-600">{t("not_found.body")}</p>
     <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
       <a
         href="/"
         class="inline-flex items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-700"
       >
-        Wróć na stronę główną
+        {t("not_found.home_link")}
       </a>
       <a
         href="/#regiony"
         class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-900 hover:bg-slate-100"
       >
-        Przejdź do rejonów
+        {t("not_found.regions_link")}
       </a>
     </div>
   </section>

@@ -3,6 +3,7 @@ import { Mail, Send } from "lucide-react";
 import { FormField } from "@/components/auth/FormField";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { ServerError } from "@/components/auth/ServerError";
+import { getTranslations } from "@/i18n";
 
 interface Props {
   serverError?: string | null;
@@ -10,16 +11,17 @@ interface Props {
 }
 
 export default function MagicLinkForm({ serverError, next }: Props) {
+  const t = getTranslations();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
 
   function validate() {
     if (!email.trim()) {
-      setEmailError("Email is required");
+      setEmailError(t("auth.signin.email_required"));
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setEmailError("Enter a valid email address");
+      setEmailError(t("auth.signin.email_invalid"));
       return false;
     }
     setEmailError(undefined);
@@ -39,7 +41,7 @@ export default function MagicLinkForm({ serverError, next }: Props) {
       <FormField
         id="email"
         type="email"
-        label="Email"
+        label={t("auth.signin.email_label")}
         value={email}
         onChange={(v) => {
           setEmail(v);
@@ -52,8 +54,8 @@ export default function MagicLinkForm({ serverError, next }: Props) {
 
       <ServerError message={serverError} />
 
-      <SubmitButton pendingText="Sending link..." icon={<Send className="size-4" />}>
-        Send sign-in link
+      <SubmitButton pendingText={t("auth.signin.submit_pending")} icon={<Send className="size-4" />}>
+        {t("auth.signin.submit")}
       </SubmitButton>
     </form>
   );

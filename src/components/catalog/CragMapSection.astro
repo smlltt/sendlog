@@ -3,11 +3,17 @@ import { listCrags, listRegions, toCragMapPins, type CragMapPin } from "@/lib/ca
 import CatalogErrorAlert from "@/components/catalog/CatalogErrorAlert.astro";
 import CragMapFallbackList from "@/components/catalog/CragMapFallbackList.astro";
 import CragMap from "@/components/catalog/CragMap";
+import { getTranslations, format } from "@/i18n";
 
+const t = getTranslations();
+
+// Polish nominative plurals split as 1 / 2-4 / 5+. Each branch is keyed in the
+// dictionary so the strings live in `src/i18n/ui.ts`; the rule itself stays
+// here as a small JS function (no plural-rules library for one locale).
 function pluralizeCrags(count: number): string {
-  if (count === 1) return "1 crąg";
-  if (count >= 2 && count <= 4) return `${count} skały`;
-  return `${count} skał`;
+  if (count === 1) return t("catalog.map.crag_count_one");
+  if (count >= 2 && count <= 4) return format(t("catalog.map.crag_count_few"), { count });
+  return format(t("catalog.map.crag_count_many"), { count });
 }
 
 let pins: CragMapPin[] = [];
@@ -23,7 +29,7 @@ try {
 ---
 
 <section id="mapa" class="mt-8 sm:mt-12">
-  <h2 class="text-2xl font-semibold text-slate-900">Skały</h2>
+  <h2 class="text-2xl font-semibold text-slate-900">{t("catalog.map.heading")}</h2>
   {
     error ? (
       <div class="mt-4">
@@ -33,7 +39,7 @@ try {
       <>
         <p class="mt-2 text-sm text-slate-600">{pluralizeCrags(pins.length)}</p>
         <div class="mt-4">
-          <CragMap client:only="react" pins={pins}>
+          <CragMap client:only="react" pins={pins} openRoutesLabel={t("catalog.crag.open_routes")}>
             <Fragment slot="fallback">
               <CragMapFallbackList pins={pins} />
             </Fragment>

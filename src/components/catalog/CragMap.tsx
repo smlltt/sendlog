@@ -34,12 +34,13 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-function buildPopupHtml(pin: CragMapPin): string {
-  return `<div class="text-sm"><strong class="block text-slate-900">${escapeHtml(pin.name)}</strong><a href="${escapeHtml(pin.href)}" class="mt-1 inline-block text-slate-700 underline hover:text-slate-900">Otwórz trasy</a></div>`;
+function buildPopupHtml(pin: CragMapPin, openRoutesLabel: string): string {
+  return `<div class="text-sm"><strong class="block text-slate-900">${escapeHtml(pin.name)}</strong><a href="${escapeHtml(pin.href)}" class="mt-1 inline-block text-slate-700 underline hover:text-slate-900">${escapeHtml(openRoutesLabel)}</a></div>`;
 }
 
 interface ClusteredCragMarkersProps {
   pins: CragMapPin[];
+  openRoutesLabel: string;
 }
 
 // Clustering is wired through the imperative leaflet.markercluster API rather
@@ -47,18 +48,20 @@ interface ClusteredCragMarkersProps {
 // v5 wrapper for the plugin. Default options give the UX we want: clicking a
 // cluster zooms in to expand it (zoomToBoundsOnClick: true), and Leaflet picks
 // the cluster vs individual-marker threshold per zoom level automatically.
-function ClusteredCragMarkers({ pins }: ClusteredCragMarkersProps) {
+function ClusteredCragMarkers({ pins, openRoutesLabel }: ClusteredCragMarkersProps) {
   const map = useMap();
   useEffect(() => {
     const group = L.markerClusterGroup();
     for (const pin of pins) {
-      L.marker([pin.latitude, pin.longitude], { icon: cragIcon }).bindPopup(buildPopupHtml(pin)).addTo(group);
+      L.marker([pin.latitude, pin.longitude], { icon: cragIcon })
+        .bindPopup(buildPopupHtml(pin, openRoutesLabel))
+        .addTo(group);
     }
     map.addLayer(group);
     return () => {
       map.removeLayer(group);
     };
-  }, [pins, map]);
+  }, [pins, map, openRoutesLabel]);
   return null;
 }
 
@@ -82,9 +85,10 @@ function FitToCrags({ pins }: FitToCragsProps) {
 
 interface CragMapProps {
   pins: CragMapPin[];
+  openRoutesLabel: string;
 }
 
-export default function CragMap({ pins }: CragMapProps) {
+export default function CragMap({ pins, openRoutesLabel }: CragMapProps) {
   return useMemo(
     () => (
       <MapContainer
@@ -94,15 +98,16 @@ export default function CragMap({ pins }: CragMapProps) {
         style={{ height: "60vh", width: "100%" }}
         className="overflow-hidden rounded-md border border-slate-200"
       >
+        {/* i18n-allow — third-party legally-required OSM tile attribution */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
-        <ClusteredCragMarkers pins={pins} />
+        <ClusteredCragMarkers pins={pins} openRoutesLabel={openRoutesLabel} />
         <FitToCrags pins={pins} />
       </MapContainer>
     ),
-    [pins],
+    [pins, openRoutesLabel],
   );
 }

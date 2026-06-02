@@ -2,6 +2,9 @@
 import Layout from "@/layouts/Layout.astro";
 import MagicLinkForm from "@/components/auth/MagicLinkForm";
 import { resolveAuthErrorMessage, sanitizeNextPath, DEFAULT_NEXT_PATH } from "@/lib/auth";
+import { getTranslations } from "@/i18n";
+
+const t = getTranslations();
 
 const errorCode = Astro.url.searchParams.get("error");
 const serverError = resolveAuthErrorMessage(errorCode);
@@ -11,16 +14,16 @@ const sanitizedNext = sanitizeNextPath(nextRaw);
 const next = sanitizedNext === DEFAULT_NEXT_PATH ? null : sanitizedNext;
 ---
 
-<Layout title="Sign in">
+<Layout title={t("auth.signin.page_title")}>
   <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
     <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
       <h1
         class="mb-3 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-center text-2xl font-bold text-transparent"
       >
-        Sign in to SendLog
+        {t("auth.signin.heading")}
       </h1>
       <p class="mb-6 text-center text-sm text-blue-100/70">
-        Enter your email and we'll send you a one-time sign-in link. New here? We'll create your account automatically.
+        {t("auth.signin.intro")}
       </p>
       <MagicLinkForm serverError={serverError} next={next} client:load />
     </div>

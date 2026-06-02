@@ -11,13 +11,28 @@
  * secrets, no runtime deps), but the DTOs are shaped for server validation.
  */
 
+import { getTranslations, type UiKey } from "@/i18n";
+
 export type AuthErrorCode = "missing_config" | "invalid_email" | "magic_link_failed" | "invalid_or_expired_link";
 
+// Each AuthErrorCode resolves through the i18n dictionary so error phrasing
+// changes in one place (`src/i18n/ui.ts`). The map is built at module load —
+// cheap, deterministic, and avoids per-request `useTranslations()` calls in
+// the redirect helper.
+const AUTH_ERROR_KEYS: Record<AuthErrorCode, UiKey> = {
+  missing_config: "errors.auth.missing_config",
+  invalid_email: "errors.auth.invalid_email",
+  magic_link_failed: "errors.auth.magic_link_failed",
+  invalid_or_expired_link: "errors.auth.invalid_or_expired_link",
+};
+
+const t = getTranslations();
+
 export const AUTH_ERROR_MESSAGES: Record<AuthErrorCode, string> = {
-  missing_config: "Sign-in is temporarily unavailable. Please try again later.",
-  invalid_email: "Enter a valid email address.",
-  magic_link_failed: "We couldn't send your sign-in link. Please try again.",
-  invalid_or_expired_link: "That sign-in link is invalid or has expired. Request a new one below.",
+  missing_config: t(AUTH_ERROR_KEYS.missing_config),
+  invalid_email: t(AUTH_ERROR_KEYS.invalid_email),
+  magic_link_failed: t(AUTH_ERROR_KEYS.magic_link_failed),
+  invalid_or_expired_link: t(AUTH_ERROR_KEYS.invalid_or_expired_link),
 };
 
 /**

@@ -1,11 +1,13 @@
 ---
 import { CatalogError } from "@/lib/catalog";
+import { getTranslations } from "@/i18n";
 
 interface Props {
   error: unknown;
 }
 
 const { error } = Astro.props;
+const t = getTranslations();
 
 interface Diagnostic {
   kind: "missing_config" | "catalog_error" | "unknown_error";
@@ -20,23 +22,22 @@ if (error instanceof CatalogError) {
   if (error.code === "missing_config") {
     diagnostic = {
       kind: "missing_config",
-      title: "Brak konfiguracji Strapi",
-      message:
-        "Strapi nie jest skonfigurowany. Ustaw STRAPI_API_URL i STRAPI_API_TOKEN w .dev.vars (lokalnie) lub jako sekrety Workera (produkcja).",
+      title: t("catalog.errors.missing_config_title"),
+      message: t("catalog.errors.missing_config_message"),
     };
   } else {
     diagnostic = {
       kind: "catalog_error",
-      title: "Błąd odczytu katalogu",
-      message: "Nie udało się pobrać danych ze Strapi. Spróbuj ponownie za chwilę.",
+      title: t("catalog.errors.catalog_error_title"),
+      message: t("catalog.errors.catalog_error_message"),
       detail: `${error.code}: ${error.message}`,
     };
   }
 } else {
   diagnostic = {
     kind: "unknown_error",
-    title: "Wystąpił nieoczekiwany błąd.",
-    message: "Spróbuj odświeżyć stronę.",
+    title: t("catalog.errors.unknown_error_title"),
+    message: t("catalog.errors.unknown_error_message"),
     detail: error instanceof Error ? error.message : String(error),
   };
 }

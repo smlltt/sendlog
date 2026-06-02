@@ -1,4 +1,5 @@
 import { SUPABASE_URL, SUPABASE_KEY, STRAPI_API_URL, STRAPI_API_TOKEN } from "astro:env/server";
+import { getTranslations } from "@/i18n";
 
 export interface ConfigStatus {
   name: string;
@@ -8,18 +9,20 @@ export interface ConfigStatus {
   docsLabel?: string;
 }
 
+const t = getTranslations();
+
 export const configStatuses: ConfigStatus[] = [
   {
     name: "Supabase",
     configured: Boolean(SUPABASE_URL && SUPABASE_KEY),
-    message: "Supabase nie jest skonfigurowany — funkcje uwierzytelniania są wyłączone.",
+    message: t("errors.config.supabase_missing"),
     docsUrl: "https://github.com/przeprogramowani/10x-astro-starter#supabase-configuration",
-    docsLabel: "Zobacz instrukcję konfiguracji",
+    docsLabel: t("errors.config.supabase_docs_label"),
   },
   {
     name: "Strapi",
     configured: Boolean(STRAPI_API_URL && STRAPI_API_TOKEN),
-    message: "Strapi nie jest skonfigurowany — katalog (regiony, skały, drogi) jest niedostępny.",
+    message: t("errors.config.strapi_missing"),
   },
 ];
 

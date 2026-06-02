@@ -1,11 +1,13 @@
 ---
 import type { CragMapPin } from "@/lib/catalog";
+import { getTranslations } from "@/i18n";
 
 interface Props {
   pins: CragMapPin[];
 }
 
 const { pins } = Astro.props;
+const t = getTranslations();
 
 interface PinGroup {
   regionSlug: string;
@@ -30,7 +32,7 @@ for (const pin of pins) {
 
 {
   pins.length === 0 ? (
-    <p class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700">Brak opublikowanych skał.</p>
+    <p class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700">{t("catalog.map.empty")}</p>
   ) : (
     <div class="space-y-6">
       {groups.map((group) => (
