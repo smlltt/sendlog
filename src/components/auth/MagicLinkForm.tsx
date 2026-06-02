@@ -14,6 +14,7 @@ export default function MagicLinkForm({ serverError, next }: Props) {
   const t = getTranslations();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function validate() {
     if (!email.trim()) {
@@ -31,7 +32,10 @@ export default function MagicLinkForm({ serverError, next }: Props) {
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     if (!validate()) {
       e.preventDefault();
+      setIsSubmitting(false);
+      return;
     }
+    setIsSubmitting(true);
   }
 
   return (
@@ -45,6 +49,7 @@ export default function MagicLinkForm({ serverError, next }: Props) {
         value={email}
         onChange={(v) => {
           setEmail(v);
+          setIsSubmitting(false);
           if (emailError) setEmailError(undefined);
         }}
         placeholder="you@example.com"
@@ -54,7 +59,11 @@ export default function MagicLinkForm({ serverError, next }: Props) {
 
       <ServerError message={serverError} />
 
-      <SubmitButton pendingText={t("auth.signin.submit_pending")} icon={<Send className="size-4" />}>
+      <SubmitButton
+        pending={isSubmitting}
+        pendingText={t("auth.signin.submit_pending")}
+        icon={<Send className="size-4" />}
+      >
         {t("auth.signin.submit")}
       </SubmitButton>
     </form>

@@ -321,34 +321,34 @@ No data migration. No Supabase schema change. Rollback is a code revert plus rem
 
 #### Automated
 
-- [x] 1.1 Astro types regenerate: `npx astro sync`
-- [x] 1.2 Lint passes: `npm run lint`
-- [x] 1.3 Production build passes: `npm run build`
-- [x] 1.4 New script reports zero violations on the post-audit tree: `npm run guardrails:i18n`
-- [x] 1.5 `rg "Email is required|Enter a valid email|Sending link|Send sign-in link|Sign in to SendLog|Check your email" src/components/auth src/pages/auth` returns no matches.
+- [x] 1.1 Astro types regenerate: `npx astro sync` — dd5c3d9
+- [x] 1.2 Lint passes: `npm run lint` — dd5c3d9
+- [x] 1.3 Production build passes: `npm run build` — dd5c3d9
+- [x] 1.4 New script reports zero violations on the post-audit tree: `npm run guardrails:i18n` — dd5c3d9
+- [x] 1.5 `rg "Email is required|Enter a valid email|Sending link|Send sign-in link|Sign in to SendLog|Check your email" src/components/auth src/pages/auth` returns no matches. — dd5c3d9
 
 #### Manual
 
-- [x] 1.6 Loading `/auth/signin` in a browser shows fully Polish copy (page title, h1, intro paragraph, form label, placeholder hint, button label, validation error text).
-- [x] 1.7 Loading `/auth/check-email`, `/auth/signup`, `/auth/confirm-email`, and `/regiony/sokoliki/<a-real-crag-slug>` shows no visible English fallbacks.
-- [x] 1.8 Triggering a server-side auth error renders the resulting Polish error message on `/auth/signin?error=invalid_email`.
+- [x] 1.6 Loading `/auth/signin` in a browser shows fully Polish copy (page title, h1, intro paragraph, form label, placeholder hint, button label, validation error text). — dd5c3d9
+- [x] 1.7 Loading `/auth/check-email`, `/auth/signup`, `/auth/confirm-email`, and `/regiony/sokoliki/<a-real-crag-slug>` shows no visible English fallbacks. — dd5c3d9
+- [x] 1.8 Triggering a server-side auth error renders the resulting Polish error message on `/auth/signin?error=invalid_email`. — dd5c3d9
 
 ### Phase 2: Progress Feedback Primitives + Static Guard
 
 #### Automated
 
-- [ ] 2.1 Astro types regenerate: `npx astro sync`
-- [ ] 2.2 Lint passes: `npm run lint`
-- [ ] 2.3 Production build passes: `npm run build`
-- [ ] 2.4 `npm run guardrails:progress` exits zero against the current file set.
-- [ ] 2.5 `rg "role=\"status\"" src/components/ui/Pending.tsx src/components/ui/Skeleton.tsx` returns at least one match in each file.
+- [x] 2.1 Astro types regenerate: `npx astro sync`
+- [x] 2.2 Lint passes: `npm run lint`
+- [x] 2.3 Production build passes: `npm run build`
+- [x] 2.4 `npm run guardrails:progress` exits zero against the current file set.
+- [x] 2.5 `rg "role=\"status\"" src/components/ui/Pending.tsx src/components/ui/Skeleton.tsx` returns at least one match in each file.
 
 #### Manual
 
-- [ ] 2.6 Importing `<Pending label="..." />` into a throwaway scratch page renders a spinner with the label visible.
-- [ ] 2.7 Importing `<Skeleton rows={5} />` renders five pulsing placeholder rows that match the catalog palette.
-- [ ] 2.8 Chrome DevTools accessibility tree (or VoiceOver) announces the loading state in Polish when `<Pending>` mounts.
-- [ ] 2.9 Submitting the magic-link form on Slow 4G shows the existing `SubmitButton` spinner within ~300 ms of click and remains visible until the redirect.
+- [x] 2.6 Importing `<Pending label="..." />` into a throwaway scratch page renders a spinner with the label visible.
+- [x] 2.7 Importing `<Skeleton rows={5} />` renders five pulsing placeholder rows that match the catalog palette.
+- [x] 2.8 Chrome DevTools accessibility tree (or VoiceOver) announces the loading state in Polish when `<Pending>` mounts.
+- [x] 2.9 Submitting the magic-link form on Slow 4G shows the existing `SubmitButton` spinner within ~300 ms of click and remains visible until the redirect.
 
 ### Phase 3: Beta-Flow Verification Checklist + Unified Guardrails Script
 
