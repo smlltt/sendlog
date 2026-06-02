@@ -354,17 +354,17 @@ No data migration. No Supabase schema change. Rollback is a code revert plus rem
 
 #### Automated
 
-- [x] 3.1 Astro types regenerate: `npx astro sync`
-- [x] 3.2 Lint passes: `npm run lint`
-- [x] 3.3 Production build passes: `npm run build`
-- [x] 3.4 `npm run guardrails` exits zero (runs both `guardrails:i18n` and `guardrails:progress`).
-- [x] 3.5 `.github/workflows/ci.yml` contains `npm run guardrails` between `npm run lint` and `npm run build`.
-- [x] 3.6 `docs/verification/beta-flow-checklist.md` exists and references all three viewport sizes, the throttling profile keywords, the in-scope pages, and `docs/verification/progress-feedback-actions.md`.
-- [x] 3.7 `AGENTS.md` mentions `npm run guardrails` and links to `docs/verification/beta-flow-checklist.md`.
+- [x] 3.1 Astro types regenerate: `npx astro sync` — a947e32
+- [x] 3.2 Lint passes: `npm run lint` — a947e32
+- [x] 3.3 Production build passes: `npm run build` — a947e32
+- [x] 3.4 `npm run guardrails` exits zero (runs both `guardrails:i18n` and `guardrails:progress`). — a947e32
+- [x] 3.5 `.github/workflows/ci.yml` contains `npm run guardrails` between `npm run lint` and `npm run build`. — a947e32
+- [x] 3.6 `docs/verification/beta-flow-checklist.md` exists and references all three viewport sizes, the throttling profile keywords, the in-scope pages, and `docs/verification/progress-feedback-actions.md`. — a947e32
+- [x] 3.7 `AGENTS.md` mentions `npm run guardrails` and links to `docs/verification/beta-flow-checklist.md`. — a947e32
 
 #### Manual
 
-- [x] 3.8 First end-to-end run of `docs/verification/beta-flow-checklist.md` passes all gate sections for currently-shipped pages; planned rows skipped; Latest run subsection filled in with gate results and response-time observation.
-- [x] 3.9 Response-time observation on `/regiony/sokoliki/<crag>` on iPhone-SE + Slow 4G + 4× CPU is recorded in "Latest run" as the median of 3 timed runs (no pass/fail).
-- [x] 3.10 Simulated regression (inline English literal in a new component) causes `npm run guardrails` to fail locally.
-- [x] 3.11 Simulated regression (shipped row pointing at a file without the named primitive import) causes `npm run guardrails:progress` to fail.
+- [x] 3.8 First end-to-end run of `docs/verification/beta-flow-checklist.md` passes all gate sections for currently-shipped pages; planned rows skipped; Latest run subsection filled in with gate results and response-time observation. — a947e32
+- [x] 3.9 Response-time observation on `/regiony/sokoliki/<crag>` on iPhone-SE + Slow 4G + 4× CPU is recorded in "Latest run" as the median of 3 timed runs (no pass/fail). — a947e32
+- [x] 3.10 Simulated regression (inline English literal in a new component) causes `npm run guardrails` to fail locally. — a947e32
+- [x] 3.11 Simulated regression (shipped row pointing at a file without the named primitive import) causes `npm run guardrails:progress` to fail. — a947e32
