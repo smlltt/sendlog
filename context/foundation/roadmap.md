@@ -3,7 +3,7 @@ project: SendLog
 version: 1
 status: draft
 created: 2026-05-26
-updated: 2026-06-01
+updated: 2026-06-02
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -29,7 +29,7 @@ SendLog is a Polish-first online catalog for local climbing crags, starting with
 |---|---|---|---|---|---|
 | F-01 | catalog-content-contract | (foundation) catalog content and canonical route identity are ready for public browsing and private references | - | Business Logic, Access Control, FR-001, FR-003, FR-016, FR-018 | done |
 | F-02 | private-user-state-contract | (foundation) authenticated climber state is private per user and can reference canonical routes | F-01 | Access Control, NFR privacy, FR-006, FR-009, FR-012 | proposed |
-| F-03 | core-flow-verification-guardrails | (foundation) mobile, Polish-language, progress, and response-time guardrails are checkable for beta flows | - | NFR mobile, NFR Polish UI, NFR progress, NFR response time | ready |
+| F-03 | core-flow-verification-guardrails | (foundation) mobile, Polish-language, progress, and response-time guardrails are checkable for beta flows | - | NFR mobile, NFR Polish UI, NFR progress, NFR response time | done |
 | S-07 | admin-catalog-curation | admin can create, edit, and delete regions, crags, and routes | F-01 | FR-016, FR-017, FR-018 | done |
 | S-01 | public-catalog-browse | visitor can browse regions, open a crag, and view its routes | F-01, S-07 | FR-001, FR-002, FR-003 | done |
 | S-02 | crag-map-navigation | visitor can use map pins to reach a crag's route list | S-01 | FR-004, FR-005 | done |
@@ -98,7 +98,7 @@ What's already in place in the codebase as of `2026-05-26` (auto-researched + us
 - **Blockers:** -
 - **Unknowns:** -
 - **Risk:** Kept lightweight for speed, but placed before the climb-log beta path so the primary flow is not judged only by "it works on my machine."
-- **Status:** ready
+- **Status:** done
 
 ## Slices
 
@@ -232,3 +232,4 @@ No open roadmap questions. The only sequencing-relevant uncertainty is tracked i
 - **S-01: visitor can browse regions, open a crag, and view its routes** — Archived 2026-05-31 → `context/archive/2026-05-29-public-catalog-browse/`. Lesson: —.
 - **S-02: visitor can use map pins to reach a crag's route list** — Archived 2026-05-31 → `context/archive/2026-05-31-crag-map-navigation/`. Lesson: —.
 - **S-03: visitor can request a sign-in link, become signed in, and sign out** — Archived 2026-06-01 → `context/archive/2026-06-01-passwordless-auth-flow/`. Lesson: —.
+- **F-03: (foundation) mobile, Polish-language, progress, and response-time guardrails are checkable for beta flows** — Archived 2026-06-02 → `context/archive/2026-06-01-core-flow-verification-guardrails/`. Lesson: —.
