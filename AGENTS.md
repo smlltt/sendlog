@@ -26,6 +26,7 @@ sendlog is an Astro 6 SSR app on Cloudflare Workers with React 19 islands, Tailw
 - `npm run build` — production build via `@astrojs/cloudflare`.
 - `npm run lint` / `npm run lint:fix` — ESLint, type-checked (@eslint.config.js).
 - `npm run format` — Prettier with astro + tailwind plugins.
+- `npm run guardrails` — static checks for i18n coverage and >2s progress-feedback primitives (CI runs this between lint and build). See @docs/verification/beta-flow-checklist.md for the matching manual checklist.
 - `npx astro sync` — regenerate `.astro/types.d.ts`; CI runs this before lint.
 
 No test runner is configured.
@@ -48,7 +49,7 @@ No test runner is configured.
 ## Commit & Pull Request Guidelines
 
 - Pre-commit (@.husky/pre-commit) runs `lint-staged`: `eslint --fix` on `*.{ts,tsx,astro}`, `prettier --write` on `*.{json,css,md}`. Do not bypass with `--no-verify`.
-- CI (@.github/workflows/ci.yml): `npm ci` → `npx astro sync` → `npm run lint` → `npm run build` on push/PR to `main`. Requires `SUPABASE_URL` and `SUPABASE_KEY` repo secrets.
+- CI (@.github/workflows/ci.yml): `npm ci` → `npx astro sync` → `npm run lint` → `npm run guardrails` → `npm run build` on push/PR to `main`. Requires `SUPABASE_URL` and `SUPABASE_KEY` repo secrets.
 - Commit convention not yet established (3 commits in history); use short, imperative subjects until one is set.
 
 ## Environment & Deploy

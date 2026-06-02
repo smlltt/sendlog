@@ -43,7 +43,7 @@ export default function Pending({ label, size = "md", className }: PendingProps)
     <span
       role="status"
       aria-live="polite"
-      aria-label={label ? label : fallbackLabel}
+      aria-label={label ?? fallbackLabel}
       className={cn("inline-flex items-center gap-2 text-current", className)}
     >
       <span

@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
+    "guardrails": "npm run guardrails:i18n && npm run guardrails:progress",
     "guardrails:i18n": "node scripts/check-i18n.mjs",
     "guardrails:progress": "node scripts/check-progress.mjs"
   },
