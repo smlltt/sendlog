@@ -112,11 +112,68 @@ export const ui = {
     "catalog.routes.column_grade": "Skala",
     "catalog.routes.column_type": "Typ",
     "catalog.routes.column_year": "Rok poprowadzenia",
+    "catalog.routes.column_log": "Twoje przejścia",
     "catalog.routes.cell_name_label": "Nazwa:",
     "catalog.routes.cell_grade_label": "Skala:",
     "catalog.routes.cell_type_label": "Typ:",
     "catalog.routes.cell_year_label": "Rok poprowadzenia:",
+    "catalog.routes.cell_log_label": "Twoje przejścia:",
     "catalog.routes.year_missing": "—",
+
+    // Climbs — page-level signed-out CTA on the crag route page
+    "climbs.signin_cta.body": "Zaloguj się, aby śledzić swoje przejścia tras na tej skale.",
+    "climbs.signin_cta.link": "Zaloguj się",
+
+    // Climbs — diagnostic when private-state load fails on the crag page
+    "climbs.diagnostic.load_failed": "Nie udało się wczytać twoich przejść. Katalog jest dostępny poniżej.",
+
+    // Climbs — per-route action (collapsed / expanded states)
+    "climbs.action.log_button": "Dodaj przejście",
+    "climbs.action.add_another": "Dodaj kolejne przejście",
+    "climbs.action.collapse": "Anuluj",
+    "climbs.action.none_logged": "Brak zapisanych przejść",
+    "climbs.action.indicator_count_one": "1 przejście",
+    "climbs.action.indicator_count_few": "{count} przejścia",
+    "climbs.action.indicator_count_many": "{count} przejść",
+    "climbs.action.indicator_latest": "ostatnie {date}",
+
+    // Climbs — inline form (date + note + submit)
+    "climbs.form.heading": "Nowe przejście",
+    "climbs.form.date_label": "Data przejścia",
+    "climbs.form.note_label": "Notatka (opcjonalnie)",
+    "climbs.form.note_placeholder": "np. styl, partner, warunki",
+    "climbs.form.submit": "Zapisz przejście",
+    "climbs.form.submit_pending": "Zapisywanie…",
+    "climbs.form.success": "Zapisano przejście.",
+    "climbs.form.error_date_required": "Data jest wymagana.",
+    "climbs.form.error_date_invalid": "Podaj prawidłową datę w formacie YYYY-MM-DD.",
+    "climbs.form.error_network": "Brak połączenia z serwerem. Spróbuj ponownie.",
+
+    // Climbs — server-resolved error messages (keyed by API error code)
+    "errors.climbs.missing_config": "Zapis przejść jest chwilowo niedostępny. Spróbuj ponownie później.",
+    "errors.climbs.unauthenticated": "Sesja wygasła. Zaloguj się ponownie, aby zapisać przejście.",
+    "errors.climbs.unknown_route": "Nie znaleziono tej drogi w katalogu. Odśwież stronę i spróbuj ponownie.",
+    "errors.climbs.upstream_error": "Nie udało się zapisać przejścia. Spróbuj ponownie za chwilę.",
+    "errors.climbs.invalid_input": "Nieprawidłowe dane formularza. Sprawdź datę i spróbuj ponownie.",
+    "errors.climbs.unknown": "Wystąpił nieoczekiwany błąd podczas zapisywania przejścia.",
+
+    // History — /historia (page + dashboard entry + row chrome)
+    "history.page_title": "Historia przejść",
+    "history.heading": "Historia przejść",
+    "history.lead": "Twoje zapisane przejścia, najnowsze na górze.",
+    "history.empty_heading": "Brak zapisanych przejść",
+    "history.empty_body": "Wybierz drogę z katalogu, aby zapisać pierwsze przejście.",
+    "history.empty_cta": "Przeglądaj rejony",
+    "history.load_error": "Nie udało się wczytać historii przejść. Spróbuj odświeżyć stronę.",
+    "history.row.date_label": "Data:",
+    "history.row.grade_label": "Wycena:",
+    "history.row.crag_label": "Skała:",
+    "history.row.note_label": "Notatka:",
+    "history.row.open_crag": "Otwórz skałę",
+    "history.row.crag_unavailable": "Niedostępne",
+
+    // Dashboard — entry point copy (added for Phase 3 in the same dictionary)
+    "dashboard.history_link": "Otwórz historię przejść",
 
     // Catalog — photo gallery (placeholders: {n}, {m})
     "catalog.photos.aria_photo_n_of_m": "Zdjęcie {n} z {m}",

@@ -410,39 +410,39 @@ Rollback is a code revert of the S-04 UI/API/history changes. Any climb rows cre
 
 #### Automated
 
-- [x] 1.1 Astro types still regenerate after any preflight notes or supporting edits: `npx astro sync`
-- [x] 1.2 Root lint passes: `npm run lint`
-- [x] 1.3 Guardrails still pass: `npm run guardrails`
-- [x] 1.4 Production build still passes: `npm run build`
+- [x] 1.1 Astro types still regenerate after any preflight notes or supporting edits: `npx astro sync` — 323414f
+- [x] 1.2 Root lint passes: `npm run lint` — 323414f
+- [x] 1.3 Guardrails still pass: `npm run guardrails` — 323414f
+- [x] 1.4 Production build still passes: `npm run build` — 323414f
 
 #### Manual
 
-- [x] 1.5 `createPrivateStateClient(headers, cookies, null)` behavior is verified as `unauthenticated`.
-- [x] 1.6 Unknown route write behavior is verified as `PrivateStateError("unknown_route")`.
-- [x] 1.7 Default `listClimbs` orphan behavior is verified as dropping orphaned rows.
-- [x] 1.8 Preflight result is recorded in `context/changes/route-climb-log/change.md`.
+- [x] 1.5 `createPrivateStateClient(headers, cookies, null)` behavior is verified as `unauthenticated`. — 323414f
+- [x] 1.6 Unknown route write behavior is verified as `PrivateStateError("unknown_route")`. — 323414f
+- [x] 1.7 Default `listClimbs` orphan behavior is verified as dropping orphaned rows. — 323414f
+- [x] 1.8 Preflight result is recorded in `context/changes/route-climb-log/change.md`. — 323414f
 
 ### Phase 2: Save API + Route-Page State
 
 #### Automated
 
-- [ ] 2.1 Astro types regenerate: `npx astro sync`
-- [ ] 2.2 Root lint passes: `npm run lint`
-- [ ] 2.3 Guardrails pass after adding S-04 strings/form imports: `npm run guardrails`
-- [ ] 2.4 Production build passes: `npm run build`
-- [ ] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no React component imports.
-- [ ] 2.6 `rg "new Date\\(\\)\\.toISOString|toISOString\\(" src/components src/pages src/lib` does not show new S-04 date formatting calls.
+- [x] 2.1 Astro types regenerate: `npx astro sync`
+- [x] 2.2 Root lint passes: `npm run lint`
+- [x] 2.3 Guardrails pass after adding S-04 strings/form imports: `npm run guardrails`
+- [x] 2.4 Production build passes: `npm run build`
+- [x] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no React component imports.
+- [x] 2.6 `rg "new Date\\(\\)\\.toISOString|toISOString\\(" src/components src/pages src/lib` does not show new S-04 date formatting calls.
 
 #### Manual
 
-- [ ] 2.7 Signed-out crag route page remains public and shows one page-level Polish CTA to sign in and track routes.
-- [ ] 2.8 Signed-in crag route page shows inline log actions in route rows without horizontal scrolling on 375×667, 390×844, and 412×915 viewports.
-- [ ] 2.9 Date defaults to today's UTC `YYYY-MM-DD` value and can be changed.
-- [ ] 2.10 Note is optional; saving with an empty note succeeds.
-- [ ] 2.11 Saving a route shows pending feedback, then inline success and an updated logged count/latest-date indicator without leaving the route page.
-- [ ] 2.12 Saving the same route twice creates two history rows and updates the route-row count.
-- [ ] 2.13 Invalid API input returns structured `{ error: { code, message, context } }` JSON.
-- [ ] 2.14 Browser HTML and network responses do not expose `SUPABASE_KEY`, `STRAPI_API_TOKEN`, or private rows belonging to another user.
+- [x] 2.7 Signed-out crag route page remains public and shows one page-level Polish CTA to sign in and track routes.
+- [x] 2.8 Signed-in crag route page shows inline log actions in route rows without horizontal scrolling on 375×667, 390×844, and 412×915 viewports.
+- [x] 2.9 Date defaults to today's UTC `YYYY-MM-DD` value and can be changed.
+- [x] 2.10 Note is optional; saving with an empty note succeeds.
+- [x] 2.11 Saving a route shows pending feedback, then inline success and an updated logged count/latest-date indicator without leaving the route page.
+- [x] 2.12 Saving the same route twice creates two history rows and updates the route-row count.
+- [x] 2.13 Invalid API input returns structured `{ error: { code, message, context } }` JSON.
+- [x] 2.14 Browser HTML and network responses do not expose `SUPABASE_KEY`, `STRAPI_API_TOKEN`, or private rows belonging to another user.
 
 ### Phase 3: Personal History + Dashboard Entry
 
