@@ -189,6 +189,7 @@ export const ui = {
     "catalog.errors.unknown_error_message": "Spróbuj odświeżyć stronę.",
 
     // Catalog — header / footer
+    "catalog.header.history": "Historia",
     "catalog.header.signout": "Wyloguj",
     "catalog.header.signin": "Zaloguj się",
     "catalog.header.breadcrumbs_aria": "Okruszki",

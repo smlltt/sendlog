@@ -1,29 +1,55 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import CatalogLayout from "@/layouts/CatalogLayout.astro";
 import { getTranslations } from "@/i18n";
+
+/**
+ * `/dashboard` — protected lightweight entry point.
+ *
+ * The starter dashboard rendered a stand-alone purple/blue gradient
+ * page that has nothing to do with the rest of the app. S-04 turns it
+ * into a useful protected landing: the climber's email, a primary link
+ * into `/historia`, and the existing POST sign-out button — all in the
+ * shared CatalogLayout chrome so the navigation, breadcrumbs, and
+ * footer match the catalog/history surfaces.
+ *
+ * Auth posture is unchanged: middleware (`src/middleware.ts`) gates
+ * `/dashboard` via `PROTECTED_ROUTES`, so `Astro.locals.user` is
+ * non-null below.
+ *
+ * Scope: this page deliberately stays tiny. Stats, projects, and
+ * delete-climb actions are the next slices' (S-05 / S-06) territory.
+ */
 
 const { user } = Astro.locals;
 const t = getTranslations();
 ---
 
-<Layout title={t("dashboard.page_title")}>
-  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
-    <div class="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
-      <h1 class="mb-4 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-        {t("dashboard.heading")}
-      </h1>
-      <p class="text-blue-100/80">
-        {t("dashboard.welcome")}, <span class="font-semibold text-white">{user?.email}</span>
-      </p>
-      <p class="mt-2 text-sm text-blue-100/50">{t("dashboard.auth_only")}</p>
-      <form method="POST" action="/api/auth/signout" class="mt-6">
+<CatalogLayout
+  title={t("dashboard.page_title")}
+  breadcrumbs={[{ label: "SendLog", href: "/" }, { label: t("dashboard.heading") }]}
+>
+  <section class="py-2 sm:py-4">
+    <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{t("dashboard.heading")}</h1>
+    <p class="mt-2 text-sm text-slate-600 sm:text-base">
+      {t("dashboard.welcome")}, <span class="font-medium text-slate-900">{user?.email}</span>
+    </p>
+
+    <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <a
+        href="/historia"
+        class="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+      >
+        {t("dashboard.history_link")}
+      </a>
+
+      <form method="POST" action="/api/auth/signout">
         <button
           type="submit"
-          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/20"
+          class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
         >
           {t("dashboard.signout")}
         </button>
       </form>
     </div>
-  </div>
-</Layout>
+  </section>
+</CatalogLayout>

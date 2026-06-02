@@ -57,3 +57,28 @@ export interface ClimbApiErrorBody {
     context: Record<string, unknown>;
   };
 }
+
+/**
+ * Pre-shaped row consumed by `<HistoryList>` on `/historia`.
+ *
+ * The page-level loader (`src/pages/historia.astro`) joins
+ * `listClimbs(client)` against `listCrags()` and projects each row into
+ * this DTO so the list component never touches `@/lib/private-state` or
+ * `@/lib/catalog`. This keeps the server-only boundary intact and
+ * leaves `HistoryList` reusable from any future caller (e.g. dashboard
+ * preview, projects page) that hydrates the same primitives.
+ *
+ * `cragHref` is `null` when either `regionSlug` or `cragSlug` is
+ * missing on the underlying route — the row still renders, but the
+ * page surfaces a Polish unavailable-link fallback instead of emitting
+ * a broken `/regiony/null/null` URL.
+ */
+export interface HistoryClimbItem {
+  id: string;
+  climbedOn: string;
+  note: string | null;
+  routeName: string | null;
+  routeGrade: string | null;
+  cragName: string | null;
+  cragHref: string | null;
+}

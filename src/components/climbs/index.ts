@@ -13,6 +13,12 @@
  * inside React-land.
  */
 
-export type { RouteClimbSummary, ClimbResponse, ClimbApiErrorBody, ClimbApiErrorCode } from "@/components/climbs/types";
+export type {
+  RouteClimbSummary,
+  ClimbResponse,
+  ClimbApiErrorBody,
+  ClimbApiErrorCode,
+  HistoryClimbItem,
+} from "@/components/climbs/types";
 export { default as ClimbLogForm } from "@/components/climbs/ClimbLogForm";
 export { default as RouteClimbAction } from "@/components/climbs/RouteClimbAction";

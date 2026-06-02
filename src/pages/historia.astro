@@ -1,0 +1,118 @@
+---
+import CatalogLayout from "@/layouts/CatalogLayout.astro";
+import HistoryList from "@/components/climbs/HistoryList.astro";
+import { listCrags, type CatalogCrag } from "@/lib/catalog";
+import { createPrivateStateClient, listClimbs, PrivateStateError } from "@/lib/private-state";
+import type { HistoryClimbItem } from "@/components/climbs/types";
+import { getTranslations } from "@/i18n";
+
+/**
+ * `/historia` — protected personal climb history (FR-010).
+ *
+ * Auth posture: middleware (`src/middleware.ts`) gates `/historia` via
+ * `PROTECTED_ROUTES`, redirecting signed-out visitors to `/auth/signin`
+ * with `next=/historia` so the passwordless callback returns them here.
+ * `Astro.locals.user` is therefore guaranteed non-null below, but
+ * `createPrivateStateClient` keeps the second-line check anyway —
+ * defense in depth against a future middleware regression.
+ *
+ * Data flow: `listClimbs(client)` returns `UserClimbWithRoute[]` already
+ * sorted by `climbed_on desc, created_at desc` and joined against the
+ * catalog cache (orphans dropped by default — acceptable for S-04 per
+ * the plan). We pair that with one `listCrags()` read so each row gets
+ * a friendly crag name and a `/regiony/<region>/<crag>` link, then
+ * project into the client-shaped `HistoryClimbItem` DTO that
+ * `<HistoryList>` consumes.
+ *
+ * Failure surface: any `PrivateStateError` (or unexpected throw) is
+ * rendered as a Polish inline diagnostic without leaking the upstream
+ * Supabase / Strapi error text. The page still renders the chrome and
+ * lead so the user sees a recoverable state, not a 500.
+ *
+ * Initial-load primitive: this page is server-rendered today, so no
+ * `Skeleton` is used at runtime. The progress-feedback registry's
+ * "Personal history initial load" row points here so any future
+ * deferred-loading variant lands the skeleton in the same file.
+ */
+
+const { user } = Astro.locals;
+const t = getTranslations();
+
+let climbs: HistoryClimbItem[] = [];
+let loadError = false;
+
+if (user !== null) {
+  try {
+    const client = createPrivateStateClient(Astro.request.headers, Astro.cookies, user);
+    const [hydratedClimbs, crags] = await Promise.all([listClimbs(client), listCrags()]);
+    const cragsById = new Map<string, CatalogCrag>(crags.map((c) => [c.id, c] as const));
+
+    climbs = hydratedClimbs.map((climb) => {
+      const route = climb.route;
+      const crag = route?.cragId ? (cragsById.get(route.cragId) ?? null) : null;
+      const cragHref = route?.regionSlug && route.cragSlug ? `/regiony/${route.regionSlug}/${route.cragSlug}` : null;
+      return {
+        id: climb.id,
+        climbedOn: climb.climbedOn,
+        note: climb.note,
+        routeName: route?.name ?? null,
+        routeGrade: route?.grade ?? null,
+        cragName: crag?.name ?? route?.cragSlug ?? null,
+        cragHref,
+      } satisfies HistoryClimbItem;
+    });
+  } catch (err) {
+    // We swallow both PrivateStateError and any unexpected throw into
+    // the same Polish "couldn't load" surface. Logging is intentionally
+    // minimal here; the upstream code paths already log inside the
+    // helpers (Supabase / Strapi response context).
+    if (!(err instanceof PrivateStateError) && err instanceof Error) {
+      console.error("historia.astro: unexpected error loading climbs", err);
+    }
+    loadError = true;
+  }
+}
+
+const isEmpty = !loadError && climbs.length === 0;
+---
+
+<CatalogLayout
+  title={t("history.page_title")}
+  breadcrumbs={[{ label: "SendLog", href: "/" }, { label: t("history.heading") }]}
+>
+  <section class="py-2 sm:py-4">
+    <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{t("history.heading")}</h1>
+    <p class="mt-2 text-sm text-slate-600 sm:text-base">{t("history.lead")}</p>
+
+    {
+      loadError && (
+        <p class="mt-6 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900" role="alert">
+          {t("history.load_error")}
+        </p>
+      )
+    }
+
+    {
+      isEmpty && (
+        <div class="mt-8 rounded-md border border-slate-200 bg-white p-6 text-center">
+          <h2 class="text-lg font-semibold text-slate-900">{t("history.empty_heading")}</h2>
+          <p class="mt-2 text-sm text-slate-600">{t("history.empty_body")}</p>
+          <a
+            href="/"
+            class="mt-4 inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          >
+            {t("history.empty_cta")}
+          </a>
+        </div>
+      )
+    }
+
+    {
+      !loadError && climbs.length > 0 && (
+        <div class="mt-6">
+          <HistoryList climbs={climbs} />
+        </div>
+      )
+    }
+  </section>
+</CatalogLayout>

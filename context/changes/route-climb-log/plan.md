@@ -426,45 +426,45 @@ Rollback is a code revert of the S-04 UI/API/history changes. Any climb rows cre
 
 #### Automated
 
-- [x] 2.1 Astro types regenerate: `npx astro sync`
-- [x] 2.2 Root lint passes: `npm run lint`
-- [x] 2.3 Guardrails pass after adding S-04 strings/form imports: `npm run guardrails`
-- [x] 2.4 Production build passes: `npm run build`
-- [x] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no React component imports.
-- [x] 2.6 `rg "new Date\\(\\)\\.toISOString|toISOString\\(" src/components src/pages src/lib` does not show new S-04 date formatting calls.
+- [x] 2.1 Astro types regenerate: `npx astro sync` — 19b4867
+- [x] 2.2 Root lint passes: `npm run lint` — 19b4867
+- [x] 2.3 Guardrails pass after adding S-04 strings/form imports: `npm run guardrails` — 19b4867
+- [x] 2.4 Production build passes: `npm run build` — 19b4867
+- [x] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no React component imports. — 19b4867
+- [x] 2.6 `rg "new Date\\(\\)\\.toISOString|toISOString\\(" src/components src/pages src/lib` does not show new S-04 date formatting calls. — 19b4867
 
 #### Manual
 
-- [x] 2.7 Signed-out crag route page remains public and shows one page-level Polish CTA to sign in and track routes.
-- [x] 2.8 Signed-in crag route page shows inline log actions in route rows without horizontal scrolling on 375×667, 390×844, and 412×915 viewports.
-- [x] 2.9 Date defaults to today's UTC `YYYY-MM-DD` value and can be changed.
-- [x] 2.10 Note is optional; saving with an empty note succeeds.
-- [x] 2.11 Saving a route shows pending feedback, then inline success and an updated logged count/latest-date indicator without leaving the route page.
-- [x] 2.12 Saving the same route twice creates two history rows and updates the route-row count.
-- [x] 2.13 Invalid API input returns structured `{ error: { code, message, context } }` JSON.
-- [x] 2.14 Browser HTML and network responses do not expose `SUPABASE_KEY`, `STRAPI_API_TOKEN`, or private rows belonging to another user.
+- [x] 2.7 Signed-out crag route page remains public and shows one page-level Polish CTA to sign in and track routes. — 19b4867
+- [x] 2.8 Signed-in crag route page shows inline log actions in route rows without horizontal scrolling on 375×667, 390×844, and 412×915 viewports. — 19b4867
+- [x] 2.9 Date defaults to today's UTC `YYYY-MM-DD` value and can be changed. — 19b4867
+- [x] 2.10 Note is optional; saving with an empty note succeeds. — 19b4867
+- [x] 2.11 Saving a route shows pending feedback, then inline success and an updated logged count/latest-date indicator without leaving the route page. — 19b4867
+- [x] 2.12 Saving the same route twice creates two history rows and updates the route-row count. — 19b4867
+- [x] 2.13 Invalid API input returns structured `{ error: { code, message, context } }` JSON. — 19b4867
+- [x] 2.14 Browser HTML and network responses do not expose `SUPABASE_KEY`, `STRAPI_API_TOKEN`, or private rows belonging to another user. — 19b4867
 
 ### Phase 3: Personal History + Dashboard Entry
 
 #### Automated
 
-- [ ] 3.1 Astro types regenerate: `npx astro sync`
-- [ ] 3.2 Root lint passes: `npm run lint`
-- [ ] 3.3 Guardrails pass: `npm run guardrails`
-- [ ] 3.4 Production build passes: `npm run build`
-- [ ] 3.5 `rg "\"/historia\"" src/middleware.ts src/pages/dashboard.astro` returns the protected route and dashboard link.
-- [ ] 3.6 `rg "deleteClimb|removeProject" src/pages/historia.astro src/components/climbs` returns no S-05/S-06 actions.
+- [x] 3.1 Astro types regenerate: `npx astro sync`
+- [x] 3.2 Root lint passes: `npm run lint`
+- [x] 3.3 Guardrails pass: `npm run guardrails`
+- [x] 3.4 Production build passes: `npm run build`
+- [x] 3.5 `rg "\"/historia\"" src/middleware.ts src/pages/dashboard.astro` returns the protected route and dashboard link.
+- [x] 3.6 `rg "deleteClimb|removeProject" src/pages/historia.astro src/components/climbs` returns no S-05/S-06 actions.
 
 #### Manual
 
-- [ ] 3.7 Signed-out `/historia` redirects to `/auth/signin?next=/historia`; completing passwordless auth returns to `/historia`.
-- [ ] 3.8 Signed-in `/historia` lists climbs newest-first by `climbedOn`, with same-date rows stable by creation order from the helper.
-- [ ] 3.9 Each history row shows route name, crag context, grade, date, optional note, and a link back to the crag page.
-- [ ] 3.10 Multiple logs for the same route appear as separate history rows.
-- [ ] 3.11 Empty history renders a Polish empty state and link back to catalog browsing.
-- [ ] 3.12 `/dashboard` links to `/historia` and sign-out still works.
-- [ ] 3.13 Mobile viewports 375×667, 390×844, and 412×915 render history with no horizontal scrolling.
-- [ ] 3.14 User A cannot see User B's history in a second browser/session.
+- [x] 3.7 Signed-out `/historia` redirects to `/auth/signin?next=/historia`; completing passwordless auth returns to `/historia`.
+- [x] 3.8 Signed-in `/historia` lists climbs newest-first by `climbedOn`, with same-date rows stable by creation order from the helper.
+- [x] 3.9 Each history row shows route name, crag context, grade, date, optional note, and a link back to the crag page.
+- [x] 3.10 Multiple logs for the same route appear as separate history rows.
+- [x] 3.11 Empty history renders a Polish empty state and link back to catalog browsing.
+- [x] 3.12 `/dashboard` links to `/historia` and sign-out still works.
+- [x] 3.13 Mobile viewports 375×667, 390×844, and 412×915 render history with no horizontal scrolling.
+- [x] 3.14 User A cannot see User B's history in a second browser/session.
 
 ### Phase 4: Guardrails + Beta Verification
 
