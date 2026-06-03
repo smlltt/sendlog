@@ -155,6 +155,7 @@ export const ui = {
     "errors.climbs.unknown_route": "Nie znaleziono tej drogi w katalogu. Odśwież stronę i spróbuj ponownie.",
     "errors.climbs.upstream_error": "Nie udało się zapisać przejścia. Spróbuj ponownie za chwilę.",
     "errors.climbs.invalid_input": "Nieprawidłowe dane formularza. Sprawdź datę i spróbuj ponownie.",
+    "errors.climbs.not_found": "Tego przejścia już nie ma — mogło zostać wcześniej usunięte.",
     "errors.climbs.unknown": "Wystąpił nieoczekiwany błąd podczas zapisywania przejścia.",
 
     // History — /historia (page + dashboard entry + row chrome)
@@ -171,6 +172,18 @@ export const ui = {
     "history.row.note_label": "Notatka:",
     "history.row.open_crag": "Otwórz skałę",
     "history.row.crag_unavailable": "Niedostępne",
+
+    // History — per-row delete action (S-05): inline two-step confirm,
+    // pending feedback, and list-level success / neutral stale-row copy.
+    "history.delete.button": "Usuń",
+    "history.delete.confirm_prompt": "Usunąć to przejście?",
+    "history.delete.confirm": "Usuń",
+    "history.delete.cancel": "Anuluj",
+    "history.delete.pending": "Usuwanie…",
+    "history.delete.success": "Przejście zostało usunięte.",
+    "history.delete.already_gone": "Tego przejścia już nie ma — mogło zostać wcześniej usunięte.",
+    "history.delete.error": "Nie udało się usunąć przejścia. Spróbuj ponownie.",
+    "history.delete.error_network": "Brak połączenia z serwerem. Spróbuj ponownie.",
 
     // Dashboard — entry point copy (added for Phase 3 in the same dictionary)
     "dashboard.history_link": "Otwórz historię przejść",

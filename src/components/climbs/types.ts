@@ -59,6 +59,18 @@ export interface ClimbApiErrorBody {
 }
 
 /**
+ * Success payload from `DELETE /api/climbs`. Echoes the deleted climb `id`
+ * so the `/historia` row island can reconcile its local list state without
+ * a re-fetch. A handled `not_found` (404) error is treated by the client as
+ * an idempotent "already gone" — see `ClimbApiErrorCode`.
+ */
+export interface DeleteClimbResponse {
+  deleted: {
+    id: string;
+  };
+}
+
+/**
  * Pre-shaped row consumed by `<HistoryList>` on `/historia`.
  *
  * The page-level loader (`src/pages/historia.astro`) joins

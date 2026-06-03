@@ -20,5 +20,7 @@ export type {
   ClimbApiErrorCode,
   HistoryClimbItem,
 } from "@/components/climbs/types";
+export type { DeleteClimbResponse } from "@/components/climbs/types";
 export { default as ClimbLogForm } from "@/components/climbs/ClimbLogForm";
 export { default as RouteClimbAction } from "@/components/climbs/RouteClimbAction";
+export { default as HistoryClimbCard } from "@/components/climbs/HistoryClimbCard";

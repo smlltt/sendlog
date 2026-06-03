@@ -42,6 +42,7 @@ It is consumed by:
 | ----------------------------------- | ---------------------------------------------------- | -------------- | -------------------------------------------------------------------------- | ---------------------------- |
 | Magic-link request                  | `src/components/auth/MagicLinkForm.tsx`              | `SubmitButton` | Form submit lifecycle; may exceed 2 s on cellular while Supabase ack.       | `shipped`                    |
 | Climb-log save                      | `src/components/climbs/ClimbLogForm.tsx`             | `SubmitButton` | Form submit; same pattern, hits Supabase + Strapi route lookup.             | `shipped`                    |
+| Climb-log delete (personal history) | `src/components/climbs/HistoryClimbCard.tsx`         | `Pending`      | `DELETE /api/climbs` mutation; Worker + Supabase session + hard delete can exceed 2 s on cellular. | `shipped`                    |
 | Personal history initial load       | `src/pages/historia.astro`                           | `Skeleton`     | Server-rendered today; row is parked so any future deferred-loading variant lands the skeleton in this same file. | `n/a — server-rendered`      |
 | Projects list initial load          | `src/pages/projekty.astro`                           | `Skeleton`     | Server-fetched project list; same initial-paint situation as history.       | `planned: S-06`              |
 
