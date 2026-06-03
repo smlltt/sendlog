@@ -11,6 +11,10 @@ import {
   type CatalogRegion,
   type CatalogRoute,
 } from "@/lib/catalog";
+import { createPrivateStateClient, listClimbs } from "@/lib/private-state";
+import type { RouteClimbSummary } from "@/components/climbs/types";
+import { buildSignInRedirect } from "@/lib/auth";
+import { formatDate } from "@/lib/date";
 import { getTranslations } from "@/i18n";
 
 const t = getTranslations();
@@ -37,6 +41,49 @@ try {
 }
 
 const regionLabel = region?.name ?? crag?.regionSlug ?? t("catalog.crag.region_fallback");
+
+// S-04 — signed-in private-state additions.
+//
+// The crag route page remains public; private reads happen only when
+// `Astro.locals.user` is non-null. A single `listClimbs(client)` call is
+// grouped server-side into per-route summaries (count + latest date) so
+// the rendered RoutesTable can pass primitives into each
+// <RouteClimbAction> island — keeping the server-only @/lib/private-state
+// boundary intact.
+//
+// If the private-state read fails, the public catalog content stays
+// visible and a Polish inline diagnostic appears above the routes
+// section instead of degrading the whole page.
+const { user } = Astro.locals;
+const isSignedIn = user !== null;
+const todayUtc = formatDate(new Date());
+let climbSummariesByRouteId: Map<string, RouteClimbSummary> | undefined = undefined;
+let privateStateError: unknown = null;
+
+if (user !== null && crag !== null) {
+  try {
+    const client = createPrivateStateClient(Astro.request.headers, Astro.cookies, user);
+    const myClimbs = await listClimbs(client);
+    const acc = new Map<string, RouteClimbSummary>();
+    for (const climb of myClimbs) {
+      if (climb.route === null) continue;
+      const existing = acc.get(climb.routeId);
+      if (existing) {
+        existing.count += 1;
+        if (existing.latestClimbedOn === null || climb.climbedOn > existing.latestClimbedOn) {
+          existing.latestClimbedOn = climb.climbedOn;
+        }
+      } else {
+        acc.set(climb.routeId, { count: 1, latestClimbedOn: climb.climbedOn });
+      }
+    }
+    climbSummariesByRouteId = acc;
+  } catch (err) {
+    privateStateError = err;
+  }
+}
+
+const signInHref = !isSignedIn ? buildSignInRedirect({ next: `${Astro.url.pathname}${Astro.url.search}` }) : null;
 ---
 
 {
@@ -56,7 +103,34 @@ const regionLabel = region?.name ?? crag?.regionSlug ?? t("catalog.crag.region_f
       <CragPhotos photos={crag.photos} cragName={crag.name} />
       <section class="mt-8 sm:mt-10">
         <h2 class="text-xl font-semibold text-slate-900 sm:text-2xl">{t("catalog.crag.routes_heading")}</h2>
-        <div class="mt-4">{error ? <CatalogErrorAlert error={error} /> : <RoutesTable routes={routes} />}</div>
+
+        {!isSignedIn && signInHref && (
+          <p class="mt-4 rounded-md border border-purple-200 bg-purple-50 p-3 text-sm text-purple-900">
+            {t("climbs.signin_cta.body")}{" "}
+            <a class="font-medium underline hover:text-purple-700" href={signInHref}>
+              {t("climbs.signin_cta.link")}
+            </a>
+          </p>
+        )}
+
+        {isSignedIn && privateStateError && (
+          <p class="mt-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900" role="alert">
+            {t("climbs.diagnostic.load_failed")}
+          </p>
+        )}
+
+        <div class="mt-4">
+          {error ? (
+            <CatalogErrorAlert error={error} />
+          ) : (
+            <RoutesTable
+              routes={routes}
+              isSignedIn={isSignedIn}
+              defaultClimbedOn={todayUtc}
+              climbSummariesByRouteId={climbSummariesByRouteId}
+            />
+          )}
+        </div>
       </section>
     </CatalogLayout>
   ) : (

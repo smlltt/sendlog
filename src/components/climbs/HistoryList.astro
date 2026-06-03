@@ -1,0 +1,81 @@
+---
+import { getTranslations } from "@/i18n";
+import type { HistoryClimbItem } from "@/components/climbs/types";
+
+/**
+ * <HistoryList> — semantic, mobile-first list of climb history rows.
+ *
+ * Pure server-render: takes pre-shaped `HistoryClimbItem[]` from the
+ * calling page and emits one `<li>` per row. The component never issues
+ * its own private-state read and intentionally does NOT import
+ * `@/lib/private-state` or `@/lib/catalog`. The page is responsible for
+ * hydrating climbs, joining crag names, and handling the empty / error
+ * states; this keeps the list reusable from any future caller (e.g. a
+ * dashboard preview) that has the same primitives in hand.
+ *
+ * The progress registry's "Personal history initial load" row points at
+ * `src/pages/historia.astro`, not here — the moment a skeleton primitive
+ * would matter is the page's initial paint, not this child.
+ *
+ * Each row shows: route name, grade, crag context, climbed_on date, and
+ * an optional note. When `cragHref` is set we link back to the crag
+ * page (the canonical landing surface for follow-up logs); otherwise we
+ * surface a Polish "unavailable" fallback so the row stays visible
+ * without rendering a broken `/regiony/null/null` URL.
+ *
+ * Layout: a single column of cards on every viewport. The internal
+ * `<dl>` flips from a two-line label/value stack on mobile to a tight
+ * `[max-content_1fr]` two-column grid on `sm:`+. No horizontal scroll
+ * at any of the three target viewports — every cell wraps inline rather
+ * than overflowing.
+ */
+
+interface Props {
+  climbs: HistoryClimbItem[];
+}
+
+const { climbs } = Astro.props;
+const t = getTranslations();
+---
+
+<ul class="flex flex-col gap-3">
+  {
+    climbs.map((climb) => (
+      <li class="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+        <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h3 class="text-base font-semibold text-slate-900">{climb.routeName ?? "—"}</h3>
+          {climb.routeGrade && (
+            <span class="text-sm text-slate-600">
+              <span class="text-slate-500">{t("history.row.grade_label")}</span> {climb.routeGrade}
+            </span>
+          )}
+        </div>
+
+        <dl class="mt-2 grid grid-cols-1 gap-x-4 gap-y-1 text-sm text-slate-700 sm:grid-cols-[max-content_1fr]">
+          <dt class="text-slate-500">{t("history.row.date_label")}</dt>
+          <dd>
+            <time datetime={climb.climbedOn}>{climb.climbedOn}</time>
+          </dd>
+
+          <dt class="text-slate-500">{t("history.row.crag_label")}</dt>
+          <dd>
+            {climb.cragHref ? (
+              <a href={climb.cragHref} class="font-medium text-purple-700 hover:underline">
+                {climb.cragName ?? t("history.row.open_crag")}
+              </a>
+            ) : (
+              <span class="text-slate-500">{climb.cragName ?? t("history.row.crag_unavailable")}</span>
+            )}
+          </dd>
+
+          {climb.note && (
+            <>
+              <dt class="text-slate-500">{t("history.row.note_label")}</dt>
+              <dd class="break-words whitespace-pre-wrap">{climb.note}</dd>
+            </>
+          )}
+        </dl>
+      </li>
+    ))
+  }
+</ul>

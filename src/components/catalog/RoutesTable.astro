@@ -1,16 +1,44 @@
 ---
 import type { CatalogRoute } from "@/lib/catalog";
 import { getTranslations } from "@/i18n";
+import RouteClimbAction from "@/components/climbs/RouteClimbAction";
+import type { RouteClimbSummary } from "@/components/climbs/types";
 
 interface Props {
   routes: CatalogRoute[];
+  /**
+   * Per-route, per-user climb summaries computed server-side by the crag
+   * page from `listClimbs(client)`. Only passed when `isSignedIn` is
+   * true; signed-out renders leave this unset.
+   */
+  climbSummariesByRouteId?: Map<string, RouteClimbSummary>;
+  /**
+   * Whether a `RouteClimbAction` island should render in each row. Kept
+   * as a separate flag from `climbSummariesByRouteId` so the table can
+   * still render the action column for a signed-in user with zero
+   * existing climbs (every map lookup returns `undefined`).
+   */
+  isSignedIn?: boolean;
+  /**
+   * Today's UTC `YYYY-MM-DD` date, computed server-side via the repo's
+   * `formatDate()` helper. Passed in so the React form's default value
+   * matches the server-rendered HTML during hydration and avoids
+   * timezone drift across server / client.
+   */
+  defaultClimbedOn?: string;
 }
 
-const { routes } = Astro.props;
+const { routes, climbSummariesByRouteId, isSignedIn = false, defaultClimbedOn } = Astro.props;
 const t = getTranslations();
 
 const CELL_BASE_CLASSES =
   "block sm:table-cell px-3 py-1 sm:py-2 before:content-[attr(data-label)] before:mr-2 before:font-medium before:text-slate-500 sm:before:content-none";
+
+const showActions = isSignedIn && typeof defaultClimbedOn === "string";
+
+function summaryFor(routeId: string): RouteClimbSummary {
+  return climbSummariesByRouteId?.get(routeId) ?? { count: 0, latestClimbedOn: null };
+}
 ---
 
 {
@@ -32,6 +60,11 @@ const CELL_BASE_CLASSES =
           <th class="border-b border-slate-200 px-3 py-2 text-left font-medium text-slate-700">
             {t("catalog.routes.column_year")}
           </th>
+          {showActions && (
+            <th class="border-b border-slate-200 px-3 py-2 text-left font-medium text-slate-700">
+              {t("catalog.routes.column_log")}
+            </th>
+          )}
         </tr>
       </thead>
       <tbody>
@@ -52,6 +85,16 @@ const CELL_BASE_CLASSES =
             <td data-label={t("catalog.routes.cell_year_label")} class:list={[CELL_BASE_CLASSES]}>
               {route.yearSet ?? t("catalog.routes.year_missing")}
             </td>
+            {showActions && (
+              <td data-label={t("catalog.routes.cell_log_label")} class:list={[CELL_BASE_CLASSES]}>
+                <RouteClimbAction
+                  client:load
+                  routeId={route.id}
+                  initialSummary={summaryFor(route.id)}
+                  defaultClimbedOn={defaultClimbedOn}
+                />
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
