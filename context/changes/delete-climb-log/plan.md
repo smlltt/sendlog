@@ -346,17 +346,17 @@ No Supabase migration is expected. Existing `public.climbs` rows are deleted har
 
 #### Automated
 
-- [x] 3.1 Astro types regenerate: `npx astro sync`
-- [x] 3.2 Root lint passes: `npm run lint`
-- [x] 3.3 Guardrails pass with the S-05 delete row shipped: `npm run guardrails`
-- [x] 3.4 Production build passes: `npm run build`
-- [x] 3.5 `docs/verification/progress-feedback-actions.md` includes the climb-log delete action as `shipped`.
-- [x] 3.6 `docs/verification/beta-flow-checklist.md` includes a B2 row for the delete action.
+- [x] 3.1 Astro types regenerate: `npx astro sync` — 0b275fa
+- [x] 3.2 Root lint passes: `npm run lint` — 0b275fa
+- [x] 3.3 Guardrails pass with the S-05 delete row shipped: `npm run guardrails` — 0b275fa
+- [x] 3.4 Production build passes: `npm run build` — 0b275fa
+- [x] 3.5 `docs/verification/progress-feedback-actions.md` includes the climb-log delete action as `shipped`. — 0b275fa
+- [x] 3.6 `docs/verification/beta-flow-checklist.md` includes a B2 row for the delete action. — 0b275fa
 
 #### Manual
 
-- [x] 3.7 The beta-flow checklist passes for `/auth/signin`, `/auth/signup`, `/auth/check-email`, route view with inline climb-log save, and `/historia` with delete controls.
-- [x] 3.8 The delete action shows `Pending` feedback within approximately 300 ms on Slow 4G + 4x CPU and remains visible until row removal or visible error.
-- [x] 3.9 `/historia` passes mobile checks at 375x667, 390x844, and 412x915 with delete confirmation open and closed.
-- [x] 3.10 Response-time observations are recorded for route view and `/historia` without turning the aspirational 800 ms target into a hard gate.
-- [x] 3.11 User A cannot delete or infer the existence of User B's climb row.
+- [x] 3.7 The beta-flow checklist passes for `/auth/signin`, `/auth/signup`, `/auth/check-email`, route view with inline climb-log save, and `/historia` with delete controls. — 0b275fa
+- [x] 3.8 The delete action shows `Pending` feedback within approximately 300 ms on Slow 4G + 4x CPU and remains visible until row removal or visible error. — 0b275fa
+- [x] 3.9 `/historia` passes mobile checks at 375x667, 390x844, and 412x915 with delete confirmation open and closed. — 0b275fa
+- [x] 3.10 Response-time observations are recorded for route view and `/historia` without turning the aspirational 800 ms target into a hard gate. — 0b275fa
+- [x] 3.11 User A cannot delete or infer the existence of User B's climb row. — 0b275fa
