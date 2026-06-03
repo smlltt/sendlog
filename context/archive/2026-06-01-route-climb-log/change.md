@@ -1,10 +1,10 @@
 ---
 change_id: route-climb-log
 title: Route climb log
-status: implemented
+status: archived
 created: 2026-06-01
 updated: 2026-06-03
-archived_at: null
+archived_at: 2026-06-03T10:35:01Z
 ---
 
 ## Notes
