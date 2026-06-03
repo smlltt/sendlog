@@ -173,6 +173,18 @@ export const ui = {
     "history.row.open_crag": "Otwórz skałę",
     "history.row.crag_unavailable": "Niedostępne",
 
+    // History — per-row delete action (S-05): inline two-step confirm,
+    // pending feedback, and list-level success / neutral stale-row copy.
+    "history.delete.button": "Usuń",
+    "history.delete.confirm_prompt": "Usunąć to przejście?",
+    "history.delete.confirm": "Usuń",
+    "history.delete.cancel": "Anuluj",
+    "history.delete.pending": "Usuwanie…",
+    "history.delete.success": "Przejście zostało usunięte.",
+    "history.delete.already_gone": "Tego przejścia już nie ma — mogło zostać wcześniej usunięte.",
+    "history.delete.error": "Nie udało się usunąć przejścia. Spróbuj ponownie.",
+    "history.delete.error_network": "Brak połączenia z serwerem. Spróbuj ponownie.",
+
     // Dashboard — entry point copy (added for Phase 3 in the same dictionary)
     "dashboard.history_link": "Otwórz historię przejść",
 

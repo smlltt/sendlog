@@ -305,42 +305,42 @@ No Supabase migration is expected. Existing `public.climbs` rows are deleted har
 
 #### Automated
 
-- [x] 1.1 Astro types regenerate: `npx astro sync`
-- [x] 1.2 Root lint passes: `npm run lint`
-- [x] 1.3 Guardrails still pass before UI docs are updated: `npm run guardrails`
-- [x] 1.4 Production build passes: `npm run build`
-- [x] 1.5 `rg "export const DELETE" src/pages/api/climbs.ts` finds the new handler.
-- [x] 1.6 Invalid delete payloads return structured `{ error: { code, message, context } }` JSON.
+- [x] 1.1 Astro types regenerate: `npx astro sync` — 3882399
+- [x] 1.2 Root lint passes: `npm run lint` — 3882399
+- [x] 1.3 Guardrails still pass before UI docs are updated: `npm run guardrails` — 3882399
+- [x] 1.4 Production build passes: `npm run build` — 3882399
+- [x] 1.5 `rg "export const DELETE" src/pages/api/climbs.ts` finds the new handler. — 3882399
+- [x] 1.6 Invalid delete payloads return structured `{ error: { code, message, context } }` JSON. — 3882399
 
 #### Manual
 
-- [x] 1.7 Signed-out `DELETE /api/climbs` returns structured `unauthenticated` JSON, not an HTML redirect.
-- [x] 1.8 Signed-in delete with an owned climb id removes that row from Supabase.
-- [x] 1.9 Signed-in delete with an unknown or other-user climb id returns structured `not_found` JSON without leaking ownership details.
-- [x] 1.10 Existing `POST /api/climbs` save behavior still works.
+- [x] 1.7 Signed-out `DELETE /api/climbs` returns structured `unauthenticated` JSON, not an HTML redirect. — 3882399
+- [x] 1.8 Signed-in delete with an owned climb id removes that row from Supabase. — 3882399
+- [x] 1.9 Signed-in delete with an unknown or other-user climb id returns structured `not_found` JSON without leaking ownership details. — 3882399
+- [x] 1.10 Existing `POST /api/climbs` save behavior still works. — 3882399
 
 ### Phase 2: History Delete UI
 
 #### Automated
 
-- [ ] 2.1 Astro types regenerate: `npx astro sync`
-- [ ] 2.2 Root lint passes: `npm run lint`
-- [ ] 2.3 Guardrails pass after adding S-05 i18n and progress rows: `npm run guardrails`
-- [ ] 2.4 Production build passes: `npm run build`
-- [ ] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no React component imports.
-- [ ] 2.6 `rg "window.confirm|confirm\\(" src/components/climbs` returns no browser-native confirmation usage.
-- [ ] 2.7 `rg "Pending" src/components/climbs` finds the delete pending primitive.
+- [x] 2.1 Astro types regenerate: `npx astro sync`
+- [x] 2.2 Root lint passes: `npm run lint`
+- [x] 2.3 Guardrails pass after adding S-05 i18n and progress rows: `npm run guardrails`
+- [x] 2.4 Production build passes: `npm run build`
+- [x] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no React component imports.
+- [x] 2.6 `rg "window.confirm|confirm\\(" src/components/climbs` returns no browser-native confirmation usage.
+- [x] 2.7 `rg "Pending" src/components/climbs` finds the delete pending primitive.
 
 #### Manual
 
-- [ ] 2.8 `/historia` shows a Polish delete control for each climb row.
-- [ ] 2.9 Tapping delete opens inline confirmation without navigating away.
-- [ ] 2.10 Cancel closes confirmation and leaves the row unchanged.
-- [ ] 2.11 Confirm shows visible pending feedback within approximately 300 ms and keeps it visible until completion.
-- [ ] 2.12 Successful delete removes only the selected row and leaves other climbs, including other logs for the same route, visible.
-- [ ] 2.13 A handled `not_found` response removes the stale row and shows neutral Polish copy.
-- [ ] 2.14 If the last row is deleted, the chosen empty-state behavior is clear and not visually broken.
-- [ ] 2.15 Mobile viewports 375x667, 390x844, and 412x915 render the delete controls without horizontal scrolling or overlapping tap targets.
+- [x] 2.8 `/historia` shows a Polish delete control for each climb row.
+- [x] 2.9 Tapping delete opens inline confirmation without navigating away.
+- [x] 2.10 Cancel closes confirmation and leaves the row unchanged.
+- [x] 2.11 Confirm shows visible pending feedback within approximately 300 ms and keeps it visible until completion.
+- [x] 2.12 Successful delete removes only the selected row and leaves other climbs, including other logs for the same route, visible.
+- [x] 2.13 A handled `not_found` response removes the stale row and shows neutral Polish copy.
+- [x] 2.14 If the last row is deleted, the chosen empty-state behavior is clear and not visually broken.
+- [x] 2.15 Mobile viewports 375x667, 390x844, and 412x915 render the delete controls without horizontal scrolling or overlapping tap targets.
 
 ### Phase 3: Guardrails + Beta Verification
 
