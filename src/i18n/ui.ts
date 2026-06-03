@@ -155,6 +155,7 @@ export const ui = {
     "errors.climbs.unknown_route": "Nie znaleziono tej drogi w katalogu. Odśwież stronę i spróbuj ponownie.",
     "errors.climbs.upstream_error": "Nie udało się zapisać przejścia. Spróbuj ponownie za chwilę.",
     "errors.climbs.invalid_input": "Nieprawidłowe dane formularza. Sprawdź datę i spróbuj ponownie.",
+    "errors.climbs.not_found": "Tego przejścia już nie ma — mogło zostać wcześniej usunięte.",
     "errors.climbs.unknown": "Wystąpił nieoczekiwany błąd podczas zapisywania przejścia.",
 
     // History — /historia (page + dashboard entry + row chrome)
