@@ -470,17 +470,17 @@ Rollback is a code revert of the S-04 UI/API/history changes. Any climb rows cre
 
 #### Automated
 
-- [x] 4.1 Astro types regenerate: `npx astro sync`
-- [x] 4.2 Root lint passes: `npm run lint`
-- [x] 4.3 Guardrails pass with S-04 rows current: `npm run guardrails`
-- [x] 4.4 Production build passes: `npm run build`
-- [x] 4.5 `docs/verification/progress-feedback-actions.md` marks the climb-log save row as `shipped`.
-- [x] 4.6 `docs/verification/beta-flow-checklist.md` includes `/historia` as current and includes a climb-log save progress-feedback row.
+- [x] 4.1 Astro types regenerate: `npx astro sync` — 53ba87a
+- [x] 4.2 Root lint passes: `npm run lint` — 53ba87a
+- [x] 4.3 Guardrails pass with S-04 rows current: `npm run guardrails` — 53ba87a
+- [x] 4.4 Production build passes: `npm run build` — 53ba87a
+- [x] 4.5 `docs/verification/progress-feedback-actions.md` marks the climb-log save row as `shipped`. — 53ba87a
+- [x] 4.6 `docs/verification/beta-flow-checklist.md` includes `/historia` as current and includes a climb-log save progress-feedback row. — 53ba87a
 
 #### Manual
 
-- [x] 4.7 The beta-flow checklist passes for `/auth/signin`, `/auth/signup`, `/auth/check-email`, route view with inline climb-log save, and `/historia`.
-- [x] 4.8 The route-log save action shows progress feedback within ~300 ms on Slow 4G + 4× CPU and remains visible until success or visible error.
-- [x] 4.9 Route view and history pass mobile checks at 375×667, 390×844, and 412×915.
-- [x] 4.10 Response-time observations are recorded for the route view and history page, without turning the aspirational 800 ms target into a hard gate.
-- [x] 4.11 The newest-first history and route-row saved/count indicator are verified with at least two logs on the same route.
+- [x] 4.7 The beta-flow checklist passes for `/auth/signin`, `/auth/signup`, `/auth/check-email`, route view with inline climb-log save, and `/historia`. — 53ba87a
+- [x] 4.8 The route-log save action shows progress feedback within ~300 ms on Slow 4G + 4× CPU and remains visible until success or visible error. — 53ba87a
+- [x] 4.9 Route view and history pass mobile checks at 375×667, 390×844, and 412×915. — 53ba87a
+- [x] 4.10 Response-time observations are recorded for the route view and history page, without turning the aspirational 800 ms target into a hard gate. — 53ba87a
+- [x] 4.11 The newest-first history and route-row saved/count indicator are verified with at least two logs on the same route. — 53ba87a
