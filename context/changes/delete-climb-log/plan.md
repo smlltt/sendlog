@@ -323,40 +323,40 @@ No Supabase migration is expected. Existing `public.climbs` rows are deleted har
 
 #### Automated
 
-- [x] 2.1 Astro types regenerate: `npx astro sync`
-- [x] 2.2 Root lint passes: `npm run lint`
-- [x] 2.3 Guardrails pass after adding S-05 i18n and progress rows: `npm run guardrails`
-- [x] 2.4 Production build passes: `npm run build`
-- [x] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no React component imports.
-- [x] 2.6 `rg "window.confirm|confirm\\(" src/components/climbs` returns no browser-native confirmation usage.
-- [x] 2.7 `rg "Pending" src/components/climbs` finds the delete pending primitive.
+- [x] 2.1 Astro types regenerate: `npx astro sync` — b1be209
+- [x] 2.2 Root lint passes: `npm run lint` — b1be209
+- [x] 2.3 Guardrails pass after adding S-05 i18n and progress rows: `npm run guardrails` — b1be209
+- [x] 2.4 Production build passes: `npm run build` — b1be209
+- [x] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no React component imports. — b1be209
+- [x] 2.6 `rg "window.confirm|confirm\\(" src/components/climbs` returns no browser-native confirmation usage. — b1be209
+- [x] 2.7 `rg "Pending" src/components/climbs` finds the delete pending primitive. — b1be209
 
 #### Manual
 
-- [x] 2.8 `/historia` shows a Polish delete control for each climb row.
-- [x] 2.9 Tapping delete opens inline confirmation without navigating away.
-- [x] 2.10 Cancel closes confirmation and leaves the row unchanged.
-- [x] 2.11 Confirm shows visible pending feedback within approximately 300 ms and keeps it visible until completion.
-- [x] 2.12 Successful delete removes only the selected row and leaves other climbs, including other logs for the same route, visible.
-- [x] 2.13 A handled `not_found` response removes the stale row and shows neutral Polish copy.
-- [x] 2.14 If the last row is deleted, the chosen empty-state behavior is clear and not visually broken.
-- [x] 2.15 Mobile viewports 375x667, 390x844, and 412x915 render the delete controls without horizontal scrolling or overlapping tap targets.
+- [x] 2.8 `/historia` shows a Polish delete control for each climb row. — b1be209
+- [x] 2.9 Tapping delete opens inline confirmation without navigating away. — b1be209
+- [x] 2.10 Cancel closes confirmation and leaves the row unchanged. — b1be209
+- [x] 2.11 Confirm shows visible pending feedback within approximately 300 ms and keeps it visible until completion. — b1be209
+- [x] 2.12 Successful delete removes only the selected row and leaves other climbs, including other logs for the same route, visible. — b1be209
+- [x] 2.13 A handled `not_found` response removes the stale row and shows neutral Polish copy. — b1be209
+- [x] 2.14 If the last row is deleted, the chosen empty-state behavior is clear and not visually broken. — b1be209
+- [x] 2.15 Mobile viewports 375x667, 390x844, and 412x915 render the delete controls without horizontal scrolling or overlapping tap targets. — b1be209
 
 ### Phase 3: Guardrails + Beta Verification
 
 #### Automated
 
-- [ ] 3.1 Astro types regenerate: `npx astro sync`
-- [ ] 3.2 Root lint passes: `npm run lint`
-- [ ] 3.3 Guardrails pass with the S-05 delete row shipped: `npm run guardrails`
-- [ ] 3.4 Production build passes: `npm run build`
-- [ ] 3.5 `docs/verification/progress-feedback-actions.md` includes the climb-log delete action as `shipped`.
-- [ ] 3.6 `docs/verification/beta-flow-checklist.md` includes a B2 row for the delete action.
+- [x] 3.1 Astro types regenerate: `npx astro sync`
+- [x] 3.2 Root lint passes: `npm run lint`
+- [x] 3.3 Guardrails pass with the S-05 delete row shipped: `npm run guardrails`
+- [x] 3.4 Production build passes: `npm run build`
+- [x] 3.5 `docs/verification/progress-feedback-actions.md` includes the climb-log delete action as `shipped`.
+- [x] 3.6 `docs/verification/beta-flow-checklist.md` includes a B2 row for the delete action.
 
 #### Manual
 
-- [ ] 3.7 The beta-flow checklist passes for `/auth/signin`, `/auth/signup`, `/auth/check-email`, route view with inline climb-log save, and `/historia` with delete controls.
-- [ ] 3.8 The delete action shows `Pending` feedback within approximately 300 ms on Slow 4G + 4x CPU and remains visible until row removal or visible error.
-- [ ] 3.9 `/historia` passes mobile checks at 375x667, 390x844, and 412x915 with delete confirmation open and closed.
-- [ ] 3.10 Response-time observations are recorded for route view and `/historia` without turning the aspirational 800 ms target into a hard gate.
-- [ ] 3.11 User A cannot delete or infer the existence of User B's climb row.
+- [x] 3.7 The beta-flow checklist passes for `/auth/signin`, `/auth/signup`, `/auth/check-email`, route view with inline climb-log save, and `/historia` with delete controls.
+- [x] 3.8 The delete action shows `Pending` feedback within approximately 300 ms on Slow 4G + 4x CPU and remains visible until row removal or visible error.
+- [x] 3.9 `/historia` passes mobile checks at 375x667, 390x844, and 412x915 with delete confirmation open and closed.
+- [x] 3.10 Response-time observations are recorded for route view and `/historia` without turning the aspirational 800 ms target into a hard gate.
+- [x] 3.11 User A cannot delete or infer the existence of User B's climb row.

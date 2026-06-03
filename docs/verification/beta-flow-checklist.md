@@ -97,7 +97,9 @@ DevTools console) and confirm the resulting Polish message on the redirected
       and latest-date indicator)
 - [ ] `/historia` — fully Polish (page title, h1, lead, empty state, row
       labels, link-back fallback when crag context is missing, load-error
-      diagnostic)
+      diagnostic, per-row delete button, inline confirmation prompt,
+      confirm/cancel labels, delete pending text, success message, neutral
+      already-gone message, delete error fallback)
 - [ ] At least one server-side auth error renders Polish on
       `/auth/signin?error=…`
 
@@ -160,6 +162,11 @@ content swap, or visible end-state).
       expand a route's inline log form and submit. Pending text visible
       within ~300 ms, persists until the route-row success state +
       count/latest-date indicator updates.
+- [ ] **Climb-log delete** (`src/components/climbs/HistoryClimbCard.tsx` →
+      `Pending`) — on `/historia` while signed in, tap delete on a row,
+      confirm inline. `Pending` visible within ~300 ms, persists until the
+      row disappears (success or handled `not_found`) or a visible error
+      alert remains.
 
 Add one checkbox row per new `shipped` row added to the actions doc.
 
@@ -183,7 +190,9 @@ applied, time three reloads each of the route-view page
 - **Time-to-meaningful-interaction proxy**: pick a stable visual signal
   per page and record when it appears.
   - Crag route view: "route table fully visible."
-  - Personal history: "first history row fully visible."
+  - Personal history: "first history row fully visible" (initial load).
+  - Personal history delete: optional — time from confirm tap to row
+    removal on `/historia` (S-05 mutation; informational only).
   - Sign-in page: "form fully visible and interactive."
 
 Record the **median of 3 runs** per signal in Section C — no pass/fail
@@ -199,8 +208,8 @@ authoritative.
 ### Latest run
 
 - **Date**: 2026-06-03
-- **App commit SHA**: `8d762b3`
-- **Branch / slice context**: `feature/S04-route-climb-log` / S-04 route climb log
+- **App commit SHA**: `b1be209`
+- **Branch / slice context**: `feature/S-05-delete-climb-log` / S-05 delete climb log
 - **Pages skipped this cycle (still `planned`)**: `/projekty` (S-06)
 - **Section A result**: pass
 - **Section B1 (mobile) result**: pass
@@ -210,9 +219,10 @@ authoritative.
   - Crag route view "route table visible", 3-run median: observed during manual pass; exact median not reported.
   - Personal history FCP, 3-run median: observed during manual pass; exact median not reported.
   - Personal history "first row visible", 3-run median: observed during manual pass; exact median not reported.
+  - Personal history delete confirm-to-row-removal: observed during manual pass; exact median not reported.
   - Sign-in "form visible", 3-run median: observed during manual pass; exact median not reported.
-- **Notes**: S-04 route-log and history manual verification passed. Climb-log save progress feedback remained visible through the save result; route view and `/historia` passed the mobile viewport checks; newest-first history plus repeat-route count/latest-date behavior were verified with at least two logs on one route.
-- **Next steps**: None blocking S-04 beta verification.
+- **Notes**: S-05 delete-climb-log manual verification passed. Climb-log delete `Pending` feedback appeared within the target window and remained until row removal or visible error; `/historia` passed mobile viewport checks with delete confirmation open and closed; stale-row and cross-user delete behavior stayed privacy-preserving.
+- **Next steps**: None blocking S-05 beta verification.
 
 ### Previous runs
 
