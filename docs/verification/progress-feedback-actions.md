@@ -22,6 +22,11 @@ It is consumed by:
 - `planned: <slice-id>` — the file does not exist yet; the row is skipped
   by the guard until the named roadmap slice lands, at which point flipping
   Status to `shipped` switches the gate on. No code change required.
+- `n/a — <reason>` — the file exists but the action ships without a deferred
+  loading state (e.g. fully server-rendered initial paint). The guard skips
+  the row; the reason is recorded so the row is not mistaken for stale
+  `planned` debt. Flip to `shipped` if a future variant adopts an
+  initial-load primitive in the listed file.
 
 ## The agreed primitives
 
@@ -33,12 +38,12 @@ It is consumed by:
 
 ## Actions
 
-| Action                              | File(s)                                              | Primitive      | Rationale                                                                 | Status            |
-| ----------------------------------- | ---------------------------------------------------- | -------------- | ------------------------------------------------------------------------- | ----------------- |
-| Magic-link request                  | `src/components/auth/MagicLinkForm.tsx`              | `SubmitButton` | Form submit lifecycle; may exceed 2 s on cellular while Supabase ack.      | `shipped`         |
-| Climb-log save                      | `src/components/climbs/ClimbLogForm.tsx`             | `SubmitButton` | Form submit; same pattern, hits Supabase + Strapi route lookup.            | `planned: S-04`   |
-| Personal history initial load       | `src/pages/historia.astro`                           | `Skeleton`     | Server-fetched climb list may exceed 2 s on cellular; show row shapes.    | `planned: S-04`   |
-| Projects list initial load          | `src/pages/projekty.astro`                           | `Skeleton`     | Server-fetched project list; same initial-paint situation as history.     | `planned: S-06`   |
+| Action                              | File(s)                                              | Primitive      | Rationale                                                                  | Status                       |
+| ----------------------------------- | ---------------------------------------------------- | -------------- | -------------------------------------------------------------------------- | ---------------------------- |
+| Magic-link request                  | `src/components/auth/MagicLinkForm.tsx`              | `SubmitButton` | Form submit lifecycle; may exceed 2 s on cellular while Supabase ack.       | `shipped`                    |
+| Climb-log save                      | `src/components/climbs/ClimbLogForm.tsx`             | `SubmitButton` | Form submit; same pattern, hits Supabase + Strapi route lookup.             | `shipped`                    |
+| Personal history initial load       | `src/pages/historia.astro`                           | `Skeleton`     | Server-rendered today; row is parked so any future deferred-loading variant lands the skeleton in this same file. | `n/a — server-rendered`      |
+| Projects list initial load          | `src/pages/projekty.astro`                           | `Skeleton`     | Server-fetched project list; same initial-paint situation as history.       | `planned: S-06`              |
 
 ## Adding a new action
 

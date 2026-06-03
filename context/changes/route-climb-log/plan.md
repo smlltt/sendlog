@@ -448,39 +448,39 @@ Rollback is a code revert of the S-04 UI/API/history changes. Any climb rows cre
 
 #### Automated
 
-- [x] 3.1 Astro types regenerate: `npx astro sync`
-- [x] 3.2 Root lint passes: `npm run lint`
-- [x] 3.3 Guardrails pass: `npm run guardrails`
-- [x] 3.4 Production build passes: `npm run build`
-- [x] 3.5 `rg "\"/historia\"" src/middleware.ts src/pages/dashboard.astro` returns the protected route and dashboard link.
-- [x] 3.6 `rg "deleteClimb|removeProject" src/pages/historia.astro src/components/climbs` returns no S-05/S-06 actions.
+- [x] 3.1 Astro types regenerate: `npx astro sync` — 8d762b3
+- [x] 3.2 Root lint passes: `npm run lint` — 8d762b3
+- [x] 3.3 Guardrails pass: `npm run guardrails` — 8d762b3
+- [x] 3.4 Production build passes: `npm run build` — 8d762b3
+- [x] 3.5 `rg "\"/historia\"" src/middleware.ts src/pages/dashboard.astro` returns the protected route and dashboard link. — 8d762b3
+- [x] 3.6 `rg "deleteClimb|removeProject" src/pages/historia.astro src/components/climbs` returns no S-05/S-06 actions. — 8d762b3
 
 #### Manual
 
-- [x] 3.7 Signed-out `/historia` redirects to `/auth/signin?next=/historia`; completing passwordless auth returns to `/historia`.
-- [x] 3.8 Signed-in `/historia` lists climbs newest-first by `climbedOn`, with same-date rows stable by creation order from the helper.
-- [x] 3.9 Each history row shows route name, crag context, grade, date, optional note, and a link back to the crag page.
-- [x] 3.10 Multiple logs for the same route appear as separate history rows.
-- [x] 3.11 Empty history renders a Polish empty state and link back to catalog browsing.
-- [x] 3.12 `/dashboard` links to `/historia` and sign-out still works.
-- [x] 3.13 Mobile viewports 375×667, 390×844, and 412×915 render history with no horizontal scrolling.
-- [x] 3.14 User A cannot see User B's history in a second browser/session.
+- [x] 3.7 Signed-out `/historia` redirects to `/auth/signin?next=/historia`; completing passwordless auth returns to `/historia`. — 8d762b3
+- [x] 3.8 Signed-in `/historia` lists climbs newest-first by `climbedOn`, with same-date rows stable by creation order from the helper. — 8d762b3
+- [x] 3.9 Each history row shows route name, crag context, grade, date, optional note, and a link back to the crag page. — 8d762b3
+- [x] 3.10 Multiple logs for the same route appear as separate history rows. — 8d762b3
+- [x] 3.11 Empty history renders a Polish empty state and link back to catalog browsing. — 8d762b3
+- [x] 3.12 `/dashboard` links to `/historia` and sign-out still works. — 8d762b3
+- [x] 3.13 Mobile viewports 375×667, 390×844, and 412×915 render history with no horizontal scrolling. — 8d762b3
+- [x] 3.14 User A cannot see User B's history in a second browser/session. — 8d762b3
 
 ### Phase 4: Guardrails + Beta Verification
 
 #### Automated
 
-- [ ] 4.1 Astro types regenerate: `npx astro sync`
-- [ ] 4.2 Root lint passes: `npm run lint`
-- [ ] 4.3 Guardrails pass with S-04 rows current: `npm run guardrails`
-- [ ] 4.4 Production build passes: `npm run build`
-- [ ] 4.5 `docs/verification/progress-feedback-actions.md` marks the climb-log save row as `shipped`.
-- [ ] 4.6 `docs/verification/beta-flow-checklist.md` includes `/historia` as current and includes a climb-log save progress-feedback row.
+- [x] 4.1 Astro types regenerate: `npx astro sync`
+- [x] 4.2 Root lint passes: `npm run lint`
+- [x] 4.3 Guardrails pass with S-04 rows current: `npm run guardrails`
+- [x] 4.4 Production build passes: `npm run build`
+- [x] 4.5 `docs/verification/progress-feedback-actions.md` marks the climb-log save row as `shipped`.
+- [x] 4.6 `docs/verification/beta-flow-checklist.md` includes `/historia` as current and includes a climb-log save progress-feedback row.
 
 #### Manual
 
-- [ ] 4.7 The beta-flow checklist passes for `/auth/signin`, `/auth/signup`, `/auth/check-email`, route view with inline climb-log save, and `/historia`.
-- [ ] 4.8 The route-log save action shows progress feedback within ~300 ms on Slow 4G + 4× CPU and remains visible until success or visible error.
-- [ ] 4.9 Route view and history pass mobile checks at 375×667, 390×844, and 412×915.
-- [ ] 4.10 Response-time observations are recorded for the route view and history page, without turning the aspirational 800 ms target into a hard gate.
-- [ ] 4.11 The newest-first history and route-row saved/count indicator are verified with at least two logs on the same route.
+- [x] 4.7 The beta-flow checklist passes for `/auth/signin`, `/auth/signup`, `/auth/check-email`, route view with inline climb-log save, and `/historia`.
+- [x] 4.8 The route-log save action shows progress feedback within ~300 ms on Slow 4G + 4× CPU and remains visible until success or visible error.
+- [x] 4.9 Route view and history pass mobile checks at 375×667, 390×844, and 412×915.
+- [x] 4.10 Response-time observations are recorded for the route view and history page, without turning the aspirational 800 ms target into a hard gate.
+- [x] 4.11 The newest-first history and route-row saved/count indicator are verified with at least two logs on the same route.

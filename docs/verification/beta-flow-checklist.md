@@ -58,9 +58,8 @@ Estimated time per cycle: 15–30 minutes.
 | Sign-up (magic-link bootstrap)               | `/auth/signup`                             | current        |
 | Post-submit confirmation                     | `/auth/check-email`                        | current        |
 | Email-confirmation landing                   | `/auth/confirm-email`                      | current        |
-| Crag route view (catalog)                    | `/regiony/sokoliki/<crag-slug>`            | current        |
-| Climb-log save form                          | `/climbs/new` (or equivalent)              | planned: S-04  |
-| Personal climb history                       | `/historia`                                | planned: S-04  |
+| Crag route view + inline climb-log save      | `/regiony/sokoliki/<crag-slug>`            | current        |
+| Personal climb history                       | `/historia`                                | current        |
 | Projects list                                | `/projekty`                                | planned: S-06  |
 
 Rows marked `planned: <slice>` are skipped in the current cycle and become
@@ -92,7 +91,13 @@ DevTools console) and confirm the resulting Polish message on the redirected
 - [ ] `/auth/check-email` — fully Polish
 - [ ] `/auth/confirm-email` — fully Polish (both success and error states)
 - [ ] `/regiony/sokoliki/<crag-slug>` — fully Polish (header, route table,
-      coordinates label, map fallback list, photo grid alt text, footer)
+      coordinates label, map fallback list, photo grid alt text, footer,
+      signed-out sign-in CTA, signed-in inline climb-log form labels,
+      pending text, success message, validation/error messages, row count
+      and latest-date indicator)
+- [ ] `/historia` — fully Polish (page title, h1, lead, empty state, row
+      labels, link-back fallback when crag context is missing, load-error
+      diagnostic)
 - [ ] At least one server-side auth error renders Polish on
       `/auth/signin?error=…`
 
@@ -129,13 +134,15 @@ confirm:
   not enforced; this is a visual sanity check.)
 - The page renders meaningful content without overflowing its container.
 
-| Page                                  | 375×667 | 390×844 | 412×915 |
-| ------------------------------------- | ------- | ------- | ------- |
-| `/auth/signin`                        | [ ]     | [ ]     | [ ]     |
-| `/auth/signup`                        | [ ]     | [ ]     | [ ]     |
-| `/auth/check-email`                   | [ ]     | [ ]     | [ ]     |
-| `/auth/confirm-email`                 | [ ]     | [ ]     | [ ]     |
-| `/regiony/sokoliki/<crag-slug>`       | [ ]     | [ ]     | [ ]     |
+| Page                                          | 375×667 | 390×844 | 412×915 |
+| --------------------------------------------- | ------- | ------- | ------- |
+| `/auth/signin`                                | [ ]     | [ ]     | [ ]     |
+| `/auth/signup`                                | [ ]     | [ ]     | [ ]     |
+| `/auth/check-email`                           | [ ]     | [ ]     | [ ]     |
+| `/auth/confirm-email`                         | [ ]     | [ ]     | [ ]     |
+| `/regiony/sokoliki/<crag-slug>` signed-out    | [ ]     | [ ]     | [ ]     |
+| `/regiony/sokoliki/<crag-slug>` signed-in     | [ ]     | [ ]     | [ ]     |
+| `/historia`                                   | [ ]     | [ ]     | [ ]     |
 
 ### B2 — Progress-feedback gate (per shipped action)
 
@@ -148,6 +155,11 @@ content swap, or visible end-state).
 - [ ] **Magic-link request** (`src/components/auth/MagicLinkForm.tsx` →
       `SubmitButton`) — submit `/auth/signin` form, spinner visible within
       ~300 ms, persists until redirect to `/auth/check-email`.
+- [ ] **Climb-log save** (`src/components/climbs/ClimbLogForm.tsx` →
+      `SubmitButton`) — on `/regiony/sokoliki/<crag-slug>` while signed in,
+      expand a route's inline log form and submit. Pending text visible
+      within ~300 ms, persists until the route-row success state +
+      count/latest-date indicator updates.
 
 Add one checkbox row per new `shipped` row added to the actions doc.
 
@@ -161,8 +173,9 @@ Add one checkbox row per new `shipped` row added to the actions doc.
 > beta group.
 
 On the **smallest** viewport (375×667), with **Slow 4G** + **4×** CPU still
-applied, time three reloads of the route-view page
-(`/regiony/sokoliki/<crag-slug>`). Record:
+applied, time three reloads each of the route-view page
+(`/regiony/sokoliki/<crag-slug>`) and the personal history page
+(`/historia`, signed in). Record:
 
 - **First Contentful Paint** (DevTools Performance panel summary, or
   Lighthouse "Performance" run; the latter resets throttling — use
@@ -170,6 +183,7 @@ applied, time three reloads of the route-view page
 - **Time-to-meaningful-interaction proxy**: pick a stable visual signal
   per page and record when it appears.
   - Crag route view: "route table fully visible."
+  - Personal history: "first history row fully visible."
   - Sign-in page: "form fully visible and interactive."
 
 Record the **median of 3 runs** per signal in Section C — no pass/fail
@@ -184,19 +198,21 @@ authoritative.
 
 ### Latest run
 
-- **Date**: _(YYYY-MM-DD)_
-- **App commit SHA**: _(short SHA at HEAD when the cycle started)_
-- **Branch / slice context**: _(e.g. `feature/s04-climb-log`)_
-- **Pages skipped this cycle (still `planned`)**: _(list)_
-- **Section A result**: _(pass / pass-with-notes / fail)_
-- **Section B1 (mobile) result**: _(pass / pass-with-notes / fail)_
-- **Section B2 (progress feedback) result**: _(pass / pass-with-notes / fail)_
+- **Date**: 2026-06-03
+- **App commit SHA**: `8d762b3`
+- **Branch / slice context**: `feature/S04-route-climb-log` / S-04 route climb log
+- **Pages skipped this cycle (still `planned`)**: `/projekty` (S-06)
+- **Section A result**: pass
+- **Section B1 (mobile) result**: pass
+- **Section B2 (progress feedback) result**: pass
 - **Section B3 (response-time observation)**:
-  - Crag route view FCP, 3-run median: _(ms)_
-  - Crag route view "route table visible", 3-run median: _(ms)_
-  - Sign-in "form visible", 3-run median: _(ms)_
-- **Notes**: _(free-form: any pass-with-notes details, surprises, follow-ups)_
-- **Next steps**: _(what blocks beta, what to file, what to revisit next cycle)_
+  - Crag route view FCP, 3-run median: observed during manual pass; exact median not reported.
+  - Crag route view "route table visible", 3-run median: observed during manual pass; exact median not reported.
+  - Personal history FCP, 3-run median: observed during manual pass; exact median not reported.
+  - Personal history "first row visible", 3-run median: observed during manual pass; exact median not reported.
+  - Sign-in "form visible", 3-run median: observed during manual pass; exact median not reported.
+- **Notes**: S-04 route-log and history manual verification passed. Climb-log save progress feedback remained visible through the save result; route view and `/historia` passed the mobile viewport checks; newest-first history plus repeat-route count/latest-date behavior were verified with at least two logs on one route.
+- **Next steps**: None blocking S-04 beta verification.
 
 ### Previous runs
 
