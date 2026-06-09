@@ -27,6 +27,9 @@ const t = getTranslations();
             <a href="/historia" class="font-medium text-slate-900 hover:underline">
               {t("catalog.header.history")}
             </a>
+            <a href="/projekty" class="font-medium text-slate-900 hover:underline">
+              {t("catalog.header.projects")}
+            </a>
             <span class="hidden text-slate-600 sm:inline">{user.email}</span>
             <form method="POST" action="/api/auth/signout">
               <button type="submit" class="font-medium text-slate-900 hover:underline">

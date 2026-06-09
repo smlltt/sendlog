@@ -1,0 +1,121 @@
+---
+import CatalogLayout from "@/layouts/CatalogLayout.astro";
+import ProjectsList from "@/components/projects/ProjectsList.astro";
+import { listCrags, type CatalogCrag } from "@/lib/catalog";
+import { createPrivateStateClient, listProjects, PrivateStateError } from "@/lib/private-state";
+import type { ProjectListItem } from "@/components/projects/types";
+import { formatDate } from "@/lib/date";
+import { getTranslations } from "@/i18n";
+
+/**
+ * `/projekty` — protected personal projects list (FR-013).
+ *
+ * Auth posture: middleware (`src/middleware.ts`) gates `/projekty` via
+ * `PROTECTED_ROUTES`, redirecting signed-out visitors to `/auth/signin`
+ * with `next=/projekty` so the passwordless callback returns them here.
+ * `Astro.locals.user` is therefore guaranteed non-null below, but
+ * `createPrivateStateClient` keeps the second-line check anyway —
+ * defense in depth against a future middleware regression. Mirrors
+ * `historia.astro`.
+ *
+ * Data flow: `listProjects(client)` returns `UserProjectWithRoute[]`
+ * already sorted by `created_at desc` and joined against the catalog
+ * cache (orphans dropped by default — acceptable for S-06 per the
+ * plan). We pair that with one `listCrags()` read so each row gets a
+ * friendly crag name and a `/regiony/<region>/<crag>` link, then
+ * project into the client-shaped `ProjectListItem` DTO that
+ * `<ProjectsList>` consumes. `addedOn` is the UTC `created_at` formatted
+ * through `formatDate`.
+ *
+ * Failure surface: any `PrivateStateError` (or unexpected throw) is
+ * rendered as a Polish inline diagnostic without leaking the upstream
+ * Supabase / Strapi error text. The page still renders the chrome and
+ * lead so the user sees a recoverable state, not a 500.
+ *
+ * Initial-load primitive: this page is server-rendered today, so no
+ * `Skeleton` is used at runtime. The progress-feedback registry's
+ * "Projects list initial load" row points here so any future
+ * deferred-loading variant lands the skeleton in the same file.
+ */
+
+const { user } = Astro.locals;
+const t = getTranslations();
+
+let projects: ProjectListItem[] = [];
+let loadError = false;
+
+if (user !== null) {
+  try {
+    const client = createPrivateStateClient(Astro.request.headers, Astro.cookies, user);
+    const [hydratedProjects, crags] = await Promise.all([listProjects(client), listCrags()]);
+    const cragsById = new Map<string, CatalogCrag>(crags.map((c) => [c.id, c] as const));
+
+    projects = hydratedProjects.map((project) => {
+      const route = project.route;
+      const crag = route?.cragId ? (cragsById.get(route.cragId) ?? null) : null;
+      const cragHref = route?.regionSlug && route.cragSlug ? `/regiony/${route.regionSlug}/${route.cragSlug}` : null;
+      return {
+        id: project.id,
+        addedOn: formatDate(project.createdAt),
+        routeName: route?.name ?? null,
+        routeGrade: route?.grade ?? null,
+        routeType: route?.type ?? null,
+        cragName: crag?.name ?? route?.cragSlug ?? null,
+        cragHref,
+      } satisfies ProjectListItem;
+    });
+  } catch (err) {
+    // We swallow both PrivateStateError and any unexpected throw into
+    // the same Polish "couldn't load" surface. Logging is intentionally
+    // minimal here; the upstream code paths already log inside the
+    // helpers (Supabase / Strapi response context).
+    if (!(err instanceof PrivateStateError) && err instanceof Error) {
+      console.error("projekty.astro: unexpected error loading projects", err);
+    }
+    loadError = true;
+  }
+}
+
+const isEmpty = !loadError && projects.length === 0;
+---
+
+<CatalogLayout
+  title={t("projects.page_title")}
+  breadcrumbs={[{ label: "SendLog", href: "/" }, { label: t("projects.heading") }]}
+>
+  <section class="py-2 sm:py-4">
+    <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{t("projects.heading")}</h1>
+    <p class="mt-2 text-sm text-slate-600 sm:text-base">{t("projects.lead")}</p>
+
+    {
+      loadError && (
+        <p class="mt-6 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900" role="alert">
+          {t("projects.load_error")}
+        </p>
+      )
+    }
+
+    {
+      isEmpty && (
+        <div class="mt-8 rounded-md border border-slate-200 bg-white p-6 text-center">
+          <h2 class="text-lg font-semibold text-slate-900">{t("projects.empty_heading")}</h2>
+          <p class="mt-2 text-sm text-slate-600">{t("projects.empty_body")}</p>
+          <a
+            href="/"
+            class="mt-4 inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          >
+            {t("projects.empty_cta")}
+          </a>
+        </div>
+      )
+    }
+
+    {
+      !loadError && projects.length > 0 && (
+        <div class="mt-6">
+          <ProjectsList projects={projects} />
+        </div>
+      )
+    }
+  </section>
+</CatalogLayout>

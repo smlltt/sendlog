@@ -349,43 +349,43 @@ None — F-02's `20260531172510_private_user_state.sql` already provides the tab
 
 #### Automated
 
-- [x] 2.1 Lint + type check passes: `npm run lint`
-- [x] 2.2 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
-- [x] 2.3 i18n + progress guardrails pass: `npm run guardrails`
-- [x] 2.4 Build passes: `npm run build`
+- [x] 2.1 Lint + type check passes: `npm run lint` — 6809348
+- [x] 2.2 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty — 6809348
+- [x] 2.3 i18n + progress guardrails pass: `npm run guardrails` — 6809348
+- [x] 2.4 Build passes: `npm run build` — 6809348
 
 #### Manual
 
-- [x] 2.5 Add from crag row flips to "W projektach" without navigation
-- [x] 2.6 Two-step remove flips back to "Dodaj do projektów"
-- [x] 2.7 No horizontal scroll at 375px with both controls in one cell
-- [x] 2.8 Signed-out renders no toggle; sign-in CTA still shows
+- [x] 2.5 Add from crag row flips to "W projektach" without navigation — 6809348
+- [x] 2.6 Two-step remove flips back to "Dodaj do projektów" — 6809348
+- [x] 2.7 No horizontal scroll at 375px with both controls in one cell — 6809348
+- [x] 2.8 Signed-out renders no toggle; sign-in CTA still shows — 6809348
 
 ### Phase 3: Protected /projekty Page + Removal + Navigation
 
 #### Automated
 
-- [ ] 3.1 Lint + type check passes: `npm run lint`
-- [ ] 3.2 i18n + progress guardrails pass: `npm run guardrails`
-- [ ] 3.3 Build passes: `npm run build`
-- [ ] 3.4 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
+- [x] 3.1 Lint + type check passes: `npm run lint`
+- [x] 3.2 i18n + progress guardrails pass: `npm run guardrails`
+- [x] 3.3 Build passes: `npm run build`
+- [x] 3.4 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
 
 #### Manual
 
-- [ ] 3.5 Signed-out `/projekty` redirects to `/auth/signin?next=/projekty`
-- [ ] 3.6 `/projekty` lists projects newest-first with grade/type/date + working crag links
-- [ ] 3.7 Two-step remove on `/projekty` removes the row; last row → empty-state, no refresh
-- [ ] 3.8 Crag-page add/remove reflects on `/projekty`; dashboard CTA + header link both reach it
+- [x] 3.5 Signed-out `/projekty` redirects to `/auth/signin?next=/projekty`
+- [x] 3.6 `/projekty` lists projects newest-first with grade/type/date + working crag links
+- [x] 3.7 Two-step remove on `/projekty` removes the row; last row → empty-state, no refresh
+- [x] 3.8 Crag-page add/remove reflects on `/projekty`; dashboard CTA + header link both reach it
 
 ### Phase 4: Guardrails + Beta Verification
 
 #### Automated
 
-- [ ] 4.1 Full guardrails pass: `npm run guardrails`
-- [ ] 4.2 Lint passes: `npm run lint`
-- [ ] 4.3 Build passes: `npm run build`
-- [ ] 4.4 No stale placeholders: `rg "planned: S-06" docs` empty
+- [x] 4.1 Full guardrails pass: `npm run guardrails`
+- [x] 4.2 Lint passes: `npm run lint`
+- [x] 4.3 Build passes: `npm run build`
+- [x] 4.4 No stale placeholders: `rg "planned: S-06" docs` empty
 
 #### Manual
 
-- [ ] 4.5 Beta-flow checklist walked end-to-end for the projects flow and passes
+- [x] 4.5 Beta-flow checklist walked end-to-end for the projects flow and passes

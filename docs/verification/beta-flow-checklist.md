@@ -60,7 +60,7 @@ Estimated time per cycle: 15–30 minutes.
 | Email-confirmation landing                   | `/auth/confirm-email`                      | current        |
 | Crag route view + inline climb-log save      | `/regiony/sokoliki/<crag-slug>`            | current        |
 | Personal climb history                       | `/historia`                                | current        |
-| Projects list                                | `/projekty`                                | planned: S-06  |
+| Projects list                                | `/projekty`                                | current        |
 
 Rows marked `planned: <slice>` are skipped in the current cycle and become
 live the moment the slice lands. Use `pass-with-notes` in Section C if a
@@ -100,6 +100,13 @@ DevTools console) and confirm the resulting Polish message on the redirected
       diagnostic, per-row delete button, inline confirmation prompt,
       confirm/cancel labels, delete pending text, success message, neutral
       already-gone message, delete error fallback)
+- [ ] `/projekty` — fully Polish (page title, h1, lead, empty state +
+      empty CTA, row labels grade/type/added/crag, crag-unavailable
+      fallback, load-error diagnostic, per-row remove button, inline
+      confirmation prompt, confirm/cancel labels, remove pending text,
+      success message, neutral already-gone message, remove error fallback);
+      crag-row toggle states ("Dodaj do projektów" / "W projektach" +
+      remove confirm) on `/regiony/sokoliki/<crag-slug>` signed-in
 - [ ] At least one server-side auth error renders Polish on
       `/auth/signin?error=…`
 
@@ -145,6 +152,7 @@ confirm:
 | `/regiony/sokoliki/<crag-slug>` signed-out    | [ ]     | [ ]     | [ ]     |
 | `/regiony/sokoliki/<crag-slug>` signed-in     | [ ]     | [ ]     | [ ]     |
 | `/historia`                                   | [ ]     | [ ]     | [ ]     |
+| `/projekty`                                   | [ ]     | [ ]     | [ ]     |
 
 ### B2 — Progress-feedback gate (per shipped action)
 
@@ -164,6 +172,16 @@ content swap, or visible end-state).
       count/latest-date indicator updates.
 - [ ] **Climb-log delete** (`src/components/climbs/HistoryClimbCard.tsx` →
       `Pending`) — on `/historia` while signed in, tap delete on a row,
+      confirm inline. `Pending` visible within ~300 ms, persists until the
+      row disappears (success or handled `not_found`) or a visible error
+      alert remains.
+- [ ] **Projects add/remove toggle** (`src/components/projects/ProjectAction.tsx`
+      → `Pending`) — on `/regiony/sokoliki/<crag-slug>` while signed in, add
+      a route to projects (and remove via the two-step confirm). `Pending`
+      visible within ~300 ms, persists until the toggle reaches its
+      on-list / off-list end state or a visible error alert remains.
+- [ ] **Projects list remove** (`src/components/projects/ProjectsListCard.tsx`
+      → `Pending`) — on `/projekty` while signed in, tap remove on a row,
       confirm inline. `Pending` visible within ~300 ms, persists until the
       row disappears (success or handled `not_found`) or a visible error
       alert remains.
@@ -210,7 +228,7 @@ authoritative.
 - **Date**: 2026-06-03
 - **App commit SHA**: `b1be209`
 - **Branch / slice context**: `feature/S-05-delete-climb-log` / S-05 delete climb log
-- **Pages skipped this cycle (still `planned`)**: `/projekty` (S-06)
+- **Pages skipped this cycle (still `planned`)**: none — `/projekty` (S-06) is now in scope
 - **Section A result**: pass
 - **Section B1 (mobile) result**: pass
 - **Section B2 (progress feedback) result**: pass

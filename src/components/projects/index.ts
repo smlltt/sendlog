@@ -24,3 +24,4 @@ export type {
 } from "@/components/projects/types";
 
 export { default as ProjectAction } from "@/components/projects/ProjectAction";
+export { default as ProjectsListCard } from "@/components/projects/ProjectsListCard";

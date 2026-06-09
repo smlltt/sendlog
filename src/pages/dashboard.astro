@@ -16,8 +16,9 @@ import { getTranslations } from "@/i18n";
  * `/dashboard` via `PROTECTED_ROUTES`, so `Astro.locals.user` is
  * non-null below.
  *
- * Scope: this page deliberately stays tiny. Stats, projects, and
- * delete-climb actions are the next slices' (S-05 / S-06) territory.
+ * Scope: this page deliberately stays tiny. It links into the two
+ * personal-state surfaces — `/historia` (S-05) and `/projekty` (S-06).
+ * Stats and richer dashboard content remain future territory.
  */
 
 const { user } = Astro.locals;
@@ -40,6 +41,13 @@ const t = getTranslations();
         class="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
       >
         {t("dashboard.history_link")}
+      </a>
+
+      <a
+        href="/projekty"
+        class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+      >
+        {t("dashboard.projects_link")}
       </a>
 
       <form method="POST" action="/api/auth/signout">

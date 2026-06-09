@@ -1,0 +1,33 @@
+---
+import ProjectsListCard from "@/components/projects/ProjectsListCard";
+import type { ProjectListItem } from "@/components/projects/types";
+
+/**
+ * <ProjectsList> — server-render wrapper that hands the projects list to the
+ * `<ProjectsListCard>` React island for per-row remove interaction (S-06).
+ *
+ * Boundary: this component never issues its own private-state read and
+ * intentionally does NOT import `@/lib/private-state` or `@/lib/catalog`.
+ * The calling page (`src/pages/projekty.astro`) hydrates projects, joins crag
+ * names, and projects each row into the primitive `ProjectListItem` DTO;
+ * those primitives cross into the island as props. Mirrors `HistoryList.astro`.
+ *
+ * Why an island: the list adds inline two-step remove, in-flight `Pending`
+ * feedback, local row removal, and Polish success / neutral stale-row copy
+ * — all client-side state. The island owns the full list so removing the
+ * last row falls through to the same Polish empty-state without a refresh.
+ *
+ * The progress registry's "Projects list initial load" row points at
+ * `src/pages/projekty.astro`, not here — the initial paint is the page's
+ * concern. The >2 s remove mutation's `Pending` primitive lives in the
+ * island.
+ */
+
+interface Props {
+  projects: ProjectListItem[];
+}
+
+const { projects } = Astro.props;
+---
+
+<ProjectsListCard projects={projects} client:load />

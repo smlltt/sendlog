@@ -185,6 +185,23 @@ export const ui = {
     "projects.remove.already_gone": "Tego projektu już nie ma — mógł zostać wcześniej usunięty.",
     "projects.remove.error": "Nie udało się usunąć projektu. Spróbuj ponownie.",
 
+    // Projects — /projekty page (S-06): heading + lead + empty / load-error
+    // surfaces, row chrome, and the dashboard CTA + header nav entries.
+    // Mirrors the `history.*` families.
+    "projects.page_title": "Moje projekty",
+    "projects.heading": "Moje projekty",
+    "projects.lead": "Trasy zapisane jako projekty, najnowsze na górze.",
+    "projects.empty_heading": "Brak zapisanych projektów",
+    "projects.empty_body": "Wybierz drogę z katalogu i dodaj ją do projektów.",
+    "projects.empty_cta": "Przeglądaj rejony",
+    "projects.load_error": "Nie udało się wczytać listy projektów. Spróbuj odświeżyć stronę.",
+    "projects.row.grade_label": "Wycena:",
+    "projects.row.type_label": "Typ:",
+    "projects.row.added_label": "Dodano:",
+    "projects.row.crag_label": "Skała:",
+    "projects.row.open_crag": "Otwórz skałę",
+    "projects.row.crag_unavailable": "Niedostępne",
+
     // History — /historia (page + dashboard entry + row chrome)
     "history.page_title": "Historia przejść",
     "history.heading": "Historia przejść",
@@ -214,6 +231,7 @@ export const ui = {
 
     // Dashboard — entry point copy (added for Phase 3 in the same dictionary)
     "dashboard.history_link": "Otwórz historię przejść",
+    "dashboard.projects_link": "Otwórz moje projekty",
 
     // Catalog — photo gallery (placeholders: {n}, {m})
     "catalog.photos.aria_photo_n_of_m": "Zdjęcie {n} z {m}",
@@ -230,6 +248,7 @@ export const ui = {
 
     // Catalog — header / footer
     "catalog.header.history": "Historia",
+    "catalog.header.projects": "Projekty",
     "catalog.header.signout": "Wyloguj",
     "catalog.header.signin": "Zaloguj się",
     "catalog.header.breadcrumbs_aria": "Okruszki",

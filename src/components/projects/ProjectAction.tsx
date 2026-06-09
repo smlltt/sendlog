@@ -162,7 +162,7 @@ export default function ProjectAction({ routeId, initialProjectId }: ProjectActi
           )}
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
               {t("projects.action.on_list")}
