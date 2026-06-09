@@ -85,12 +85,7 @@ function summaryFor(routeId: string): RouteClimbSummary {
       <tbody>
         {routes.map((route, index) => (
           <tr class="mb-3 block rounded-md border border-slate-200 bg-white sm:mb-0 sm:table-row sm:rounded-none sm:border-0 sm:border-b sm:bg-transparent">
-            <td
-
-                class:list={[" px-3 py-1 font-medium text-slate-900"]}
-            >
-              {index + 1}
-            </td>
+            <td class:list={["px-3 py-1 font-medium text-slate-900"]}>{index + 1}</td>
             <td
               data-label={t("catalog.routes.cell_name_label")}
               class:list={[CELL_BASE_CLASSES, "font-medium text-slate-900"]}
