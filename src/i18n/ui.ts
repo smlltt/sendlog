@@ -139,10 +139,12 @@ export const ui = {
 
     // Climbs — inline form (date + note + submit)
     "climbs.form.heading": "Nowe przejście",
+    "climbs.form.edit_heading": "Edytuj przejście",
     "climbs.form.date_label": "Data przejścia",
     "climbs.form.note_label": "Notatka (opcjonalnie)",
     "climbs.form.note_placeholder": "np. styl, partner, warunki",
     "climbs.form.submit": "Zapisz przejście",
+    "climbs.form.edit_submit": "Zapisz zmiany",
     "climbs.form.submit_pending": "Zapisywanie…",
     "climbs.form.success": "Zapisano przejście.",
     "climbs.form.error_date_required": "Data jest wymagana.",
@@ -228,6 +230,12 @@ export const ui = {
     "history.delete.already_gone": "Tego przejścia już nie ma — mogło zostać wcześniej usunięte.",
     "history.delete.error": "Nie udało się usunąć przejścia. Spróbuj ponownie.",
     "history.delete.error_network": "Brak połączenia z serwerem. Spróbuj ponownie.",
+
+    // History — per-row edit action (inline edit form + success notice).
+    // The edit-gone case reuses `history.delete.already_gone`; PATCH
+    // server errors reuse the `errors.climbs.*` family.
+    "history.edit.button": "Edytuj",
+    "history.edit.success": "Zmiany zostały zapisane.",
 
     // Dashboard — entry point copy (added for Phase 3 in the same dictionary)
     "dashboard.history_link": "Otwórz historię przejść",

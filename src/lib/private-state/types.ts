@@ -51,6 +51,11 @@ export interface CreateClimbInput {
   note?: string | null;
 }
 
+export interface UpdateClimbInput {
+  climbedOn: string;
+  note: string | null;
+}
+
 export interface CreateProjectInput {
   routeId: string;
 }

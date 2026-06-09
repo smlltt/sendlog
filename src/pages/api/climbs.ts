@@ -6,6 +6,7 @@ import {
   deleteClimb,
   PrivateStateError,
   type PrivateStateErrorCode,
+  updateClimb,
 } from "@/lib/private-state";
 import { getTranslations } from "@/i18n";
 
@@ -27,6 +28,16 @@ import { getTranslations } from "@/i18n";
  *   Postgres `date` column on `public.climbs`.
  *   - Success: `201 Created` with `{ climb: UserClimb }` so the calling
  *     island can update its row summary without a re-fetch.
+ * - `PATCH` body: `{ id: string; climbedOn: string; note?: string | null }`
+ *   where `id` is the climb row UUID and `climbedOn` is a strict
+ *   `YYYY-MM-DD` UTC date (same as `POST`). The route is identity and is
+ *   NOT editable, so it is intentionally absent from the payload.
+ *   - Success: `200 OK` with `{ climb: UserClimb }` carrying the refreshed
+ *     values (including a bumped `updatedAt`) so the calling island can
+ *     reconcile its row in place without a re-fetch.
+ *   - `not_found` (404): the row is absent or not owned by the current
+ *     user. Unlike `DELETE` (idempotent), the edit's typed changes cannot
+ *     land, so the island drops the row with a neutral notice.
  * - `DELETE` body: `{ id: string }` where `id` is the climb row UUID.
  *   - Success: `200 OK` with `{ deleted: { id } }` so the calling island
  *     can reconcile its local row state without a re-fetch.
@@ -58,6 +69,15 @@ const NOTE_MAX_LENGTH = 2000;
 
 const climbSchema = z.object({
   routeId: z.string().trim().min(1).max(200),
+  climbedOn: z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "climbedOn must be a YYYY-MM-DD UTC date"),
+  note: z.string().max(NOTE_MAX_LENGTH).nullish(),
+});
+
+const updateClimbSchema = z.object({
+  id: z.uuid(),
   climbedOn: z
     .string()
     .trim()
@@ -176,6 +196,59 @@ export const POST: APIRoute = async (context) => {
       note: parsed.data.note ?? null,
     });
     return jsonResponse({ climb }, 201);
+  } catch (err) {
+    if (err instanceof PrivateStateError) {
+      return jsonResponse(errorBody(err.code, err.context), STATUS_FOR_CODE[err.code]);
+    }
+    return jsonResponse(
+      errorBody("unknown", { detail: err instanceof Error ? err.message : String(err) }),
+      STATUS_FOR_CODE.unknown,
+    );
+  }
+};
+
+export const PATCH: APIRoute = async (context) => {
+  // Same JSON-only contract as POST/DELETE: the `/historia` row island sends
+  // an `{ id, climbedOn, note }` body via `fetch`. Form-data is not supported.
+  let raw: unknown;
+  try {
+    raw = await context.request.json();
+  } catch {
+    return jsonResponse(errorBody("invalid_input", { reason: "body_not_json" }), STATUS_FOR_CODE.invalid_input);
+  }
+
+  const parsed = updateClimbSchema.safeParse(raw);
+  if (!parsed.success) {
+    return jsonResponse(
+      errorBody("invalid_input", {
+        issues: parsed.error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          code: issue.code,
+        })),
+      }),
+      STATUS_FOR_CODE.invalid_input,
+    );
+  }
+
+  let client;
+  try {
+    client = createPrivateStateClient(context.request.headers, context.cookies, context.locals.user);
+  } catch (err) {
+    if (err instanceof PrivateStateError) {
+      return jsonResponse(errorBody(err.code, err.context), STATUS_FOR_CODE[err.code]);
+    }
+    return jsonResponse(
+      errorBody("unknown", { detail: err instanceof Error ? err.message : String(err) }),
+      STATUS_FOR_CODE.unknown,
+    );
+  }
+
+  try {
+    const climb = await updateClimb(client, parsed.data.id, {
+      climbedOn: parsed.data.climbedOn,
+      note: parsed.data.note ?? null,
+    });
+    return jsonResponse({ climb }, 200);
   } catch (err) {
     if (err instanceof PrivateStateError) {
       return jsonResponse(errorBody(err.code, err.context), STATUS_FOR_CODE[err.code]);
