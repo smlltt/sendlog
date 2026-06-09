@@ -32,6 +32,7 @@ export {
   PrivateStateError,
   type CreateClimbInput,
   type CreateProjectInput,
+  type UpdateClimbInput,
   type PrivateStateErrorCode,
   type PrivateStateReadOptions,
   type UserClimb,
@@ -40,5 +41,5 @@ export {
   type UserProjectWithRoute,
 } from "@/lib/private-state/types";
 export { createPrivateStateClient, type PrivateStateClient } from "@/lib/private-state/client";
-export { createClimb, deleteClimb, listClimbs, listClimbsByRoute } from "@/lib/private-state/climbs";
+export { createClimb, deleteClimb, listClimbs, listClimbsByRoute, updateClimb } from "@/lib/private-state/climbs";
 export { addProject, isRouteOnProjects, listProjects, removeProject } from "@/lib/private-state/projects";

@@ -4,6 +4,7 @@ import {
   type CreateClimbInput,
   PrivateStateError,
   type PrivateStateReadOptions,
+  type UpdateClimbInput,
   type UserClimb,
   type UserClimbWithRoute,
 } from "@/lib/private-state/types";
@@ -122,6 +123,35 @@ export async function createClimb(client: PrivateStateClient, input: CreateClimb
     });
   }
   return rowToClimb(data);
+}
+
+/**
+ * Update one climb owned by the current user — only the editable fields
+ * (`climbed_on`, `note`). The route is identity, never re-validated or
+ * rewritten here. RLS enforces user scoping; the explicit `user_id` filter
+ * makes the intent obvious and lets the helper collapse "row not found" and
+ * "RLS denied" into one `not_found` (both surface as zero rows returned). The
+ * `climbs_set_updated_at` trigger bumps `updated_at` on the write. Returns the
+ * refreshed `UserClimb` so the caller can reconcile without a re-fetch.
+ */
+export async function updateClimb(client: PrivateStateClient, id: string, input: UpdateClimbInput): Promise<UserClimb> {
+  const { data, error } = await client.supabase
+    .from("climbs")
+    .update({ climbed_on: input.climbedOn, note: input.note })
+    .eq("id", id)
+    .eq("user_id", client.userId)
+    .select(CLIMB_COLUMNS)
+    .overrideTypes<ClimbRow[], { merge: false }>();
+  if (error) {
+    throw new PrivateStateError("upstream_error", `Supabase update on climbs failed: ${error.message}`, {
+      pgCode: error.code,
+      id,
+    });
+  }
+  if (data.length === 0) {
+    throw new PrivateStateError("not_found", `No climb with id=${id} for current user.`, { id });
+  }
+  return rowToClimb(data[0]);
 }
 
 /**

@@ -365,27 +365,27 @@ None — F-02's `20260531172510_private_user_state.sql` already provides the tab
 
 #### Automated
 
-- [x] 3.1 Lint + type check passes: `npm run lint`
-- [x] 3.2 i18n + progress guardrails pass: `npm run guardrails`
-- [x] 3.3 Build passes: `npm run build`
-- [x] 3.4 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
+- [x] 3.1 Lint + type check passes: `npm run lint` — 646a683
+- [x] 3.2 i18n + progress guardrails pass: `npm run guardrails` — 646a683
+- [x] 3.3 Build passes: `npm run build` — 646a683
+- [x] 3.4 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty — 646a683
 
 #### Manual
 
-- [x] 3.5 Signed-out `/projekty` redirects to `/auth/signin?next=/projekty`
-- [x] 3.6 `/projekty` lists projects newest-first with grade/type/date + working crag links
-- [x] 3.7 Two-step remove on `/projekty` removes the row; last row → empty-state, no refresh
-- [x] 3.8 Crag-page add/remove reflects on `/projekty`; dashboard CTA + header link both reach it
+- [x] 3.5 Signed-out `/projekty` redirects to `/auth/signin?next=/projekty` — 646a683
+- [x] 3.6 `/projekty` lists projects newest-first with grade/type/date + working crag links — 646a683
+- [x] 3.7 Two-step remove on `/projekty` removes the row; last row → empty-state, no refresh — 646a683
+- [x] 3.8 Crag-page add/remove reflects on `/projekty`; dashboard CTA + header link both reach it — 646a683
 
 ### Phase 4: Guardrails + Beta Verification
 
 #### Automated
 
-- [x] 4.1 Full guardrails pass: `npm run guardrails`
-- [x] 4.2 Lint passes: `npm run lint`
-- [x] 4.3 Build passes: `npm run build`
-- [x] 4.4 No stale placeholders: `rg "planned: S-06" docs` empty
+- [x] 4.1 Full guardrails pass: `npm run guardrails` — 646a683
+- [x] 4.2 Lint passes: `npm run lint` — 646a683
+- [x] 4.3 Build passes: `npm run build` — 646a683
+- [x] 4.4 No stale placeholders: `rg "planned: S-06" docs` empty — 646a683
 
 #### Manual
 
-- [x] 4.5 Beta-flow checklist walked end-to-end for the projects flow and passes
+- [x] 4.5 Beta-flow checklist walked end-to-end for the projects flow and passes — 646a683

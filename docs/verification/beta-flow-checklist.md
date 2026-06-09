@@ -99,7 +99,9 @@ DevTools console) and confirm the resulting Polish message on the redirected
       labels, link-back fallback when crag context is missing, load-error
       diagnostic, per-row delete button, inline confirmation prompt,
       confirm/cancel labels, delete pending text, success message, neutral
-      already-gone message, delete error fallback)
+      already-gone message, delete error fallback, per-row edit button,
+      edit form heading/labels/submit, edit save pending text, edit success
+      message, edit already-removed neutral message)
 - [ ] `/projekty` — fully Polish (page title, h1, lead, empty state +
       empty CTA, row labels grade/type/added/crag, crag-unavailable
       fallback, load-error diagnostic, per-row remove button, inline
@@ -175,6 +177,12 @@ content swap, or visible end-state).
       confirm inline. `Pending` visible within ~300 ms, persists until the
       row disappears (success or handled `not_found`) or a visible error
       alert remains.
+- [ ] **Climb-log edit** (`src/components/climbs/ClimbLogForm.tsx` →
+      `SubmitButton`) — on `/historia` while signed in, tap **Edytuj** on a
+      row, change the date and/or note, and save. `SubmitButton` pending text
+      visible within ~300 ms, persists until the row collapses to its read
+      view with the "changes saved" notice (or the row drops with the neutral
+      already-removed notice on `not_found`).
 - [ ] **Projects add/remove toggle** (`src/components/projects/ProjectAction.tsx`
       → `Pending`) — on `/regiony/sokoliki/<crag-slug>` while signed in, add
       a route to projects (and remove via the two-step confirm). `Pending`

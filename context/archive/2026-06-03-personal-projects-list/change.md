@@ -1,10 +1,10 @@
 ---
 change_id: personal-projects-list
 title: Personal projects list
-status: implementing
+status: archived
 created: 2026-06-03
 updated: 2026-06-09
-archived_at: null
+archived_at: 2026-06-09T11:03:38Z
 ---
 
 ## Notes
