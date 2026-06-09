@@ -1,17 +1,28 @@
 /**
- * <HistoryClimbCard> — the `/historia` delete-capable history list island.
+ * <HistoryClimbCard> — the `/historia` edit- and delete-capable history
+ * list island.
  *
  * Boundary
  *
  * - DOES NOT import `@/lib/private-state` (server-only) or `@/lib/catalog`.
- *   The only path back to Supabase is the JSON `DELETE /api/climbs`
- *   endpoint, which carries the user's session cookies automatically
- *   through the browser fetch.
+ *   The only paths back to Supabase are the JSON `DELETE /api/climbs`
+ *   endpoint (delete) and `<ClimbLogForm mode="edit">`'s `PATCH
+ *   /api/climbs` (edit) — both carry the user's session cookies
+ *   automatically through the browser fetch. `ClimbLogForm` is itself a
+ *   client island and keeps the server-only boundary intact.
  * - DOES import `Pending` from `@/components/ui/Pending` so
  *   `scripts/check-progress.mjs` (`guardrails:progress`) can prove the
  *   >2 s delete mutation shows progress feedback. Do not swap for a plain
  *   spinner without updating
  *   `docs/verification/progress-feedback-actions.md`.
+ *
+ * Edit lifecycle
+ *
+ * Each row carries an `editing` sub-state that mounts `ClimbLogForm` in
+ * edit mode. On save the list (not the row) reconciles the edited values
+ * via `handleUpdated` so the collapsed row re-renders from one source of
+ * truth; a `not_found` reuses the delete `already_gone` path so a stale
+ * row drops out with the shared neutral notice.
  *
  * Why a list-level island (not one island per row)
  *
@@ -35,7 +46,8 @@
  */
 
 import { useState } from "react";
-import { Trash2, X } from "lucide-react";
+import { Pencil, Trash2, X } from "lucide-react";
+import ClimbLogForm from "@/components/climbs/ClimbLogForm";
 import Pending from "@/components/ui/Pending";
 import { cn } from "@/lib/utils";
 import { getTranslations } from "@/i18n";
@@ -62,6 +74,14 @@ export default function HistoryClimbCard({ climbs }: HistoryClimbCardProps) {
         ? { kind: "success", text: t("history.delete.success") }
         : { kind: "neutral", text: t("history.delete.already_gone") },
     );
+  }
+
+  // The list owns the edited values (not the row) so the collapsed row
+  // re-renders from a single source of truth, mirroring how delete owns
+  // membership at the list level.
+  function handleUpdated(id: string, patch: { climbedOn: string; note: string | null }) {
+    setItems((prev) => prev.map((climb) => (climb.id === id ? { ...climb, ...patch } : climb)));
+    setNotice({ kind: "success", text: t("history.edit.success") });
   }
 
   if (items.length === 0) {
@@ -119,6 +139,7 @@ export default function HistoryClimbCard({ climbs }: HistoryClimbCardProps) {
             key={climb.id}
             climb={climb}
             onRemoved={handleRemoved}
+            onUpdated={handleUpdated}
             onActivity={() => {
               setNotice(null);
             }}
@@ -132,13 +153,14 @@ export default function HistoryClimbCard({ climbs }: HistoryClimbCardProps) {
 interface ClimbRowProps {
   climb: HistoryClimbItem;
   onRemoved: (id: string, outcome: RemovalOutcome) => void;
+  onUpdated: (id: string, patch: { climbedOn: string; note: string | null }) => void;
   /** Called when the user starts interacting so a stale list notice clears. */
   onActivity: () => void;
 }
 
-type RowState = "idle" | "confirming" | "deleting";
+type RowState = "idle" | "confirming" | "deleting" | "editing";
 
-function ClimbRow({ climb, onRemoved, onActivity }: ClimbRowProps) {
+function ClimbRow({ climb, onRemoved, onUpdated, onActivity }: ClimbRowProps) {
   const t = getTranslations();
   const [state, setState] = useState<RowState>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -226,7 +248,18 @@ function ClimbRow({ climb, onRemoved, onActivity }: ClimbRowProps) {
 
       <div className="mt-3 flex flex-col gap-2 border-t border-slate-100 pt-3">
         {state === "idle" ? (
-          <div className="flex justify-end">
+          <div className="flex flex-wrap justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                onActivity();
+                setState("editing");
+              }}
+              className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            >
+              <Pencil className="size-4" aria-hidden="true" />
+              {t("history.edit.button")}
+            </button>
             <button
               type="button"
               onClick={() => {
@@ -238,6 +271,28 @@ function ClimbRow({ climb, onRemoved, onActivity }: ClimbRowProps) {
               <Trash2 className="size-4" aria-hidden="true" />
               {t("history.delete.button")}
             </button>
+          </div>
+        ) : null}
+
+        {state === "editing" ? (
+          <div>
+            <h4 className="text-sm font-medium text-slate-700">{t("climbs.form.edit_heading")}</h4>
+            <ClimbLogForm
+              mode="edit"
+              climbId={climb.id}
+              initialClimbedOn={climb.climbedOn}
+              initialNote={climb.note}
+              onSaved={(updated) => {
+                onUpdated(climb.id, { climbedOn: updated.climbedOn, note: updated.note });
+                setState("idle");
+              }}
+              onGone={() => {
+                onRemoved(climb.id, "already_gone");
+              }}
+              onCancel={() => {
+                setState("idle");
+              }}
+            />
           </div>
         ) : null}
 
