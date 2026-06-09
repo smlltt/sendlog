@@ -3,7 +3,7 @@ project: SendLog
 version: 1
 status: draft
 created: 2026-05-26
-updated: 2026-06-03
+updated: 2026-06-09
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -28,7 +28,7 @@ SendLog is a Polish-first online catalog for local climbing crags, starting with
 | ID | Change ID | Outcome (user can ...) | Prerequisites | PRD refs | Status |
 |---|---|---|---|---|---|
 | F-01 | catalog-content-contract | (foundation) catalog content and canonical route identity are ready for public browsing and private references | - | Business Logic, Access Control, FR-001, FR-003, FR-016, FR-018 | done |
-| F-02 | private-user-state-contract | (foundation) authenticated climber state is private per user and can reference canonical routes | F-01 | Access Control, NFR privacy, FR-006, FR-009, FR-012 | proposed |
+| F-02 | private-user-state-contract | (foundation) authenticated climber state is private per user and can reference canonical routes | F-01 | Access Control, NFR privacy, FR-006, FR-009, FR-012 | done |
 | F-03 | core-flow-verification-guardrails | (foundation) mobile, Polish-language, progress, and response-time guardrails are checkable for beta flows | - | NFR mobile, NFR Polish UI, NFR progress, NFR response time | done |
 | S-07 | admin-catalog-curation | admin can create, edit, and delete regions, crags, and routes | F-01 | FR-016, FR-017, FR-018 | done |
 | S-01 | public-catalog-browse | visitor can browse regions, open a crag, and view its routes | F-01, S-07 | FR-001, FR-002, FR-003 | done |
@@ -85,7 +85,7 @@ What's already in place in the codebase as of `2026-05-26` (auto-researched + us
 - **Blockers:** -
 - **Unknowns:** -
 - **Risk:** Kept before auth-dependent slices because privacy is a guardrail, not polish; the main risk is discovering too late that personal state cannot cleanly attach to catalog routes.
-- **Status:** proposed
+- **Status:** done
 
 ### F-03: Core-flow verification guardrails
 
@@ -235,3 +235,4 @@ No open roadmap questions. The only sequencing-relevant uncertainty is tracked i
 - **F-03: (foundation) mobile, Polish-language, progress, and response-time guardrails are checkable for beta flows** — Archived 2026-06-02 → `context/archive/2026-06-01-core-flow-verification-guardrails/`. Lesson: —.
 - **S-04: signed-in climber can log a route with date and note, then see it in personal history** — Archived 2026-06-03 → `context/archive/2026-06-01-route-climb-log/`. Lesson: —.
 - **S-05: signed-in climber can delete one of their own logged climbs** — Archived 2026-06-03 → `context/archive/2026-06-03-delete-climb-log/`. Lesson: —.
+- **F-02: (foundation) authenticated climber state is private per user and can reference canonical routes** — Archived 2026-06-09 → `context/archive/2026-05-31-private-user-state-contract/`. Lesson: —.
