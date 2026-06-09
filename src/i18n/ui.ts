@@ -158,6 +158,16 @@ export const ui = {
     "errors.climbs.not_found": "Tego przejścia już nie ma — mogło zostać wcześniej usunięte.",
     "errors.climbs.unknown": "Wystąpił nieoczekiwany błąd podczas zapisywania przejścia.",
 
+    // Projects — server-resolved error messages (keyed by API error code)
+    "errors.projects.missing_config": "Lista projektów jest chwilowo niedostępna. Spróbuj ponownie później.",
+    "errors.projects.unauthenticated": "Sesja wygasła. Zaloguj się ponownie, aby zarządzać projektami.",
+    "errors.projects.unknown_route": "Nie znaleziono tej drogi w katalogu. Odśwież stronę i spróbuj ponownie.",
+    "errors.projects.duplicate_project": "Ta droga jest już na Twojej liście projektów.",
+    "errors.projects.upstream_error": "Nie udało się zaktualizować listy projektów. Spróbuj ponownie za chwilę.",
+    "errors.projects.invalid_input": "Nieprawidłowe dane. Odśwież stronę i spróbuj ponownie.",
+    "errors.projects.not_found": "Tego projektu już nie ma — mógł zostać wcześniej usunięty.",
+    "errors.projects.unknown": "Wystąpił nieoczekiwany błąd podczas aktualizacji listy projektów.",
+
     // History — /historia (page + dashboard entry + row chrome)
     "history.page_title": "Historia przejść",
     "history.heading": "Historia przejść",

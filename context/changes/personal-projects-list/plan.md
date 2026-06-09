@@ -1,282 +1,250 @@
-# Personal Projects List Implementation Plan
+# Personal Projects List (S-06) Implementation Plan
 
 ## Overview
 
-Ship S-06 **add + view** for personal projects: a signed-in climber can add a route to their projects list from the crag route table (FR-012), see a per-route **"W projektach"** indicator once added, and review all projects on a protected `/projekty` page (FR-013).
-
-This slice mirrors the shipped S-04 (`route-climb-log`) structure: private-state helpers and schema already exist from F-02; S-06 adds the JSON API, React island, crag-page wiring, protected list page, nav entry points, and guardrail updates.
-
-**Remove** (FR-014) is explicitly **out of scope** here. It will ship in a separate change (e.g. `remove-personal-project`) that mirrors `delete-climb-log` once that slice lands. FR-015 (auto-remove on log) remains parked per the roadmap.
+Ship S-06 in full: a signed-in climber can **add** a route to, **view**, and **remove** a route from their personal projects list (FR-012, FR-013, FR-014). The data and privacy layer already exists from F-02 (`public.projects` table, RLS, and the `listProjects` / `isRouteOnProjects` / `addProject` / `removeProject` helpers). This change builds the API surface, the crag-row toggle, the protected `/projekty` page, navigation, i18n, and verification on top of that finished contract. It mirrors the shipped S-04 (add/view) and S-05 (two-step remove) climb flows almost field-for-field. **No new migration.**
 
 ## Current State Analysis
 
-F-02 (`private-user-state-contract`) already delivered everything below the UI layer:
+What exists today (verified against the codebase at planning time):
 
-- `public.projects` with `unique (user_id, route_id)`, FR-013 index, RLS ON, four per-operation policies (`supabase/migrations/20260531172510_private_user_state.sql`).
-- `@/lib/private-state` exports `listProjects`, `isRouteOnProjects`, `addProject`, and `removeProject` (`src/lib/private-state/projects.ts`). S-06 consumes the first three; `removeProject` waits for the remove slice.
-- S-04 shipped the patterns to mirror: `/api/climbs.ts`, `RouteClimbAction` / `ClimbLogForm`, `RoutesTable.astro` signed-in action cell, `/historia.astro` + `HistoryList.astro`, dashboard CTA, and `CatalogHeader` history link.
+- **Data + privacy (DONE, F-02).** `supabase/migrations/20260531172510_private_user_state.sql` created `public.projects` (`id`, `user_id`, `route_id` text = Strapi `documentId`, `created_at`) with `unique (user_id, route_id)`, a `(user_id, created_at desc)` index for FR-013, RLS ON, and four per-operation `authenticated` policies scoped to `auth.uid() = user_id`. No `anon` policy → unauthenticated denied.
+- **Server helpers (DONE, F-02).** `src/lib/private-state/projects.ts` exports `listProjects` (ordered `created_at desc`, catalog-hydrated, orphans dropped by default), `isRouteOnProjects`, `addProject` (validates route id, translates Postgres `23505` → `PrivateStateError("duplicate_project")`), and `removeProject` (deletes scoped by `id` AND `user_id`; zero rows → `not_found`). All re-exported from `src/lib/private-state/index.ts`.
+- **Mutation API precedent (DONE, S-04 + S-05).** `src/pages/api/climbs.ts` is now POST **and** DELETE. Its `STATUS_FOR_CODE` already maps `duplicate_project: 422` and `not_found: 404`; DELETE takes `{ id }` (zod `z.uuid()`), echoes `{ deleted: { id } }`, and treats `not_found` as idempotent. `/api/climbs` is intentionally NOT in `PROTECTED_ROUTES` so islands get a JSON `401`, not an HTML redirect.
+- **Crag-row island precedent (DONE, S-04).** `src/components/climbs/RouteClimbAction.tsx` is the per-route island; `src/components/catalog/RoutesTable.astro` renders it in a signed-in-only "Twoje przejścia" action cell; `src/pages/regiony/[region]/[crag].astro` builds the private-state client only when `Astro.locals.user` is set, reads `listClimbs`, groups per route, and threads primitives into the table.
+- **List + remove precedent (DONE, S-05).** `src/pages/historia.astro` loads `Promise.all([listClimbs, listCrags])`, projects rows into the client-safe `HistoryClimbItem` DTO, and renders `HistoryList.astro` → `HistoryClimbCard.tsx`, a **list-level** island doing per-row two-step confirm, `Pending` feedback, `not_found`-as-idempotent, and last-row-falls-through-to-empty-state.
+- **Nav + protection (DONE).** `src/middleware.ts` `PROTECTED_ROUTES = ["/dashboard", "/historia", "/private-state-smoke"]`; dashboard CTA group in `src/pages/dashboard.astro`; authenticated header links in `src/components/catalog/CatalogHeader.astro`.
+- **Forward-compat harness (DONE).** `scripts/check-i18n.mjs` already lists `src/pages/projekty.astro` in its scope; `docs/verification/progress-feedback-actions.md` and `docs/verification/beta-flow-checklist.md` carry `planned: S-06` rows to flip.
 
-Missing for S-06:
-
-1. `POST`-only projects API route (`src/pages/api/projects.ts`).
-2. `ProjectAction` React island (add button → success → static badge).
-3. Crag page: `listProjects` → `Set<routeId>` passed into `RoutesTable`.
-4. Protected `/projekty` page + `ProjectsList.astro` (view-only rows).
-5. `/projekty` in `PROTECTED_ROUTES`, dashboard + header nav links, `projects.*` i18n keys, and flipping `planned: S-06` verification rows to `shipped`/`current`.
+What is missing (this plan builds it): the projects API route, the projects UI module + crag-row toggle island, crag-page project-membership wiring, the `/projekty` page + list/remove island, `/projekty` protection, dashboard + header links, `projects.*` / `errors.projects.*` i18n keys, and the verification flips.
 
 ## Desired End State
 
-After this plan lands:
+A signed-in climber on a crag page sees, in the same per-route action cell as the climb log, a projects toggle: "Dodaj do projektów" when the route is not on their list, or a "W projektach" state with an inline two-step remove when it is. Adding/removing updates the row in place without navigation. `/projekty` (protected) lists their projects newest-first with route name, grade, type, an "added on" date, and a crag back-link, each row removable via the same two-step confirm. `/projekty` is reachable from both the dashboard CTA and the header nav. `npm run guardrails`, lint, and build pass; the S-06 verification rows are flipped from `planned` to current.
 
-- Signed-out users still browse crag route pages publicly; no per-row project controls.
-- Signed-in users see a per-route **add-to-projects** control beside the existing climb-log action. Adding shows pending feedback, then inline success, then a non-interactive **"W projektach"** badge (no remove affordance in this slice).
-- Duplicate add attempts return structured `duplicate_project` JSON (422) without breaking the row.
-- `/projekty` is middleware-protected, lists the user's projects ordered `created_at desc` (via `listProjects`), each row showing route name, grade/type, crag context, and a link back to `/regiony/{region}/{crag}` when slugs are available.
-- `/dashboard` and authenticated `CatalogHeader` link to `/projekty` beside `/historia`.
-- `npm run guardrails`, `npm run lint`, and `npm run build` pass; progress registry and beta checklist mark S-06 paths as shipped/current.
+Verify by: signing in, toggling a route on/off from a crag page, opening `/projekty` and confirming the route appears/disappears, removing from `/projekty`, and checking that a signed-out hit on `/projekty` redirects to sign-in.
 
 ### Key Discoveries:
 
-- `src/components/catalog/RoutesTable.astro` renders a mobile-card route table with one signed-in action column for climb logging; S-06 stacks a second island in that cell without adding a column (preserves no-horizontal-scroll layout).
-- `addProject` already maps Postgres `23505` → `PrivateStateError("duplicate_project")` and `STATUS_FOR_CODE` in `/api/climbs.ts` already lists `duplicate_project: 422` as forward-compatible precedent.
-- `removeProject(client, id)` takes the **project row id**, not `routeId` — the future remove slice will resolve that; this slice never calls it.
-- Verification harness pre-registers `src/pages/projekty.astro` in i18n guard, progress registry (`planned: S-06`), and beta checklist (`planned: S-06`).
+- `addProject` already translates the duplicate case to `duplicate_project` and `removeProject` already enforces `not_found` discipline (`src/lib/private-state/projects.ts:91-140`) — the API route is pure plumbing.
+- `STATUS_FOR_CODE` in `src/pages/api/climbs.ts:82-91` already contains every code the projects API needs (`duplicate_project`, `not_found`, etc.); the projects route copies this map verbatim.
+- `removeProject(client, id)` takes the **project row id**, not the route id (`src/lib/private-state/projects.ts:123`). The crag page therefore must thread a `routeId → projectId` map (not just a boolean) so the toggle island can issue a DELETE without a server round-trip to resolve the id.
+- `listProjects` returns `UserProjectWithRoute[]` already carrying `id` per row and `route` (with `regionSlug`/`cragSlug`), so both the crag-page membership map and the `/projekty` rows derive from one read each (`src/lib/private-state/projects.ts:33-61`).
+- The S-05 list-level island pattern (`HistoryClimbCard.tsx`) is the exact template for `/projekty` removal, including last-row empty-state fall-through.
+- Client-safe boundary is strict: islands must NOT import `@/lib/private-state`; they receive primitive props and call the JSON API (`src/components/climbs/types.ts:1-10`, `index.ts:1-14`).
 
 ## What We're NOT Doing
 
-- **FR-014 remove from projects** — deferred to a separate change mirroring `delete-climb-log` (no DELETE verb, no remove button on `/projekty`, no toggle-off on the route row).
-- **FR-015 auto-remove project when logging a climb** — nice-to-have, parked in roadmap.
-- Climb-log or history changes beyond coexisting on the same route row.
-- Stats, search, filters, or reordering of the projects list.
-- Per-route detail pages; routes remain rows on the crag page.
-- New Supabase migrations (schema is complete).
-- A test runner setup (verify via astro sync, lint, guardrails, build, manual smoke).
+- **FR-015 (auto-remove a project when its route is logged)** — parked in the roadmap; spans climbs + projects and is out of scope.
+- **No new migration, schema, index, or RLS change** — F-02 delivered all of it.
+- **No edit of a project** — projects are a binary membership (on the list or not); there is nothing to edit.
+- **No stats, counts, search, filtering, or manual reordering** on `/projekty` — newest-first only.
+- **No changes to the climb-log flow** — S-04/S-05 stay as-is; projects is an additive sibling.
+- **No second locale** — Polish-only, consistent with the rest of the app.
 
 ## Implementation Approach
 
-Keep the crag route page public and server-rendered. When `Astro.locals.user` is present, extend the existing private-state `try` block to also call `listProjects`, build `projectRouteIds: Set<string>`, and pass a per-route `isOnProjects` boolean into `RoutesTable`. Use `Promise.all([listClimbs(client), listProjects(client)])` so signed-in reads stay one round-trip group.
+Build bottom-up, mirroring the climb flow so each layer has a known-good template:
 
-Mutations are **add-only**: a narrow `POST /api/projects` accepts `{ routeId }`, validates with zod, calls `addProject`, returns `201 { project }`. React `ProjectAction` owns pending/success/error and flips local state to show the badge; it never imports `@/lib/private-state`.
+1. **API + client-safe types first** (Phase 1) so the UI layers have a contract to call and DTOs to import.
+2. **Crag-row toggle** (Phase 2) — the FR-012 add + FR-014 remove entry point, where most users will act.
+3. **`/projekty` page + remove + nav** (Phase 3) — the FR-013 view plus a second remove surface and discoverability.
+4. **Guardrails + beta verification** (Phase 4) — flip the pre-registered S-06 rows and prove the flow against the committed checklists.
 
-`/projekty` mirrors `/historia`: protected Astro page, `listProjects(client)`, map hydrated rows into a flat DTO for `ProjectsList.astro`, Polish empty/error states, orphan rows dropped by default.
+The projects UI lives in a new `src/components/projects/` module (`index.ts`, `types.ts`, `__tests__/`) mirroring `src/components/climbs/` to satisfy the repo module-structure rule. The DELETE contract is by **project row id** (exact mirror of `/api/climbs`); the crag page supplies the id via a membership map, and `/projekty` rows carry it natively.
 
 ## Critical Implementation Details
 
-### Public Route Page, Private Writes
+- **Membership must be a `routeId → projectId` map, not a boolean.** The crag-row toggle issues `DELETE { id }`, so a plain "on list?" flag is insufficient — the island needs the project row id to remove without an extra lookup. Build `Map<string, string>` (routeId → project id) from one `listProjects(client)` call in the crag page's existing signed-in `try` block, alongside the climbs read in the same `Promise.all`.
+- **Add returns the new project id; the island stores it.** After a successful `POST { routeId }`, the island reads `{ project: { id } }` from the response and transitions to the on-list state holding that id, so an immediate remove works without a refresh (same no-re-render-during-session assumption as `RouteClimbAction`).
+- **Mobile no-horizontal-scroll constraint.** The toggle stacks *inside* the existing action cell (no new column); on 375px viewports the cell already renders block-level (`RoutesTable.astro` `CELL_BASE_CLASSES`). Keep the toggle as a single wrapping flex row to avoid overflow.
 
-Do not add `/regiony` to `PROTECTED_ROUTES`. Only `/projekty` and `/api/projects` (JSON `401`, not HTML redirect) are new authenticated surfaces for this slice.
-
-### Server-Only Boundary
-
-`@/lib/private-state` imports only from Astro pages and API routes. `ProjectAction` receives `routeId` and `initialIsOnProjects` (boolean); it POSTs to `/api/projects`. Guardrail: `rg "from \"@/lib/private-state\"" src/components` must stay empty.
-
-### Add-Only Row State
-
-Once a route is on the list, render a static badge — not a disabled remove button — so users are not promised removal before the remove slice ships. Optimistic/local state after a successful `201` should set `isOnProjects: true` without a full page reload.
-
-## Phase 1: Projects-State Preflight
+## Phase 1: Projects Mutation API + Client-Safe Module
 
 ### Overview
 
-Verify F-02 project helpers S-06 relies on before building user-facing UI. No product surface in this phase.
+Stand up `POST`/`DELETE /api/projects` and the `src/components/projects/` module scaffold with client-safe DTOs and the projects error i18n keys. After this phase the contract exists and is callable, even though no UI consumes it yet.
 
 ### Changes Required:
 
-#### 1. Review F-02 project helper contracts
-
-**Files**: `src/lib/private-state/projects.ts`, `context/changes/private-user-state-contract/plan.md`
-
-**Intent**: Confirm `addProject`, `listProjects`, and `isRouteOnProjects` match FR-012/FR-013 expectations and that `removeProject` exists but is intentionally unused in this slice.
-
-**Contract**: `addProject` rejects unknown `routeId` with `unknown_route`; duplicate insert yields `duplicate_project`; `listProjects` orders `created_at desc` and drops orphans by default; `isRouteOnProjects` returns boolean for a canonical `routeId`.
-
-#### 2. Exercise project helper failure modes locally
-
-**Files**: `src/lib/private-state/projects.ts`, `src/pages/private-state-smoke.astro` (if applicable)
-
-**Intent**: Prove add/list/membership behavior before wiring islands.
-
-**Contract**: With local Supabase + Strapi env: add a valid route → row exists; add same route again → `duplicate_project`; `listProjects` returns hydrated row; `isRouteOnProjects` is true for that route and false for another.
-
-#### 3. Record preflight outcome
-
-**File**: `context/changes/personal-projects-list/change.md`
-
-**Intent**: Leave a short note that S-06 started with projects preflight complete or blocked.
-
-**Contract**: Under `## Notes`, summarize result and blockers. Stop before Phase 2 if blocked.
-
-### Success Criteria:
-
-#### Automated Verification:
-
-- Astro types regenerate: `npx astro sync`
-- Root lint passes: `npm run lint`
-- Guardrails pass: `npm run guardrails`
-- Production build passes: `npm run build`
-
-#### Manual Verification:
-
-- `addProject` succeeds for a valid catalog `routeId`.
-- Duplicate add returns `PrivateStateError("duplicate_project")`.
-- `listProjects` returns newest-first hydrated rows; orphans dropped by default.
-- `isRouteOnProjects` reflects membership after add.
-- Preflight recorded in `change.md`.
-
-**Implementation Note**: After automated verification passes, pause for manual confirmation before Phase 2.
-
----
-
-## Phase 2: Add API + Route-Page State
-
-### Overview
-
-Add the authenticated add path and per-route projects UI: JSON API, `ProjectAction` island, `RoutesTable` props, crag-page `listProjects` read, and core `projects.*` i18n keys.
-
-### Changes Required:
-
-#### 1. Projects add API route
+#### 1. Projects API route
 
 **File**: `src/pages/api/projects.ts`
 
-**Intent**: Provide one authenticated JSON mutation for adding a route to projects (FR-012).
+**Intent**: Single authenticated JSON mutation surface for projects, mirroring `src/pages/api/climbs.ts`: `POST` adds a route to the list, `DELETE` removes a project by row id. Keep it out of `PROTECTED_ROUTES` so signed-out islands get a structured `401` JSON instead of an HTML redirect.
 
-**Contract**: Export `const prerender = false` and `POST` only. Accept JSON `{ routeId: string }`; validate with zod. Build `PrivateStateClient` from headers/cookies/`context.locals.user`, call `addProject`, return `201` with `{ project: UserProject }` on success. Map validation and `PrivateStateError` to `{ error: { code, message, context } }` with Polish messages from `errors.projects.*` keys. Status map mirrors `/api/climbs.ts`: `invalid_input` 400, `unauthenticated` 401, `unknown_route`/`duplicate_project` 422, `missing_config` 503, `upstream_error`/`unknown` 500. Do **not** export `DELETE` in this slice.
+**Contract**:
+- `export const prerender = false`.
+- `POST` body `{ routeId: string }` (zod: trimmed, 1–200 chars) → `addProject(client, { routeId })` → `201 { project: UserProject }`.
+- `DELETE` body `{ id: string }` (zod `z.uuid()`) → `removeProject(client, id)` → `200 { deleted: { id } }`.
+- Error shape `{ error: { code, message, context } }` via an `errorBody` helper; reuse the `STATUS_FOR_CODE` map from `climbs.ts` (already includes `duplicate_project: 422`, `not_found: 404`, `unauthenticated: 401`, `unknown_route: 422`, `missing_config: 503`, `upstream_error`/`unknown: 500`, `invalid_input: 400`).
+- Messages resolved from `errors.projects.*` i18n keys (new) via `getTranslations()`; raw Supabase/Strapi text stays in `context` only.
 
-#### 2. Projects UI types and island
+#### 2. Projects UI module scaffold + client-safe types
 
-**Files**: `src/components/projects/ProjectAction.tsx`, `src/components/projects/types.ts`, `src/components/projects/index.ts`, `src/components/projects/__tests__/README.md`
+**File**: `src/components/projects/types.ts`, `src/components/projects/index.ts`, `src/components/projects/__tests__/` (mirror `src/components/climbs/`)
 
-**Intent**: Per-route add control without importing server-only private-state code.
+**Intent**: Define the primitive DTOs that cross the server→client island boundary so no island imports `@/lib/private-state`. Provide the module's public entrypoint and the `__tests__/` directory required by the repo module-structure rule.
 
-**Contract**: `ProjectAction` accepts `routeId: string` and `initialIsOnProjects: boolean`. When false: render add button using `SubmitButton` (progress guard for S-06 add action). POST JSON to `/api/projects`; on `201`, set local state to on-projects and show brief inline success (mirror climb success chip). When true: render non-interactive **"W projektach"** badge only. Handle `duplicate_project` by flipping to badge state (idempotent UX). All strings via `getTranslations()`.
+**Contract**: In `types.ts` —
+- `ProjectResponse` (mirror of `UserProject`: `id`, `routeId`, `createdAt`).
+- `AddProjectResponse { project: ProjectResponse }`, `DeleteProjectResponse { deleted: { id } }`.
+- `ProjectApiErrorCode` (mirror the climbs union: `invalid_input | unauthenticated | unknown_route | duplicate_project | not_found | missing_config | upstream_error | unknown`) and `ProjectApiErrorBody`.
+- `ProjectListItem` (pre-shaped `/projekty` row): `id`, `addedOn` (date string), `routeName`, `routeGrade`, `routeType`, `cragName`, `cragHref` — all nullable where the underlying route/crag may be missing, mirroring `HistoryClimbItem`.
 
-#### 3. Extend route table for projects
+`index.ts` re-exports the types and the two islands added in Phases 2–3. `__tests__/` carries a README mapping mirroring `src/lib/private-state/__tests__/README.md` (no test runner is configured).
 
-**File**: `src/components/catalog/RoutesTable.astro`
-
-**Intent**: Render `ProjectAction` beside `RouteClimbAction` in the signed-in action cell without horizontal scroll regression.
-
-**Contract**: Extend props with optional `projectRouteIds?: Set<string>` (or equivalent `isOnProjectsForRoute(routeId)` helper). When `showActions` is true, wrap both islands in a vertical `flex flex-col gap-2` inside the existing action cell. Pass `initialIsOnProjects={projectRouteIds?.has(route.id) ?? false}`. Add i18n for any new column label if the action header becomes shared (e.g. keep climb column label, projects control is subordinate in same cell).
-
-#### 4. Load project membership on crag page
-
-**File**: `src/pages/regiony/[region]/[crag].astro`
-
-**Intent**: Supply per-route project membership alongside climb summaries for signed-in users.
-
-**Contract**: In the signed-in `try` block, replace single `listClimbs` with `Promise.all([listClimbs(client), listProjects(client)])`. Build `projectRouteIds` from `listProjects` results' `routeId` (skip rows with `route === null`). Pass `projectRouteIds` into `RoutesTable`. On private-state failure, keep existing Polish diagnostic; public catalog stays visible.
-
-#### 5. Core projects i18n keys
+#### 3. Projects error i18n keys
 
 **File**: `src/i18n/ui.ts`
 
-**Intent**: Polish strings for add button, badge, pending/success/error, API errors, and route-row copy.
+**Intent**: Add the `errors.projects.*` Polish messages keyed by API error code so the API route resolves user-facing copy, mirroring `errors.climbs.*`.
 
-**Contract**: Add `projects.action.*`, `projects.form.*` (if needed), `errors.projects.*` mirroring `errors.climbs.*` shape. Register progress-feedback copy for the add action file path in Phase 4.
+**Contract**: New keys `errors.projects.{missing_config,unauthenticated,unknown_route,duplicate_project,upstream_error,invalid_input,not_found,unknown}`. `duplicate_project` gets a real "already on your list" message (unlike climbs, where it's a fallback). Adding keys to the single dictionary updates the `UiKey` union automatically.
 
 ### Success Criteria:
 
 #### Automated Verification:
 
-- Astro types regenerate: `npx astro sync`
-- Root lint passes: `npm run lint`
-- Guardrails pass: `npm run guardrails`
-- Production build passes: `npm run build`
-- `rg "from \"@/lib/private-state\"" src/components` returns no matches.
-- `rg "DELETE|removeProject" src/pages/api/projects.ts src/components/projects` returns no remove surface in this slice.
+- Type checking passes: `npm run lint`
+- i18n guardrail passes (no missing/orphaned keys): `npm run guardrails`
+- Build passes: `npm run build`
 
 #### Manual Verification:
 
-- Signed-out crag page: no project controls; public catalog unchanged.
-- Signed-in crag page: add control visible per row; no horizontal scroll at 375×667, 390×844, 412×915.
-- Adding a route shows progress feedback, then success, then **"W projektach"** badge without navigation.
-- Adding the same route again (e.g. race/double-click) surfaces gracefully (badge state, structured 422 if API hit twice).
-- Invalid `routeId` returns structured JSON error.
-- Network responses do not leak secrets or another user's project rows.
+- `POST /api/projects` with a valid `routeId` while signed in returns `201 { project }`; a second identical POST returns `422 duplicate_project`.
+- `DELETE /api/projects` with that project `id` returns `200 { deleted }`; repeating returns `404 not_found`.
+- Both verbs return `401 unauthenticated` (JSON, not a redirect) when signed out.
 
-**Implementation Note**: Pause for manual confirmation before Phase 3.
+**Implementation Note**: After completing this phase and all automated verification passes, pause for manual confirmation before proceeding.
 
 ---
 
-## Phase 3: Projects List Page + Dashboard/Nav Entry
+## Phase 2: Crag-Row Add/Remove Toggle
 
 ### Overview
 
-Add the protected projects list (FR-013) and discoverability via dashboard + header nav.
+Add the per-route projects toggle island, wire project membership into the crag page, and render the island stacked inside the existing climb action cell. After this phase a signed-in user can add and remove a route's project status directly from the crag table.
 
 ### Changes Required:
 
-#### 1. Protect `/projekty`
+#### 1. ProjectAction island
 
-**File**: `src/middleware.ts`
+**File**: `src/components/projects/ProjectAction.tsx`
 
-**Intent**: Gate the projects list behind auth with passwordless `next` return.
+**Intent**: Per-route toggle that mirrors `RouteClimbAction` for state ownership but combines add + two-step remove. Off-list: a "Dodaj do projektów" button (`POST { routeId }`). On-list: a "W projektach" indicator with an inline remove that uses the S-05 two-step confirm (`DELETE { id }`, `Pending` feedback, `not_found`-as-idempotent). Holds the project id in local state so a fresh add can be removed without a refresh.
 
-**Contract**: Add `"/projekty"` to `PROTECTED_ROUTES`. Keep `/api/projects` **out** of `PROTECTED_ROUTES` (JSON `401` for islands).
+**Contract**: Props `{ routeId: string; initialProjectId: string | null }` (`null` = not on list). Calls `getTranslations()` directly. Imports `Pending` from `@/components/ui/Pending` (so `guardrails:progress` can see the >2 s mutation feedback). Must NOT import `@/lib/private-state`. Re-exported from `src/components/projects/index.ts`.
 
-#### 2. Projects page
+#### 2. Crag-page project membership read
 
-**File**: `src/pages/projekty.astro`
+**File**: `src/pages/regiony/[region]/[crag].astro`
 
-**Intent**: Render the current user's projects list (view-only).
+**Intent**: In the existing signed-in `try` block, also read the user's projects and build a `routeId → projectId` map, then pass it to `RoutesTable`. Fold the projects read into the same `Promise.all` as `listClimbs` so it stays one round-trip group; on failure, reuse the existing Polish private-state diagnostic without breaking the public catalog.
 
-**Contract**: Mirror `src/pages/historia.astro` structure: `CatalogLayout`, defensive `createPrivateStateClient`, `listProjects(client)` (optionally `Promise.all` with `listCrags()` only if needed for extra crag labels — prefer hydrated `route` from `listProjects`). Map to `ProjectsListItem` DTO: `id`, `routeName`, `routeGrade`, `routeType`, `cragName`, `cragHref` (null-safe slugs). Polish empty state pointing to catalog; Polish load error without secret leakage. **No** remove controls per row.
+**Contract**: Add `listProjects` to the `@/lib/private-state` import. Build `projectMembershipByRouteId: Map<string, string>` (routeId → project row id) from `listProjects(client)` rows whose `route` is non-null. Pass it into `RoutesTable` as a new prop. Existing climbs grouping is unchanged.
 
-#### 3. Projects list component
+#### 3. RoutesTable wiring
 
-**Files**: `src/components/projects/ProjectsList.astro`, `src/components/projects/ProjectsSkeleton.tsx` (only if deferred loading is introduced)
+**File**: `src/components/catalog/RoutesTable.astro`
 
-**Intent**: Reusable, mobile-friendly list rows mirroring `HistoryList.astro`.
+**Intent**: Accept the membership map and render `ProjectAction` stacked below `RouteClimbAction` inside the same signed-in action cell (no new column, per the mobile constraint).
 
-**Contract**: Semantic list; each row shows route name, grade, type, crag name, and crag back-link when `cragHref` is set; unavailable-link fallback when slugs missing (same discipline as history). No `createdAt` display in v1.
+**Contract**: New optional prop `projectMembershipByRouteId?: Map<string, string>`. Inside the `showActions` cell, render `<ProjectAction client:load routeId={route.id} initialProjectId={projectMembershipByRouteId?.get(route.id) ?? null} />` beneath the existing `<RouteClimbAction>`. Action-column visibility logic (`showActions`) is unchanged.
 
-#### 4. Dashboard entry point
-
-**File**: `src/pages/dashboard.astro`
-
-**Intent**: Add primary/secondary CTA to `/projekty` beside `/historia`.
-
-**Contract**: Render a link to `/projekty` with `dashboard.projects_link` i18n key. Keep sign-out and history link. No stats.
-
-#### 5. Header nav link
-
-**File**: `src/components/catalog/CatalogHeader.astro`
-
-**Intent**: Global discoverability for projects (secondary PRD success metric).
-
-**Contract**: Authenticated nav shows `/projekty` link beside `/historia` using `catalog.header.projects` key.
-
-#### 6. Page i18n keys
+#### 4. Crag-row + toggle i18n
 
 **File**: `src/i18n/ui.ts`
 
-**Intent**: Polish copy for `/projekty`, dashboard/header links, empty/error states, list labels.
+**Intent**: Add `projects.*` keys for the toggle states and inline remove, mirroring the `climbs.action.*` / `history.delete.*` families.
 
-**Contract**: All visible strings via `getTranslations()`; satisfy `scripts/check-i18n.mjs` scope for `src/pages/projekty.astro`.
+**Contract**: New keys e.g. `projects.action.add_button` ("Dodaj do projektów"), `projects.action.on_list` ("W projektach"), `projects.action.add_pending`, `projects.action.added`, `projects.remove.button`, `projects.remove.confirm_prompt` ("Usunąć z projektów?"), `projects.remove.confirm`, `projects.remove.cancel`, `projects.remove.pending`, `projects.remove.success`, `projects.remove.already_gone`, `projects.remove.error`, `projects.action.error_network`.
 
 ### Success Criteria:
 
 #### Automated Verification:
 
-- Astro types regenerate: `npx astro sync`
-- Root lint passes: `npm run lint`
-- Guardrails pass: `npm run guardrails`
-- Production build passes: `npm run build`
-- `rg "\"/projekty\"" src/middleware.ts src/pages/dashboard.astro src/components/catalog/CatalogHeader.astro` returns protected route and links.
-- `rg "removeProject|DELETE" src/pages/projekty.astro src/components/projects` returns no remove UI.
+- Lint + type check passes: `npm run lint`
+- Server-only boundary holds (island does not import private-state): `rg "from \"@/lib/private-state\"" src/components` returns no matches
+- i18n + progress guardrails pass: `npm run guardrails`
+- Build passes: `npm run build`
 
 #### Manual Verification:
 
-- Signed-out `/projekty` redirects to `/auth/signin?next=/projekty`; passwordless return works.
-- Signed-in `/projekty` lists projects newest-first (`created_at desc`).
-- Rows show route name, grade, type, crag context, and valid crag link when slugs exist.
-- Empty projects list shows Polish empty state + catalog link.
-- `/dashboard` and header link reach `/projekty`.
-- Mobile viewports: no horizontal scroll on list page.
-- User A cannot see User B's projects in a second session.
+- Signed in on a crag page: a not-on-list route shows "Dodaj do projektów"; clicking adds it and the row switches to "W projektach" without navigation.
+- Clicking remove on an on-list route shows the two-step confirm, then removes it back to "Dodaj do projektów".
+- No horizontal scroll at 375px with both the climb and projects controls in one cell.
+- Signed out: no toggle renders; the existing sign-in CTA still shows.
 
-**Implementation Note**: Pause for manual confirmation before Phase 4.
+**Implementation Note**: After automated verification passes, pause for manual confirmation before proceeding.
+
+---
+
+## Phase 3: Protected /projekty Page + Removal + Navigation
+
+### Overview
+
+Build the protected `/projekty` view mirroring `/historia`, with a list-level remove island, then add protection and discoverability (dashboard CTA + header link). After this phase the full FR-012/013/014 loop is reachable end to end.
+
+### Changes Required:
+
+#### 1. Projects list island
+
+**File**: `src/components/projects/ProjectsListCard.tsx`
+
+**Intent**: List-level island mirroring `HistoryClimbCard`: owns the `ProjectListItem[]`, renders each row (name + grade + type + crag link + "added on" date), provides per-row two-step remove (`DELETE { id }`, `Pending`, `not_found`-as-idempotent), shows shared success/neutral notice, and falls through to the Polish empty-state when the last row is removed.
+
+**Contract**: Props `{ projects: ProjectListItem[] }`. Same `not_found` idempotency and notice model as `HistoryClimbCard`. Imports `Pending`; must NOT import `@/lib/private-state`. Re-exported from `index.ts`. A thin `ProjectsList.astro` server wrapper (mirror of `HistoryList.astro`) renders it `client:load`.
+
+#### 2. /projekty page
+
+**File**: `src/pages/projekty.astro`
+
+**Intent**: Protected page mirroring `historia.astro`: defensive `Astro.locals.user` check, `createPrivateStateClient`, `Promise.all([listProjects(client), listCrags()])`, project each row into `ProjectListItem` (with `addedOn` from `createdAt` via `formatDate`, crag name + `/regiony/<region>/<crag>` href), render heading/lead + load-error + empty + `ProjectsList`. Note this path is referenced by the progress registry (Phase 4).
+
+**Contract**: New page at `/projekty`. Uses `formatDate` from `@/lib/date` for `addedOn`. `cragHref` is `null` when `regionSlug`/`cragSlug` are missing (same fallback as history). Error surface reuses the Polish "couldn't load" pattern without leaking upstream text.
+
+#### 3. Route protection
+
+**File**: `src/middleware.ts`
+
+**Intent**: Gate `/projekty` for signed-out users with the same redirect-to-sign-in + `next` behavior as `/historia`.
+
+**Contract**: Add `"/projekty"` to `PROTECTED_ROUTES`.
+
+#### 4. Discoverability — dashboard CTA + header link
+
+**File**: `src/pages/dashboard.astro`, `src/components/catalog/CatalogHeader.astro`
+
+**Intent**: Add a `/projekty` entry next to the existing `/historia` ones in both the dashboard CTA group and the authenticated header nav.
+
+**Contract**: Dashboard: a second CTA link to `/projekty` using a new `dashboard.projects_link` key. Header: a `/projekty` link beside the history link using a new `catalog.header.projects` key. Update the stale dashboard scope comment that says projects is a "next slice".
+
+#### 5. Page/list i18n
+
+**File**: `src/i18n/ui.ts`
+
+**Intent**: Add the `/projekty` page + row + nav keys mirroring the `history.*` families.
+
+**Contract**: New keys e.g. `projects.page_title`, `projects.heading`, `projects.lead`, `projects.empty_heading`, `projects.empty_body`, `projects.empty_cta`, `projects.load_error`, `projects.row.{grade_label,type_label,added_label,crag_label,open_crag,crag_unavailable}`, `dashboard.projects_link`, `catalog.header.projects`.
+
+### Success Criteria:
+
+#### Automated Verification:
+
+- Lint + type check passes: `npm run lint`
+- i18n + progress guardrails pass: `npm run guardrails`
+- Build passes: `npm run build`
+- Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` returns no matches
+
+#### Manual Verification:
+
+- Signed-out hit on `/projekty` redirects to `/auth/signin?next=/projekty`.
+- `/projekty` lists the signed-in user's projects newest-first with correct grade/type/date and working crag links.
+- Removing a project on `/projekty` uses the two-step confirm and removes the row; removing the last row shows the empty-state without a refresh.
+- A route added from a crag page appears on `/projekty`, and one removed there disappears; reaching the page via both the dashboard CTA and header link works.
+
+**Implementation Note**: After automated verification passes, pause for manual confirmation before proceeding.
 
 ---
 
@@ -284,176 +252,140 @@ Add the protected projects list (FR-013) and discoverability via dashboard + hea
 
 ### Overview
 
-Flip S-06 verification placeholders to shipped/current and record a beta-flow pass.
+Flip the pre-registered S-06 verification placeholders to current and run the full guardrail/lint/build suite plus the manual beta checklist pass.
 
 ### Changes Required:
 
-#### 1. Register projects add action in progress registry
+#### 1. Progress-feedback registry
 
 **File**: `docs/verification/progress-feedback-actions.md`
 
-**Intent**: Enforce >2s progress feedback on the projects add control.
+**Intent**: Flip the `planned: S-06` "Projects list initial load" row to current (pointing at `src/pages/projekty.astro`) and add the >2 s projects mutation rows (add toggle + remove) pointing at the `Pending` usage in the projects islands.
 
-**Contract**: Add or update a row for **Projects add** → `src/components/projects/ProjectAction.tsx` → `SubmitButton` → `shipped`. Update **Projects list initial load** from `planned: S-06` to `shipped` (or document server-render-only rationale if no skeleton at runtime, same discipline as history).
+**Contract**: Update the affected row(s) from `planned: S-06` to the shipped/current status used by S-04/S-05 rows; ensure every >2 s projects action has a registry entry matching what `scripts/check-progress.mjs` enforces.
 
-#### 2. Update beta-flow checklist
+#### 2. Beta-flow checklist
 
 **File**: `docs/verification/beta-flow-checklist.md`
 
-**Intent**: Exercise crag add-to-projects and `/projekty` in manual beta verification.
+**Intent**: Flip the `planned: S-06` "Projects list" / `/projekty` rows to current and remove `/projekty` from the "pages skipped this cycle" note.
 
-**Contract**: Change `/projekty` from `planned: S-06` to `current`. Add progress-feedback checklist item for projects add. Update latest run with date, commit, branch, Polish/mobile/progress results.
-
-#### 3. Run S-06 verification pass
-
-**Files**: `docs/verification/beta-flow-checklist.md`, `context/changes/personal-projects-list/plan.md`
-
-**Intent**: Record automated + manual verification before considering S-06 complete.
-
-**Contract**: Run `npm run guardrails`, manual checklist on local dev/preview, update `## Progress` with commit SHA when landed.
+**Contract**: Update the `/projekty` row status and the skipped-pages line so no stale `planned: S-06` remains.
 
 ### Success Criteria:
 
 #### Automated Verification:
 
-- Astro types regenerate: `npx astro sync`
-- Root lint passes: `npm run lint`
-- Guardrails pass with S-06 rows current: `npm run guardrails`
-- Production build passes: `npm run build`
-- Progress registry marks projects add row `shipped` and projects list row not `planned: S-06`.
-- Beta checklist lists `/projekty` as `current`.
+- Full guardrails pass: `npm run guardrails`
+- Lint passes: `npm run lint`
+- Build passes: `npm run build`
+- No stale S-06 placeholders remain: `rg "planned: S-06" docs` returns no matches
 
 #### Manual Verification:
 
-- Beta checklist covers crag route add-to-projects and `/projekty` list view.
-- Projects add shows progress feedback within ~300 ms on Slow 4G + 4× CPU until success/error.
-- Route table and `/projekty` pass mobile checks at 375×667, 390×844, 412×915.
-- At least two routes on projects list appear in correct order after two adds.
+- The beta-flow checklist is walked end-to-end for the projects flow (mobile, Polish copy, >2 s progress feedback, response time) and passes.
 
-**Implementation Note**: Pause for manual confirmation before archiving S-06.
+**Implementation Note**: After automated verification passes, pause for final manual confirmation.
 
 ---
 
 ## Testing Strategy
 
-### Unit Tests:
+No automated test runner is configured in this repo; verification is the guardrail scripts + manual checklist.
 
-- No test runner configured.
-- Document future cases in `src/components/projects/__tests__/README.md`: add pending state, duplicate handling, badge vs button states, API error rendering.
+### Static / guardrail checks:
 
-### Integration Tests:
+- `npm run lint` (type-checked ESLint)
+- `npm run guardrails` (i18n coverage + >2 s progress-feedback registry)
+- `npm run build`
+- `rg "from \"@/lib/private-state\"" src/components` stays empty (server-only boundary)
 
-- `npx astro sync`, `npm run lint`, `npm run guardrails`, `npm run build` after each phase.
-- Manual JSON API exercise: valid add, duplicate add, unknown route, unauthenticated POST.
+### Manual testing steps:
 
-### Manual Testing Steps:
-
-1. Start local Supabase + Astro with valid env.
-2. Open a crag signed out — confirm no project controls.
-3. Sign in, add a route to projects from a row — confirm badge without leaving page.
-4. Open `/projekty` — confirm row content and crag link.
-5. Add a second route — confirm ordering on `/projekty`.
-6. Second user/session — confirm no cross-user visibility.
-7. Run beta-flow checklist; record latest run.
+1. Sign in; on a crag page add a route to projects and confirm the row flips to "W projektach".
+2. Remove it via the crag-row two-step confirm; confirm it flips back.
+3. Add two routes; open `/projekty`; confirm both appear newest-first with grade/type/date/crag link.
+4. Remove one on `/projekty` (two-step); confirm the row leaves; remove the last and confirm empty-state.
+5. Sign out; hit `/projekty`; confirm redirect to sign-in with `next=/projekty`.
+6. Re-add the same route twice quickly; confirm the duplicate path is handled gracefully (no error UI for an already-on-list route).
+7. Check 375px viewport: no horizontal scroll on crag rows with both controls.
 
 ## Performance Considerations
 
-Signed-in crag pages gain one `listProjects` read alongside existing `listClimbs`, batched via `Promise.all`. At beta scale (tens of projects), in-memory `Set` membership is O(1) per route row. Add path is one insert plus catalog route validation (cached).
-
-`/projekty` is a single `listProjects` read; pagination deferred until histories grow large.
+The crag page adds one `listProjects` read inside the existing signed-in `Promise.all`, so there is no extra round-trip group. Both reads hydrate against the already-cached catalog. The `(user_id, created_at desc)` index serves the `/projekty` query directly.
 
 ## Migration Notes
 
-No new migration. Rollback is a code revert; project rows created during testing remain in Supabase and can be cleaned manually if needed.
+None — F-02's `20260531172510_private_user_state.sql` already provides the table, constraints, index, RLS, and policies.
 
 ## References
 
-- Roadmap S-06: `context/foundation/roadmap.md`
-- PRD FR-012, FR-013: `context/foundation/prd.md`
-- Research: `context/changes/personal-projects-list/research.md`
-- Sibling plan: `context/changes/route-climb-log/plan.md`
-- Private-state: `src/lib/private-state/projects.ts`
-- Climb API template: `src/pages/api/climbs.ts`
-- History template: `src/pages/historia.astro`
-- Progress registry: `docs/verification/progress-feedback-actions.md`
-- Beta checklist: `docs/verification/beta-flow-checklist.md`
+- Related research: `context/changes/personal-projects-list/research.md`
+- F-02 contract: `supabase/migrations/20260531172510_private_user_state.sql`, `src/lib/private-state/projects.ts`
+- Add/view sibling (S-04): `src/components/climbs/RouteClimbAction.tsx`, `src/components/catalog/RoutesTable.astro`, `src/pages/regiony/[region]/[crag].astro:57-131`
+- Remove sibling (S-05): `src/pages/api/climbs.ts:190-240`, `src/components/climbs/HistoryClimbCard.tsx`, `src/pages/historia.astro`
+- Nav/protection: `src/middleware.ts:5`, `src/pages/dashboard.astro:37-53`, `src/components/catalog/CatalogHeader.astro:25-35`
+- Verification: `docs/verification/progress-feedback-actions.md:47`, `docs/verification/beta-flow-checklist.md:63`, `scripts/check-i18n.mjs:72`
 
 ## Progress
 
-> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles.
+> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
 
-### Phase 1: Projects-State Preflight
-
-#### Automated
-
-- [ ] 1.1 Astro types regenerate: `npx astro sync`
-- [ ] 1.2 Root lint passes: `npm run lint`
-- [ ] 1.3 Guardrails pass: `npm run guardrails`
-- [ ] 1.4 Production build passes: `npm run build`
-
-#### Manual
-
-- [ ] 1.5 `addProject` succeeds for a valid catalog `routeId`
-- [ ] 1.6 Duplicate add returns `PrivateStateError("duplicate_project")`
-- [ ] 1.7 `listProjects` returns newest-first hydrated rows; orphans dropped by default
-- [ ] 1.8 `isRouteOnProjects` reflects membership after add
-- [ ] 1.9 Preflight recorded in `context/changes/personal-projects-list/change.md`
-
-### Phase 2: Add API + Route-Page State
+### Phase 1: Projects Mutation API + Client-Safe Module
 
 #### Automated
 
-- [ ] 2.1 Astro types regenerate: `npx astro sync`
-- [ ] 2.2 Root lint passes: `npm run lint`
-- [ ] 2.3 Guardrails pass: `npm run guardrails`
-- [ ] 2.4 Production build passes: `npm run build`
-- [ ] 2.5 `rg "from \"@/lib/private-state\"" src/components` returns no matches
-- [ ] 2.6 `rg "DELETE|removeProject" src/pages/api/projects.ts src/components/projects` returns no remove surface
+- [x] 1.1 Type checking passes: `npm run lint`
+- [x] 1.2 i18n guardrail passes: `npm run guardrails`
+- [x] 1.3 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.7 Signed-out crag page has no project controls
-- [ ] 2.8 Signed-in crag page shows add control without horizontal scroll (375×667, 390×844, 412×915)
-- [ ] 2.9 Add flow shows progress, success, then **W projektach** badge without navigation
-- [ ] 2.10 Duplicate add handled gracefully (badge + structured 422 if applicable)
-- [ ] 2.11 Invalid input returns structured JSON error
-- [ ] 2.12 No secret or cross-user leakage in network/HTML responses
+- [x] 1.4 POST add returns 201; duplicate POST returns 422 `duplicate_project`
+- [x] 1.5 DELETE returns 200; repeat returns 404 `not_found`
+- [x] 1.6 Both verbs return JSON 401 `unauthenticated` when signed out
 
-### Phase 3: Projects List Page + Dashboard/Nav Entry
+### Phase 2: Crag-Row Add/Remove Toggle
 
 #### Automated
 
-- [ ] 3.1 Astro types regenerate: `npx astro sync`
-- [ ] 3.2 Root lint passes: `npm run lint`
-- [ ] 3.3 Guardrails pass: `npm run guardrails`
-- [ ] 3.4 Production build passes: `npm run build`
-- [ ] 3.5 `rg "\"/projekty\""` finds middleware protection and dashboard/header links
-- [ ] 3.6 `rg "removeProject|DELETE" src/pages/projekty.astro src/components/projects` returns no remove UI
+- [ ] 2.1 Lint + type check passes: `npm run lint`
+- [ ] 2.2 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
+- [ ] 2.3 i18n + progress guardrails pass: `npm run guardrails`
+- [ ] 2.4 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 3.7 Signed-out `/projekty` redirects with `next=/projekty`; return after auth works
-- [ ] 3.8 Signed-in `/projekty` lists projects newest-first
-- [ ] 3.9 Rows show name, grade, type, crag context, and valid crag link
-- [ ] 3.10 Empty state renders with catalog link
-- [ ] 3.11 Dashboard and header link reach `/projekty`
-- [ ] 3.12 Mobile viewports: no horizontal scroll on `/projekty`
-- [ ] 3.13 User A cannot see User B's projects
+- [ ] 2.5 Add from crag row flips to "W projektach" without navigation
+- [ ] 2.6 Two-step remove flips back to "Dodaj do projektów"
+- [ ] 2.7 No horizontal scroll at 375px with both controls in one cell
+- [ ] 2.8 Signed-out renders no toggle; sign-in CTA still shows
+
+### Phase 3: Protected /projekty Page + Removal + Navigation
+
+#### Automated
+
+- [ ] 3.1 Lint + type check passes: `npm run lint`
+- [ ] 3.2 i18n + progress guardrails pass: `npm run guardrails`
+- [ ] 3.3 Build passes: `npm run build`
+- [ ] 3.4 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
+
+#### Manual
+
+- [ ] 3.5 Signed-out `/projekty` redirects to `/auth/signin?next=/projekty`
+- [ ] 3.6 `/projekty` lists projects newest-first with grade/type/date + working crag links
+- [ ] 3.7 Two-step remove on `/projekty` removes the row; last row → empty-state, no refresh
+- [ ] 3.8 Crag-page add/remove reflects on `/projekty`; dashboard CTA + header link both reach it
 
 ### Phase 4: Guardrails + Beta Verification
 
 #### Automated
 
-- [ ] 4.1 Astro types regenerate: `npx astro sync`
-- [ ] 4.2 Root lint passes: `npm run lint`
-- [ ] 4.3 Guardrails pass with S-06 rows current: `npm run guardrails`
-- [ ] 4.4 Production build passes: `npm run build`
-- [ ] 4.5 Progress registry: projects add `shipped`; list row not `planned: S-06`
-- [ ] 4.6 Beta checklist: `/projekty` is `current`
+- [ ] 4.1 Full guardrails pass: `npm run guardrails`
+- [ ] 4.2 Lint passes: `npm run lint`
+- [ ] 4.3 Build passes: `npm run build`
+- [ ] 4.4 No stale placeholders: `rg "planned: S-06" docs` empty
 
 #### Manual
 
-- [ ] 4.7 Beta checklist passes for add-to-projects and `/projekty`
-- [ ] 4.8 Projects add progress feedback within ~300 ms on throttled mobile
-- [ ] 4.9 Route table and `/projekty` pass mobile viewport checks
-- [ ] 4.10 Two projects appear in correct order after two adds
+- [ ] 4.5 Beta-flow checklist walked end-to-end for the projects flow and passes
