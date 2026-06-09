@@ -22,3 +22,5 @@ export type {
   ProjectApiErrorCode,
   ProjectListItem,
 } from "@/components/projects/types";
+
+export { default as ProjectAction } from "@/components/projects/ProjectAction";

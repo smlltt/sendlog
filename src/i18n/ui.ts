@@ -168,6 +168,23 @@ export const ui = {
     "errors.projects.not_found": "Tego projektu już nie ma — mógł zostać wcześniej usunięty.",
     "errors.projects.unknown": "Wystąpił nieoczekiwany błąd podczas aktualizacji listy projektów.",
 
+    // Projects — per-route crag-row toggle (S-06): add button + on-list
+    // indicator with an inline two-step remove. Mirrors the
+    // `climbs.action.*` / `history.delete.*` families.
+    "projects.action.add_button": "Dodaj do projektów",
+    "projects.action.add_pending": "Dodawanie…",
+    "projects.action.added": "Dodano do projektów.",
+    "projects.action.on_list": "W projektach",
+    "projects.action.error_network": "Brak połączenia z serwerem. Spróbuj ponownie.",
+    "projects.remove.button": "Usuń",
+    "projects.remove.confirm_prompt": "Usunąć z projektów?",
+    "projects.remove.confirm": "Usuń",
+    "projects.remove.cancel": "Anuluj",
+    "projects.remove.pending": "Usuwanie…",
+    "projects.remove.success": "Usunięto z projektów.",
+    "projects.remove.already_gone": "Tego projektu już nie ma — mógł zostać wcześniej usunięty.",
+    "projects.remove.error": "Nie udało się usunąć projektu. Spróbuj ponownie.",
+
     // History — /historia (page + dashboard entry + row chrome)
     "history.page_title": "Historia przejść",
     "history.heading": "Historia przejść",

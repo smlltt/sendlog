@@ -335,31 +335,31 @@ None — F-02's `20260531172510_private_user_state.sql` already provides the tab
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run lint`
-- [x] 1.2 i18n guardrail passes: `npm run guardrails`
-- [x] 1.3 Build passes: `npm run build`
+- [x] 1.1 Type checking passes: `npm run lint` — 8d3dadf
+- [x] 1.2 i18n guardrail passes: `npm run guardrails` — 8d3dadf
+- [x] 1.3 Build passes: `npm run build` — 8d3dadf
 
 #### Manual
 
-- [x] 1.4 POST add returns 201; duplicate POST returns 422 `duplicate_project`
-- [x] 1.5 DELETE returns 200; repeat returns 404 `not_found`
-- [x] 1.6 Both verbs return JSON 401 `unauthenticated` when signed out
+- [x] 1.4 POST add returns 201; duplicate POST returns 422 `duplicate_project` — 8d3dadf
+- [x] 1.5 DELETE returns 200; repeat returns 404 `not_found` — 8d3dadf
+- [x] 1.6 Both verbs return JSON 401 `unauthenticated` when signed out — 8d3dadf
 
 ### Phase 2: Crag-Row Add/Remove Toggle
 
 #### Automated
 
-- [ ] 2.1 Lint + type check passes: `npm run lint`
-- [ ] 2.2 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
-- [ ] 2.3 i18n + progress guardrails pass: `npm run guardrails`
-- [ ] 2.4 Build passes: `npm run build`
+- [x] 2.1 Lint + type check passes: `npm run lint`
+- [x] 2.2 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
+- [x] 2.3 i18n + progress guardrails pass: `npm run guardrails`
+- [x] 2.4 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.5 Add from crag row flips to "W projektach" without navigation
-- [ ] 2.6 Two-step remove flips back to "Dodaj do projektów"
-- [ ] 2.7 No horizontal scroll at 375px with both controls in one cell
-- [ ] 2.8 Signed-out renders no toggle; sign-in CTA still shows
+- [x] 2.5 Add from crag row flips to "W projektach" without navigation
+- [x] 2.6 Two-step remove flips back to "Dodaj do projektów"
+- [x] 2.7 No horizontal scroll at 375px with both controls in one cell
+- [x] 2.8 Signed-out renders no toggle; sign-in CTA still shows
 
 ### Phase 3: Protected /projekty Page + Removal + Navigation
 

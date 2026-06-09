@@ -2,6 +2,7 @@
 import type { CatalogRoute } from "@/lib/catalog";
 import { getTranslations } from "@/i18n";
 import RouteClimbAction from "@/components/climbs/RouteClimbAction";
+import ProjectAction from "@/components/projects/ProjectAction";
 import type { RouteClimbSummary } from "@/components/climbs/types";
 
 interface Props {
@@ -12,6 +13,13 @@ interface Props {
    * true; signed-out renders leave this unset.
    */
   climbSummariesByRouteId?: Map<string, RouteClimbSummary>;
+  /**
+   * Per-route project membership (routeId → project row id) computed
+   * server-side by the crag page from `listProjects(client)`. A present
+   * entry means the route is on the user's projects list; the value is the
+   * project row id the toggle's `DELETE` needs. Only passed when signed in.
+   */
+  projectMembershipByRouteId?: Map<string, string>;
   /**
    * Whether a `RouteClimbAction` island should render in each row. Kept
    * as a separate flag from `climbSummariesByRouteId` so the table can
@@ -28,7 +36,13 @@ interface Props {
   defaultClimbedOn?: string;
 }
 
-const { routes, climbSummariesByRouteId, isSignedIn = false, defaultClimbedOn } = Astro.props;
+const {
+  routes,
+  climbSummariesByRouteId,
+  projectMembershipByRouteId,
+  isSignedIn = false,
+  defaultClimbedOn,
+} = Astro.props;
 const t = getTranslations();
 
 const CELL_BASE_CLASSES =
@@ -87,12 +101,19 @@ function summaryFor(routeId: string): RouteClimbSummary {
             </td>
             {showActions && (
               <td data-label={t("catalog.routes.cell_log_label")} class:list={[CELL_BASE_CLASSES]}>
-                <RouteClimbAction
-                  client:load
-                  routeId={route.id}
-                  initialSummary={summaryFor(route.id)}
-                  defaultClimbedOn={defaultClimbedOn}
-                />
+                <div class="flex flex-col gap-2">
+                  <RouteClimbAction
+                    client:load
+                    routeId={route.id}
+                    initialSummary={summaryFor(route.id)}
+                    defaultClimbedOn={defaultClimbedOn}
+                  />
+                  <ProjectAction
+                    client:load
+                    routeId={route.id}
+                    initialProjectId={projectMembershipByRouteId?.get(route.id) ?? null}
+                  />
+                </div>
               </td>
             )}
           </tr>
