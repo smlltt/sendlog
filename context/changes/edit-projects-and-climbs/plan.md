@@ -283,16 +283,16 @@ None — `20260531172510_private_user_state.sql` already provides the `climbs_up
 
 #### Automated
 
-- [x] 1.1 Type checking + lint passes: `npm run lint`
-- [x] 1.2 i18n + progress guardrails pass: `npm run guardrails`
-- [x] 1.3 Build passes: `npm run build`
+- [x] 1.1 Type checking + lint passes: `npm run lint` — eb6274c
+- [x] 1.2 i18n + progress guardrails pass: `npm run guardrails` — eb6274c
+- [x] 1.3 Build passes: `npm run build` — eb6274c
 
 #### Manual
 
-- [x] 1.4 PATCH with valid body returns 200 `{ climb }` with updated values + bumped updatedAt
-- [x] 1.5 PATCH with non-existent UUID returns 404 `not_found`
-- [x] 1.6 PATCH with malformed body / bad date returns 400 `invalid_input`
-- [x] 1.7 PATCH signed out returns JSON 401 `unauthenticated`
+- [x] 1.4 PATCH with valid body returns 200 `{ climb }` with updated values + bumped updatedAt — eb6274c
+- [x] 1.5 PATCH with non-existent UUID returns 404 `not_found` — eb6274c
+- [x] 1.6 PATCH with malformed body / bad date returns 400 `invalid_input` — eb6274c
+- [x] 1.7 PATCH signed out returns JSON 401 `unauthenticated` — eb6274c
 
 ### Phase 2: Inline Edit UI (Shared Form + History Row)
 
@@ -305,11 +305,11 @@ None — `20260531172510_private_user_state.sql` already provides the `climbs_up
 
 #### Manual
 
-- [ ] 2.5 Edytuj opens a pre-filled form; save updates the row in place with success notice
-- [ ] 2.6 Clearing the note removes it; editing the date updates the displayed date
-- [ ] 2.7 Cancel discards changes and returns to read view
-- [ ] 2.8 Climb deleted elsewhere → saving an edit drops the row with neutral notice
-- [ ] 2.9 No horizontal scroll at 375px with the edit form open
+- [x] 2.5 Edytuj opens a pre-filled form; save updates the row in place with success notice
+- [x] 2.6 Clearing the note removes it; editing the date updates the displayed date
+- [x] 2.7 Cancel discards changes and returns to read view
+- [x] 2.8 Climb deleted elsewhere → saving an edit drops the row with neutral notice
+- [x] 2.9 No horizontal scroll at 375px with the edit form open
 
 ### Phase 3: Verification Registry + Guardrails
 
