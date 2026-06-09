@@ -298,10 +298,10 @@ None — `20260531172510_private_user_state.sql` already provides the `climbs_up
 
 #### Automated
 
-- [ ] 2.1 Lint + type check passes: `npm run lint`
-- [ ] 2.2 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty
-- [ ] 2.3 i18n + progress guardrails pass: `npm run guardrails`
-- [ ] 2.4 Build passes: `npm run build`
+- [x] 2.1 Lint + type check passes: `npm run lint` — d5cb2a9
+- [x] 2.2 Server-only boundary holds: `rg "from \"@/lib/private-state\"" src/components` empty — d5cb2a9
+- [x] 2.3 i18n + progress guardrails pass: `npm run guardrails` — d5cb2a9
+- [x] 2.4 Build passes: `npm run build` — d5cb2a9
 
 #### Manual
 
@@ -315,10 +315,10 @@ None — `20260531172510_private_user_state.sql` already provides the `climbs_up
 
 #### Automated
 
-- [ ] 3.1 Full guardrails pass: `npm run guardrails`
-- [ ] 3.2 Lint passes: `npm run lint`
-- [ ] 3.3 Build passes: `npm run build`
+- [x] 3.1 Full guardrails pass: `npm run guardrails`
+- [x] 3.2 Lint passes: `npm run lint`
+- [x] 3.3 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 Beta-flow checklist walked end-to-end for the edit flow and passes
+- [x] 3.4 Beta-flow checklist walked end-to-end for the edit flow and passes
