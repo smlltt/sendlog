@@ -36,7 +36,7 @@ SendLog is a Polish-first online catalog for local climbing crags, starting with
 | S-03 | passwordless-auth-flow | visitor can request a sign-in link, become signed in, and sign out | F-02 | FR-006, FR-007, FR-008 | done |
 | S-04 | route-climb-log | signed-in climber can log a route with date and note, then see it in personal history | F-01, F-02, F-03, S-01, S-03 | US-01, FR-009, FR-010 | done |
 | S-05 | delete-climb-log | signed-in climber can delete one of their own logged climbs | S-04 | US-01, FR-011 | done |
-| S-06 | personal-projects-list | signed-in climber can add, view, and remove routes from their projects list | S-01, S-03 | FR-012, FR-013, FR-014 | proposed |
+| S-06 | personal-projects-list | signed-in climber can add, view, and remove routes from their projects list | S-01, S-03 | FR-012, FR-013, FR-014 | done |
 
 ## Streams
 
@@ -187,7 +187,7 @@ What's already in place in the codebase as of `2026-05-26` (auto-researched + us
 - **Blockers:** -
 - **Unknowns:** -
 - **Risk:** Projects are a secondary success signal, so they come after the logged-climb path is viable but can still run alongside delete-log polish.
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -236,3 +236,4 @@ No open roadmap questions. The only sequencing-relevant uncertainty is tracked i
 - **S-04: signed-in climber can log a route with date and note, then see it in personal history** — Archived 2026-06-03 → `context/archive/2026-06-01-route-climb-log/`. Lesson: —.
 - **S-05: signed-in climber can delete one of their own logged climbs** — Archived 2026-06-03 → `context/archive/2026-06-03-delete-climb-log/`. Lesson: —.
 - **F-02: (foundation) authenticated climber state is private per user and can reference canonical routes** — Archived 2026-06-09 → `context/archive/2026-05-31-private-user-state-contract/`. Lesson: —.
+- **S-06: signed-in climber can add, view, and remove routes from their projects list** — Archived 2026-06-09 → `context/archive/2026-06-03-personal-projects-list/`. Lesson: —.
