@@ -44,7 +44,9 @@ It is consumed by:
 | Climb-log save                      | `src/components/climbs/ClimbLogForm.tsx`             | `SubmitButton` | Form submit; same pattern, hits Supabase + Strapi route lookup.             | `shipped`                    |
 | Climb-log delete (personal history) | `src/components/climbs/HistoryClimbCard.tsx`         | `Pending`      | `DELETE /api/climbs` mutation; Worker + Supabase session + hard delete can exceed 2 s on cellular. | `shipped`                    |
 | Personal history initial load       | `src/pages/historia.astro`                           | `Skeleton`     | Server-rendered today; row is parked so any future deferred-loading variant lands the skeleton in this same file. | `n/a — server-rendered`      |
-| Projects list initial load          | `src/pages/projekty.astro`                           | `Skeleton`     | Server-fetched project list; same initial-paint situation as history.       | `planned: S-06`              |
+| Projects list initial load          | `src/pages/projekty.astro`                           | `Skeleton`     | Server-rendered today; row is parked so any future deferred-loading variant lands the skeleton in this same file. | `n/a — server-rendered`      |
+| Projects add/remove toggle (crag row) | `src/components/projects/ProjectAction.tsx`        | `Pending`      | `POST`/`DELETE /api/projects` mutation from the crag-row toggle; Worker + Supabase session can exceed 2 s on cellular. | `shipped`                    |
+| Projects list remove                | `src/components/projects/ProjectsListCard.tsx`       | `Pending`      | `DELETE /api/projects` mutation from the `/projekty` list; same hard-delete round-trip as the climb-log delete. | `shipped`                    |
 
 ## Adding a new action
 

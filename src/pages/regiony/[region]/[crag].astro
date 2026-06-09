@@ -11,7 +11,7 @@ import {
   type CatalogRegion,
   type CatalogRoute,
 } from "@/lib/catalog";
-import { createPrivateStateClient, listClimbs } from "@/lib/private-state";
+import { createPrivateStateClient, listClimbs, listProjects } from "@/lib/private-state";
 import type { RouteClimbSummary } from "@/components/climbs/types";
 import { buildSignInRedirect } from "@/lib/auth";
 import { formatDate } from "@/lib/date";
@@ -58,12 +58,19 @@ const { user } = Astro.locals;
 const isSignedIn = user !== null;
 const todayUtc = formatDate(new Date());
 let climbSummariesByRouteId: Map<string, RouteClimbSummary> | undefined = undefined;
+// S-06 — routeId → project row id for the per-route projects toggle. The map
+// carries the project row id (not just a boolean) so <ProjectAction> can issue
+// a `DELETE { id }` without a server round-trip to resolve it.
+let projectMembershipByRouteId: Map<string, string> | undefined = undefined;
 let privateStateError: unknown = null;
 
 if (user !== null && crag !== null) {
   try {
     const client = createPrivateStateClient(Astro.request.headers, Astro.cookies, user);
-    const myClimbs = await listClimbs(client);
+    // One round-trip group: both private reads hydrate against the already
+    // cached catalog, so folding projects into the same Promise.all as climbs
+    // adds no extra catalog fetch.
+    const [myClimbs, myProjects] = await Promise.all([listClimbs(client), listProjects(client)]);
     const acc = new Map<string, RouteClimbSummary>();
     for (const climb of myClimbs) {
       if (climb.route === null) continue;
@@ -78,6 +85,13 @@ if (user !== null && crag !== null) {
       }
     }
     climbSummariesByRouteId = acc;
+
+    const membership = new Map<string, string>();
+    for (const project of myProjects) {
+      if (project.route === null) continue;
+      membership.set(project.routeId, project.id);
+    }
+    projectMembershipByRouteId = membership;
   } catch (err) {
     privateStateError = err;
   }
@@ -128,6 +142,7 @@ const signInHref = !isSignedIn ? buildSignInRedirect({ next: `${Astro.url.pathna
               isSignedIn={isSignedIn}
               defaultClimbedOn={todayUtc}
               climbSummariesByRouteId={climbSummariesByRouteId}
+              projectMembershipByRouteId={projectMembershipByRouteId}
             />
           )}
         </div>

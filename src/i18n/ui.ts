@@ -158,6 +158,50 @@ export const ui = {
     "errors.climbs.not_found": "Tego przejścia już nie ma — mogło zostać wcześniej usunięte.",
     "errors.climbs.unknown": "Wystąpił nieoczekiwany błąd podczas zapisywania przejścia.",
 
+    // Projects — server-resolved error messages (keyed by API error code)
+    "errors.projects.missing_config": "Lista projektów jest chwilowo niedostępna. Spróbuj ponownie później.",
+    "errors.projects.unauthenticated": "Sesja wygasła. Zaloguj się ponownie, aby zarządzać projektami.",
+    "errors.projects.unknown_route": "Nie znaleziono tej drogi w katalogu. Odśwież stronę i spróbuj ponownie.",
+    "errors.projects.duplicate_project": "Ta droga jest już na Twojej liście projektów.",
+    "errors.projects.upstream_error": "Nie udało się zaktualizować listy projektów. Spróbuj ponownie za chwilę.",
+    "errors.projects.invalid_input": "Nieprawidłowe dane. Odśwież stronę i spróbuj ponownie.",
+    "errors.projects.not_found": "Tego projektu już nie ma — mógł zostać wcześniej usunięty.",
+    "errors.projects.unknown": "Wystąpił nieoczekiwany błąd podczas aktualizacji listy projektów.",
+
+    // Projects — per-route crag-row toggle (S-06): add button + on-list
+    // indicator with an inline two-step remove. Mirrors the
+    // `climbs.action.*` / `history.delete.*` families.
+    "projects.action.add_button": "Dodaj do projektów",
+    "projects.action.add_pending": "Dodawanie…",
+    "projects.action.added": "Dodano do projektów.",
+    "projects.action.on_list": "W projektach",
+    "projects.action.error_network": "Brak połączenia z serwerem. Spróbuj ponownie.",
+    "projects.remove.button": "Usuń",
+    "projects.remove.confirm_prompt": "Usunąć z projektów?",
+    "projects.remove.confirm": "Usuń",
+    "projects.remove.cancel": "Anuluj",
+    "projects.remove.pending": "Usuwanie…",
+    "projects.remove.success": "Usunięto z projektów.",
+    "projects.remove.already_gone": "Tego projektu już nie ma — mógł zostać wcześniej usunięty.",
+    "projects.remove.error": "Nie udało się usunąć projektu. Spróbuj ponownie.",
+
+    // Projects — /projekty page (S-06): heading + lead + empty / load-error
+    // surfaces, row chrome, and the dashboard CTA + header nav entries.
+    // Mirrors the `history.*` families.
+    "projects.page_title": "Moje projekty",
+    "projects.heading": "Moje projekty",
+    "projects.lead": "Trasy zapisane jako projekty, najnowsze na górze.",
+    "projects.empty_heading": "Brak zapisanych projektów",
+    "projects.empty_body": "Wybierz drogę z katalogu i dodaj ją do projektów.",
+    "projects.empty_cta": "Przeglądaj rejony",
+    "projects.load_error": "Nie udało się wczytać listy projektów. Spróbuj odświeżyć stronę.",
+    "projects.row.grade_label": "Wycena:",
+    "projects.row.type_label": "Typ:",
+    "projects.row.added_label": "Dodano:",
+    "projects.row.crag_label": "Skała:",
+    "projects.row.open_crag": "Otwórz skałę",
+    "projects.row.crag_unavailable": "Niedostępne",
+
     // History — /historia (page + dashboard entry + row chrome)
     "history.page_title": "Historia przejść",
     "history.heading": "Historia przejść",
@@ -187,6 +231,7 @@ export const ui = {
 
     // Dashboard — entry point copy (added for Phase 3 in the same dictionary)
     "dashboard.history_link": "Otwórz historię przejść",
+    "dashboard.projects_link": "Otwórz moje projekty",
 
     // Catalog — photo gallery (placeholders: {n}, {m})
     "catalog.photos.aria_photo_n_of_m": "Zdjęcie {n} z {m}",
@@ -203,6 +248,7 @@ export const ui = {
 
     // Catalog — header / footer
     "catalog.header.history": "Historia",
+    "catalog.header.projects": "Projekty",
     "catalog.header.signout": "Wyloguj",
     "catalog.header.signin": "Zaloguj się",
     "catalog.header.breadcrumbs_aria": "Okruszki",
