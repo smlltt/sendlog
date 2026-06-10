@@ -324,28 +324,28 @@ No database migrations. No production deploy changes. CI unchanged in this phase
 
 #### Automated
 
-- [x] 1.1 `npm install` succeeds and `@playwright/test` appears in `package-lock.json`
-- [x] 1.2 `npx playwright install chromium` succeeds
-- [x] 1.3 `npm run lint` passes
-- [x] 1.4 `npm run build` passes with existing Supabase env vars
-- [x] 1.5 `npm run test:e2e -- tests/e2e/smoke.spec.ts` passes
+- [x] 1.1 `npm install` succeeds and `@playwright/test` appears in `package-lock.json` — 8c05dba
+- [x] 1.2 `npx playwright install chromium` succeeds — 8c05dba
+- [x] 1.3 `npm run lint` passes — 8c05dba
+- [x] 1.4 `npm run build` passes with existing Supabase env vars — 8c05dba
+- [x] 1.5 `npm run test:e2e -- tests/e2e/smoke.spec.ts` passes — 8c05dba
 
 #### Manual
 
-- [x] 1.6 `webServer` command matches test-plan guidance (`127.0.0.1:3000`)
-- [x] 1.7 Smoke spec failure produces readable Playwright output
+- [x] 1.6 `webServer` command matches test-plan guidance (`127.0.0.1:3000`) — 8c05dba
+- [x] 1.7 Smoke spec failure produces readable Playwright output — 8c05dba
 
 ### Phase 2: Inbucket Auth Fixture
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes on new helper files
-- [ ] 2.2 Auth fixture spec passes with local Supabase + Inbucket running
+- [x] 2.1 `npm run lint` passes on new helper files
+- [x] 2.2 Auth fixture spec passes with local Supabase + Inbucket running
 
 #### Manual
 
-- [ ] 2.3 Helper error when Supabase is stopped mentions prerequisite
-- [ ] 2.4 Retrieved magic-link URL matches template contract
+- [x] 2.3 Helper error when Supabase is stopped mentions prerequisite
+- [x] 2.4 Retrieved magic-link URL matches template contract
 
 ### Phase 3: Auth Gate E2E Specs
 
