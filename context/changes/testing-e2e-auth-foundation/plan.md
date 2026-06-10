@@ -339,26 +339,26 @@ No database migrations. No production deploy changes. CI unchanged in this phase
 
 #### Automated
 
-- [x] 2.1 `npm run lint` passes on new helper files
-- [x] 2.2 Auth fixture spec passes with local Supabase + Inbucket running
+- [x] 2.1 `npm run lint` passes on new helper files — d1b4bd1
+- [x] 2.2 Auth fixture spec passes with local Supabase + Inbucket running — d1b4bd1
 
 #### Manual
 
-- [x] 2.3 Helper error when Supabase is stopped mentions prerequisite
-- [x] 2.4 Retrieved magic-link URL matches template contract
+- [x] 2.3 Helper error when Supabase is stopped mentions prerequisite — d1b4bd1
+- [x] 2.4 Retrieved magic-link URL matches template contract — d1b4bd1
 
 ### Phase 3: Auth Gate E2E Specs
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
-- [ ] 3.2 `npm run test:e2e` passes all specs with local Supabase running
-- [ ] 3.3 `npm run build` still passes
+- [x] 3.1 `npm run lint` passes
+- [x] 3.2 `npm run test:e2e` passes all specs with local Supabase running
+- [x] 3.3 `npm run build` still passes
 
 #### Manual
 
-- [ ] 3.4 Middleware redirect failure produces clear assertion message
-- [ ] 3.5 API negative spec does not follow HTML redirect
+- [x] 3.4 Middleware redirect failure produces clear assertion message
+- [x] 3.5 API negative spec does not follow HTML redirect
 
 ### Phase 4: Cookbook Documentation
 

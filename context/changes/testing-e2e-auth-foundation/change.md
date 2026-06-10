@@ -1,9 +1,9 @@
 ---
 change_id: testing-e2e-auth-foundation
 title: Testing e2e auth foundation
-status: implementing
+status: impl_reviewed
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-06-10
 archived_at: null
 ---
 

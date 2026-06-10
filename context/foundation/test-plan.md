@@ -65,7 +65,7 @@ orchestrator updates Status as artifacts appear on disk.
 
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
-| 1 | E2e harness + auth gate | Bootstrap Playwright, prove auth session behavior, and prove gated pages are actually gated. | #1, #2 | e2e; request/API negative check if research confirms better signal | change opened | `context/changes/testing-e2e-auth-foundation/` |
+| 1 | E2e harness + auth gate | Bootstrap Playwright, prove auth session behavior, and prove gated pages are actually gated. | #1, #2 | e2e; request/API negative check if research confirms better signal | implementing | `context/changes/testing-e2e-auth-foundation/` |
 | 2 | Private climber flows + isolation | Prove climb add/edit/delete and project add/delete persist correctly, including user isolation. | #2, #3, #4 | e2e; request/API negative check if research confirms better signal | not started | — |
 | 3 | Public catalog + map | Prove anonymous browse, route-list fidelity, and map pin render/navigation. | #5, #6 | e2e | not started | — |
 

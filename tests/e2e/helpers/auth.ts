@@ -31,7 +31,13 @@ export async function signInViaMagicLink(page: Page, options?: SignInViaMagicLin
   await clearMailbox(email);
   await page.goto(signInPath(next));
 
-  await page.getByLabel("Email").fill(email);
+  const emailField = page.getByLabel("Email");
+  await expect(emailField).toBeVisible();
+  await emailField.fill(email);
+  // `MagicLinkForm` is a `client:load` island — wait until React owns the input
+  // so a hydration remount does not wipe the value before submit.
+  await expect(emailField).toHaveValue(email);
+
   await page.getByRole("button", { name: "Wyślij link logowania" }).click();
 
   await expect(page).toHaveURL(/\/auth\/check-email/);
