@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { E2E_TEST_EMAIL } from "./constants";
+import { E2E_TEST_EMAIL, FIXTURE_CRAG_PATH, FIXTURE_ROUTE_NAME } from "./constants";
 import { signInViaMagicLink } from "./helpers";
 
 /**
@@ -24,12 +24,9 @@ import { signInViaMagicLink } from "./helpers";
  * exercised when the test goes through the real Supabase session + middleware.
  *
  * Local prerequisites: `npx supabase start` (Mailpit + auth) and a local Strapi
- * catalog containing the seeded fixture below. See test-plan §6.1.
+ * catalog containing the seeded fixture (`FIXTURE_CRAG_PATH` /
+ * `FIXTURE_ROUTE_NAME` in `./constants`). See test-plan §6.1.
  */
-
-/** Seeded catalog fixture: a crag with at least one route to log a climb on. */
-const FIXTURE_CRAG_PATH = "/regiony/rzedkowice/mala-gran";
-const FIXTURE_ROUTE_NAME = "test route";
 
 test("logged climb persists in history after page reload", async ({ page }) => {
   // Unique per run so a leftover row from a crashed earlier run never collides
