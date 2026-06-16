@@ -236,36 +236,36 @@ No database migrations, no Supabase changes, no Strapi schema changes, and no CI
 
 #### Automated
 
-- [x] 1.1 `npm run lint` passes after the constants and map hook changes
-- [x] 1.2 `npm run build` passes, proving the Leaflet import boundary remains valid for Cloudflare SSR
-- [x] 1.3 Targeted manual smoke of the map confirms the marker still opens the same popup and navigates to the crag route list
+- [x] 1.1 `npm run lint` passes after the constants and map hook changes — 8527eca
+- [x] 1.2 `npm run build` passes, proving the Leaflet import boundary remains valid for Cloudflare SSR — 8527eca
+- [x] 1.3 Targeted manual smoke of the map confirms the marker still opens the same popup and navigates to the crag route list — 8527eca
 
 #### Manual
 
-- [x] 1.4 The new route field constants match the seeded Strapi fixture currently used by `FIXTURE_CRAG_PATH`
-- [x] 1.5 The marker hook is discoverable in browser devtools without depending on Leaflet pane/class structure
+- [x] 1.4 The new route field constants match the seeded Strapi fixture currently used by `FIXTURE_CRAG_PATH` — 8527eca
+- [x] 1.5 The marker hook is discoverable in browser devtools without depending on Leaflet pane/class structure — 8527eca
 
 ### Phase 2: Public Catalog + Map E2E Specs
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes
-- [ ] 2.2 `npx playwright test tests/e2e/public-catalog-map.spec.ts` passes with local prerequisites and seeded Strapi catalog available
-- [ ] 2.3 `npm run test:e2e` passes all e2e specs in serial mode when the full local prerequisites are running
-- [ ] 2.4 `npm run build` still passes
+- [x] 2.1 `npm run lint` passes
+- [x] 2.2 `npx playwright test tests/e2e/public-catalog-map.spec.ts` passes with local prerequisites and seeded Strapi catalog available
+- [x] 2.3 `npm run test:e2e` passes all e2e specs in serial mode when the full local prerequisites are running
+- [x] 2.4 `npm run build` still passes
 
 #### Manual
 
-- [ ] 2.5 Temporarily breaking the route grade/type/year display causes the route-list fidelity test to fail with a clear assertion
-- [ ] 2.6 Temporarily breaking the map popup href or marker hook causes the map navigation test to fail before it can reach the crag page
-- [ ] 2.7 The spec remains anonymous; it does not call `signInViaMagicLink`, create private rows, or require cleanup
+- [x] 2.5 Temporarily breaking the route grade/type/year display causes the route-list fidelity test to fail with a clear assertion
+- [x] 2.6 Temporarily breaking the map popup href or marker hook causes the map navigation test to fail before it can reach the crag page
+- [x] 2.7 The spec remains anonymous; it does not call `signInViaMagicLink`, create private rows, or require cleanup
 
 ### Phase 3: Cookbook Documentation
 
 #### Automated
 
-- [ ] 3.1 `npm run guardrails` passes
-- [ ] 3.2 `npm run lint` passes if markdown or surrounding files trigger lint-staged checks
+- [x] 3.1 `npm run guardrails` passes
+- [x] 3.2 `npm run lint` passes if markdown or surrounding files trigger lint-staged checks
 
 #### Manual
 

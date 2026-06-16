@@ -11,6 +11,25 @@ export const E2E_TEST_EMAIL_B = "e2e-isolation-b@example.com";
 /** Seeded catalog fixture crag: a crag page with at least one loggable route. */
 export const FIXTURE_CRAG_PATH = "/regiony/rzedkowice/mala-gran";
 
+/** Region page path that lists `FIXTURE_CRAG_PATH` (parent of the seeded crag). */
+export const FIXTURE_REGION_PATH = "/regiony/rzedkowice";
+
+/**
+ * Display names rendered from the seeded Strapi catalog. They are part of the
+ * same independent oracle as the route fields below: the public catalog/map
+ * spec locates the region heading, the crag card link, and the homepage map
+ * marker by these accessible names instead of reaching into Leaflet internals
+ * or the app's own Strapi client. The map marker exposes `pin.name` as its
+ * accessible button name via the Phase 1 hook in `CragMap.tsx`, so this value
+ * must match the seeded crag's display name. Changing the seed requires
+ * updating these constants deliberately (see the oracle note on the route
+ * fields below).
+ */
+export const FIXTURE_REGION_NAME = "Rzedkowice";
+
+/** Seeded crag display name as rendered in headings, crag cards, and the map marker. */
+export const FIXTURE_CRAG_NAME = "Mala Gran";
+
 /**
  * Seeded catalog fixture route on `FIXTURE_CRAG_PATH`. These constants are an
  * independent oracle for the locally seeded Strapi catalog: public catalog
