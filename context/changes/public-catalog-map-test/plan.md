@@ -264,10 +264,10 @@ No database migrations, no Supabase changes, no Strapi schema changes, and no CI
 
 #### Automated
 
-- [x] 3.1 `npm run guardrails` passes
-- [x] 3.2 `npm run lint` passes if markdown or surrounding files trigger lint-staged checks
+- [x] 3.1 `npm run guardrails` passes — 65e9270
+- [x] 3.2 `npm run lint` passes if markdown or surrounding files trigger lint-staged checks — 65e9270
 
 #### Manual
 
-- [x] 3.3 A future contributor can read §6.4 and understand how to add another public catalog/map e2e test without reading the full implementation plan
-- [x] 3.4 §6.4 reflects the actual spec and marker hook implemented in Phases 1-2
+- [x] 3.3 A future contributor can read §6.4 and understand how to add another public catalog/map e2e test without reading the full implementation plan — 65e9270
+- [x] 3.4 §6.4 reflects the actual spec and marker hook implemented in Phases 1-2 — 65e9270
