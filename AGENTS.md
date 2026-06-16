@@ -28,8 +28,9 @@ sendlog is an Astro 6 SSR app on Cloudflare Workers with React 19 islands, Tailw
 - `npm run format` — Prettier with astro + tailwind plugins.
 - `npm run guardrails` — static checks for i18n coverage and >2s progress-feedback primitives (CI runs this between lint and build). See @docs/verification/beta-flow-checklist.md for the matching manual checklist.
 - `npx astro sync` — regenerate `.astro/types.d.ts`; CI runs this before lint.
+- `npm run test:e2e` — Playwright e2e suite (local-only, not in CI yet). Run `npm run test:e2e:install` once for the Chromium binary.
 
-No test runner is configured.
+No unit/integration test runner is configured; e2e is the only automated test layer. The e2e suite needs local Supabase running (`npx supabase start`, Docker) and a seeded Strapi catalog containing the fixture crag/route used by `tests/e2e/seed.spec.ts`. Two-user isolation specs additionally require two distinct test mailboxes (`E2E_TEST_EMAIL`, `E2E_TEST_EMAIL_B`) and serial execution (`workers: 1`, already set in `playwright.config.ts`) for Mailpit mailbox isolation and shared-DB cleanup ordering.
 
 ## Project Structure
 

@@ -53,7 +53,14 @@ function ClusteredCragMarkers({ pins, openRoutesLabel }: ClusteredCragMarkersPro
   useEffect(() => {
     const group = L.markerClusterGroup();
     for (const pin of pins) {
-      L.marker([pin.latitude, pin.longitude], { icon: cragIcon })
+      // Stable interaction contract for tests + a11y: Leaflet markers default to
+      // `keyboard: true`, so the icon element gets `role="button"` and is
+      // focusable; passing `title` sets the icon's `title`, which becomes the
+      // button's accessible name (the SVG glyph is `aria-hidden`). This lets
+      // Playwright locate the seeded crag by `getByRole("button", { name })`
+      // without coupling to the `.crag-pin` class, Leaflet panes, or cluster
+      // internals. Do not remove `pin.name` here without updating the spec.
+      L.marker([pin.latitude, pin.longitude], { icon: cragIcon, title: pin.name })
         .bindPopup(buildPopupHtml(pin, openRoutesLabel))
         .addTo(group);
     }

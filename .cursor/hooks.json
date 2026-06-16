@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "hooks": {
+        "afterFileEdit": [
+            {
+                "command": "npx eslint --fix . --quiet"
+            },
+            {
+                "command": "npx tsc --noEmit"
+            }
+        ]
+    }
+}

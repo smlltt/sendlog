@@ -1,0 +1,55 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "SendLog" [ref=e5] [cursor=pointer]:
+          - /url: /
+        - link "Zaloguj się" [ref=e7] [cursor=pointer]:
+          - /url: /auth/signin
+    - main [ref=e8]:
+      - generic [ref=e9]:
+        - heading "SendLog" [level=1] [ref=e10]
+        - paragraph [ref=e11]: Polski katalog wspinaczkowych rejonów.
+        - paragraph [ref=e12]: Przeglądaj rejony, skały i trasy bez zakładania konta. Treść jest publikowana przez administratora i widoczna dla każdego, kto chce zaplanować wyjazd albo poznać polskie skały.
+        - link "Zobacz skały na mapie" [ref=e14] [cursor=pointer]:
+          - /url: "#mapa"
+      - generic [ref=e15]:
+        - heading "Skały" [level=2] [ref=e16]
+        - paragraph [ref=e17]: 4 skały
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - heading "Rzedkowice" [level=3] [ref=e22]
+            - list [ref=e23]:
+              - listitem [ref=e24]:
+                - link "Mala Gran" [ref=e25] [cursor=pointer]:
+                  - /url: /regiony/rzedkowice/mala-gran
+              - listitem [ref=e26]:
+                - link "Zegarowa" [ref=e27] [cursor=pointer]:
+                  - /url: /regiony/rzedkowice/zegarowa
+          - generic [ref=e28]:
+            - heading "test" [level=3] [ref=e29]
+            - list [ref=e30]:
+              - listitem [ref=e31]:
+                - link "Wysoka" [ref=e32] [cursor=pointer]:
+                  - /url: /regiony/region/crag
+              - listitem [ref=e33]:
+                - link "no pic test" [ref=e34] [cursor=pointer]:
+                  - /url: /regiony/region/no-pic-test
+    - contentinfo [ref=e35]:
+      - generic [ref=e36]:
+        - paragraph [ref=e37]: SendLog — katalog wspinaczkowy. Treść zarządzana przez administratora.
+        - link "Powrót na stronę główną" [ref=e38] [cursor=pointer]:
+          - /url: /
+  - generic [ref=e41]:
+    - button "Menu" [ref=e42]:
+      - img [ref=e44]
+      - generic: Menu
+    - button "Inspect" [ref=e48]:
+      - img [ref=e50]
+      - generic: Inspect
+    - button "Audit" [ref=e52]:
+      - img [ref=e54]
+      - generic: Audit
+    - button "Settings" [ref=e57]:
+      - img [ref=e59]
+      - generic: Settings
