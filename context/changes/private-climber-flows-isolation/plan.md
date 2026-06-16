@@ -338,37 +338,37 @@ No database migrations. No production deploy changes. CI unchanged (e2e remains 
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes
-- [ ] 2.2 Isolation specs pass with local Supabase + Strapi catalog running
-- [ ] 2.3 `npm run build` passes
+- [x] 2.1 `npm run lint` passes
+- [x] 2.2 Isolation specs pass with local Supabase + Strapi catalog running
+- [x] 2.3 `npm run build` passes
 
 #### Manual
 
-- [ ] 2.4 Isolation failure messages name the leaking user/action
-- [ ] 2.5 User A sanity check — A's data visible on A's `/historia` after setup
+- [x] 2.4 Isolation failure messages name the leaking user/action
+- [x] 2.5 User A sanity check — A's data visible on A's `/historia` after setup
 
 ### Phase 3: Private Climber CRUD Flow Specs
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
-- [ ] 3.2 `climb-edit.spec.ts` and `projects-flow.spec.ts` pass
-- [ ] 3.3 Full `npm run test:e2e` suite passes
+- [x] 3.1 `npm run lint` passes
+- [x] 3.2 `climb-edit.spec.ts` and `projects-flow.spec.ts` pass
+- [x] 3.3 Full `npm run test:e2e` suite passes
 
 #### Manual
 
-- [ ] 3.4 Edit spec reload failure would indicate PATCH non-persistence
-- [ ] 3.5 Project spec reload failure would indicate POST non-persistence
+- [x] 3.4 Edit spec reload failure would indicate PATCH non-persistence
+- [x] 3.5 Project spec reload failure would indicate POST non-persistence
 
 ### Phase 4: Extended API Denial and Cookbook
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` passes
-- [ ] 4.2 `npm run guardrails` passes
-- [ ] 4.3 Full `npm run test:e2e` passes
+- [x] 4.1 `npm run lint` passes
+- [x] 4.2 `npm run guardrails` passes
+- [x] 4.3 Full `npm run test:e2e` passes
 
 #### Manual
 
-- [ ] 4.4 Contributor can follow §6.2 to add a climb-flow test
-- [ ] 4.5 §6.3 explains API denial vs UI read-isolation tradeoff
+- [x] 4.4 Contributor can follow §6.2 to add a climb-flow test
+- [x] 4.5 §6.3 explains API denial vs UI read-isolation tradeoff

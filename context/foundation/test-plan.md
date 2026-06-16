@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-09
+> Last updated: 2026-06-16
 
 ## 1. Strategy
 
@@ -66,7 +66,7 @@ orchestrator updates Status as artifacts appear on disk.
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
 | 1 | E2e harness + auth gate | Bootstrap Playwright, prove auth session behavior, and prove gated pages are actually gated. | #1, #2 | e2e; request/API negative check if research confirms better signal | implementing | `context/changes/testing-e2e-auth-foundation/` |
-| 2 | Private climber flows + isolation | Prove climb add/edit/delete and project add/delete persist correctly, including user isolation. | #2, #3, #4 | e2e; request/API negative check if research confirms better signal | not started | — |
+| 2 | Private climber flows + isolation | Prove climb add/edit/delete and project add/delete persist correctly, including user isolation. | #2, #3, #4 | e2e; request/API negative check if research confirms better signal | implementing | `context/changes/private-climber-flows-isolation/` |
 | 3 | Public catalog + map | Prove anonymous browse, route-list fidelity, and map pin render/navigation. | #5, #6 | e2e | not started | — |
 
 ## 4. Stack
@@ -114,11 +114,76 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.2 Adding an e2e test for private climber flows
 
-- TBD — see §3 Phase 2 for climb add/edit/delete and project add/delete patterns.
+Covers climb add/edit/delete and project add/remove against the real gated
+pages. `seed.spec.ts` (climb add → reload → delete) is the canonical exemplar;
+`climb-edit.spec.ts` and `projects-flow.spec.ts` extend the pattern.
+
+- **Prerequisites**: local Supabase running (`npx supabase start`, Docker), a
+  seeded Strapi catalog containing the fixture crag/route, and `.env`/`.dev.vars`
+  populated from `npx supabase status`. `playwright.config.ts` runs `workers: 1`
+  (serial Mailpit mailbox + shared DB state) — do not parallelize.
+- **Shared constants** (`tests/e2e/constants.ts`): import `FIXTURE_CRAG_PATH`
+  (`/regiony/rzedkowice/mala-gran`) and `FIXTURE_ROUTE_NAME` (`test route`)
+  instead of hardcoding catalog paths.
+- **Auth**: `signInViaMagicLink(page, { email: E2E_TEST_EMAIL, next: FIXTURE_CRAG_PATH })`
+  lands the authenticated session directly on the fixture crag — real
+  passwordless magic-link flow, no mocked session.
+- **Island hydration**: crag-row and history-row actions are `client:load`
+  islands. Wrap the open-then-assert in `expect(async () => { … }).toPass()` so
+  the click retries until the island has hydrated (see `climb-edit.spec.ts:25-28`).
+- **Unique oracle + cleanup**: tag created rows with a timestamped value
+  (`edit-before-${Date.now()}`) so concurrent/leftover data can't false-match,
+  and delete every row the spec creates (two-step UI confirm or
+  `deleteClimbViaApi`/`deleteProjectViaApi`) so re-runs start clean.
+- **Persistence is the point**: always `page.reload()` and re-assert after a
+  mutation — a success toast proves optimistic UI, not a persisted PATCH/POST.
+- **Climb edit selectors**: row = `getByRole("listitem").filter({ hasText: note })`;
+  note field = `getByLabel("Notatka (opcjonalnie)")`; buttons `Edytuj` →
+  `Zapisz zmiany`; success notice `Zmiany zostały zapisane.`.
+- **Project selectors**: crag-row add = `Dodaj do projektów` (notice
+  `Dodano do projektów.`, indicator `W projektach`); on `/projekty` the row is
+  `getByRole("listitem").filter({ hasText: FIXTURE_ROUTE_NAME })` with a heading;
+  remove is a two-step `Usunąć z projektów?` → `Usuń` (notice
+  `Usunięto z projektów.`). Reset to off-list first when the toggle may already
+  be on (see `projects-flow.spec.ts:55-71`).
 
 ### 6.3 Adding a user-isolation or authorization test
 
-- TBD — see §3 Phase 2 for cross-user denial and anonymous-denial patterns.
+Covers cross-user denial (`isolation-climbs.spec.ts`,
+`isolation-projects.spec.ts`, `isolation-read.spec.ts`) and anonymous denial
+(`api-auth.spec.ts`). Choose the cheapest layer that proves the risk:
+
+- **API mutation denial vs UI read isolation**: use an **API-level** check
+  (`page.request.patch/delete`) for *write* denial — it exercises the real
+  session cookie through the endpoint and asserts the structured error directly,
+  cheaper and clearer than driving the UI. Use a **UI read-isolation** check
+  (visit the gated page, assert the other user's row is absent) for *read* denial,
+  because the SSR scoping only manifests in the rendered page. Anonymous denial is
+  pure API (no cookies → `request` fixture).
+- **Two users**: `E2E_TEST_EMAIL` (A) and `E2E_TEST_EMAIL_B` (B) are distinct
+  mailboxes resolving to distinct Supabase identities. Build parallel sessions
+  with `createAuthenticatedContext(browser, { email, next })` — each returns
+  `{ context, page }` with cookies cleared and magic-link sign-in completed.
+- **Capture row ids from the app, never the DOM**: row UUIDs are not rendered.
+  Start `waitForClimbCreated(page)` / `waitForProjectCreated(page)` *before*
+  triggering the UI action that posts, then `await` it for the created id. Never
+  hardcode Strapi document ids.
+- **Denial contract**: a non-owned authenticated mutation collapses to
+  `404` with `error.code === "not_found"` (ownership is never leaked as `403`);
+  an unauthenticated mutation returns `401` with `error.code === "unauthenticated"`.
+  Assert status, JSON `Content-Type`, and the `error.code` (see
+  `expectNotFound` in `isolation-climbs.spec.ts:93-107`). Note: projects have no
+  PATCH endpoint — denial there is DELETE-only.
+- **Serial + cleanup**: isolation specs share user A's seeded row, so set
+  `test.describe.configure({ mode: "serial" })`, create the row in `beforeAll`,
+  and tear it down in `afterAll` (owner session via `deleteClimbViaApi` /
+  `deleteProjectViaApi`, then close both contexts).
+- **Sanity before denial**: assert user A *can* see the row (e.g. on `/historia`)
+  before B probes it, so a setup failure reads as a setup failure, not a false
+  pass on B's denial.
+- **Name the leak**: name tests after the risk (`Risk #2: …`) and pass a
+  message into the denial assertion that says which user/action leaked, so a
+  regression is not a bare timeout.
 
 ### 6.4 Adding an e2e test for public catalog and map behavior
 
@@ -126,7 +191,13 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.5 Per-rollout-phase notes
 
-- TBD — each rollout phase should append a short note here if it discovers a useful testing convention or fixture constraint.
+- **Phase 2 (private flows + isolation)**: two-user isolation specs require two
+  distinct test mailboxes (`E2E_TEST_EMAIL`, `E2E_TEST_EMAIL_B`) and must run
+  serially — `workers: 1` is mandatory because each magic-link sign-in clears and
+  polls a shared Mailpit inbox, and isolation specs share/clean a single seeded
+  row in the DB. Cross-user denial is checked at the API layer (`not_found`),
+  read isolation at the rendered gated page; an RLS-only regression where app
+  scoping still passes is a known residual gap (see plan "What We're NOT Doing").
 
 ## 7. What We Deliberately Don't Test
 
