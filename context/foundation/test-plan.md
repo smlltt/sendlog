@@ -187,7 +187,48 @@ Covers cross-user denial (`isolation-climbs.spec.ts`,
 
 ### 6.4 Adding an e2e test for public catalog and map behavior
 
-- TBD — see §3 Phase 3 for anonymous catalog browse, route-list fidelity, and map pin navigation patterns.
+Covers anonymous public browsing, seeded route-list fidelity, and homepage map
+pin navigation. `public-catalog-map.spec.ts` is the canonical exemplar; it
+protects risk #5 (map pins/navigation) and risk #6 (route-list fidelity) in one
+anonymous spec with no auth, no data creation, and no cleanup.
+
+- **Prerequisites**: the dev server (started by `playwright.config.ts`) plus a
+  seeded Strapi catalog containing `FIXTURE_CRAG_PATH` (`/regiony/rzedkowice/mala-gran`)
+  and `FIXTURE_ROUTE_NAME` (`test route`), with `.env`/`.dev.vars` configured for
+  local catalog reads. These specs are anonymous, so they do **not** need local
+  Supabase, Mailpit, or a second mailbox — but `workers: 1` still applies because
+  it is suite-wide.
+- **Scope**: anonymous homepage (hero, map CTA, map section, sign-in offered not
+  forced), region page (heading + seeded crag card link), crag page (no sign-in
+  redirect, coordinates, route table), route-list fidelity (name/grade/type/year),
+  and map marker → popup → route-list navigation.
+- **Independent oracle, never the app's own client** (`tests/e2e/constants.ts`):
+  expected route fields come from `FIXTURE_ROUTE_NAME`, `FIXTURE_ROUTE_GRADE`,
+  `FIXTURE_ROUTE_TYPE`, and `FIXTURE_ROUTE_YEAR`, and display names from
+  `FIXTURE_REGION_NAME` / `FIXTURE_CRAG_NAME`. Compare rendered text to these
+  constants directly — never to data fetched through the app's Strapi client
+  during the test, or the fidelity assertion just re-checks the code it is meant
+  to protect. A failing assertion means a real regression *or* seed drift; both
+  deserve a deliberate constants update in the same change.
+- **Locator guidance**: accessible locators first — `getByRole("heading"/"link"/"row"/"cell")`
+  with explicit names. Assert the route row with `getByRole("row", { name })`
+  and each field with `row.getByRole("cell", { name, exact: true })`. The only
+  allowed non-accessible hook is the documented marker contract: `CragMap.tsx`
+  passes `title: pin.name` to `L.marker`, so each seeded pin's icon becomes a
+  `role="button"` whose accessible name is the crag name — locate it with
+  `getByRole("button", { name: FIXTURE_CRAG_NAME })`. Do not couple to the
+  `.crag-pin` class, Leaflet panes, or cluster internals.
+- **Hydration guidance**: the map is a `client:only="react"` Leaflet island.
+  Wait for it to hydrate via an accessible built-in control
+  (`getByRole("button", { name: "Zoom in" })`) before driving any marker
+  interaction. Open the marker popup inside `expect(async () => { … }).toPass()`:
+  click the marker when visible, otherwise click `Zoom in` to expand a cluster,
+  and treat the popup's `Otwórz trasy` link becoming visible as the success
+  signal. Never use `page.waitForTimeout()`.
+- **Tile guidance**: never assert OSM tile URLs, tile images, map geometry,
+  marker coordinates, screenshots, or cluster internals — they add external
+  flake without protecting the selected risks. The map test asserts app-owned
+  state (marker name, popup link, final URL), not the tile provider.
 
 ### 6.5 Per-rollout-phase notes
 

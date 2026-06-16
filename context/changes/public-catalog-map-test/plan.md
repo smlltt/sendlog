@@ -249,16 +249,16 @@ No database migrations, no Supabase changes, no Strapi schema changes, and no CI
 
 #### Automated
 
-- [x] 2.1 `npm run lint` passes
-- [x] 2.2 `npx playwright test tests/e2e/public-catalog-map.spec.ts` passes with local prerequisites and seeded Strapi catalog available
-- [x] 2.3 `npm run test:e2e` passes all e2e specs in serial mode when the full local prerequisites are running
-- [x] 2.4 `npm run build` still passes
+- [x] 2.1 `npm run lint` passes — bcc6bbf
+- [x] 2.2 `npx playwright test tests/e2e/public-catalog-map.spec.ts` passes with local prerequisites and seeded Strapi catalog available — bcc6bbf
+- [x] 2.3 `npm run test:e2e` passes all e2e specs in serial mode when the full local prerequisites are running — bcc6bbf
+- [x] 2.4 `npm run build` still passes — bcc6bbf
 
 #### Manual
 
-- [x] 2.5 Temporarily breaking the route grade/type/year display causes the route-list fidelity test to fail with a clear assertion
-- [x] 2.6 Temporarily breaking the map popup href or marker hook causes the map navigation test to fail before it can reach the crag page
-- [x] 2.7 The spec remains anonymous; it does not call `signInViaMagicLink`, create private rows, or require cleanup
+- [x] 2.5 Temporarily breaking the route grade/type/year display causes the route-list fidelity test to fail with a clear assertion — bcc6bbf
+- [x] 2.6 Temporarily breaking the map popup href or marker hook causes the map navigation test to fail before it can reach the crag page — bcc6bbf
+- [x] 2.7 The spec remains anonymous; it does not call `signInViaMagicLink`, create private rows, or require cleanup — bcc6bbf
 
 ### Phase 3: Cookbook Documentation
 
@@ -269,5 +269,5 @@ No database migrations, no Supabase changes, no Strapi schema changes, and no CI
 
 #### Manual
 
-- [ ] 3.3 A future contributor can read §6.4 and understand how to add another public catalog/map e2e test without reading the full implementation plan
-- [ ] 3.4 §6.4 reflects the actual spec and marker hook implemented in Phases 1-2
+- [x] 3.3 A future contributor can read §6.4 and understand how to add another public catalog/map e2e test without reading the full implementation plan
+- [x] 3.4 §6.4 reflects the actual spec and marker hook implemented in Phases 1-2
